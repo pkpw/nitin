@@ -14,8 +14,17 @@
 	};
 </script>
 
-<header>
-	<button on:click={logout}>Logout</button>
+<header class="bg-sky-500 p-4">
+	<nav class="container mx-auto flex justify-between">
+		<div>
+			<button on:click={logout} class="text-white text-lg font-semibold hover:underline"
+				>Dashboard</button
+			>
+		</div>
+		<button on:click={logout} class="text-white text-lg font-semibold hover:underline"
+			>Logout</button
+		>
+	</nav>
 </header>
 <main>
 	<slot />
