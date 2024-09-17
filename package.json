@@ -39,7 +39,8 @@
 	"type": "module",
 	"dependencies": {
 		"@supabase/ssr": "^0.5.1",
-		"@supabase/supabase-js": "^2.45.2"
+		"@supabase/supabase-js": "^2.45.2",
+		"markdown-it": "^14.1.0"
 	},
 	"lint-staged": {
 		"*.js": "eslint --cache --fix",
