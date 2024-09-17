@@ -3,6 +3,11 @@
 	<a
 		href="/auth"
 		class="px-4 py-2 text-white bg-sky-500 rounded hover:bg-sky-600 transition duration-300"
-		>Login</a
-	>
+		>Login
+	</a>
+	<a
+		href="/canvas"
+		class="px-4 py-2 text-white bg-sky-500 rounded hover:bg-sky-600 transition duration-300"
+		>Canvas
+	</a>
 </div>
