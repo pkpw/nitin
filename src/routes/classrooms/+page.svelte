@@ -50,6 +50,25 @@
 }
 
     onMount(loadClassrooms);
+
+    async function deleteClassroom(classroomId: any) {
+        try {
+            const { error } = await supabase
+                .from('classrooms')
+                .delete()
+                .eq('id', classroomId);  
+
+            if (error) {
+                console.error('Error deleting classroom:', error);
+            } else {
+                loadClassrooms();  
+            }
+        } catch (err) {
+            console.error('Error while deleting classroom:', err);
+        }
+    }
+
+    loadClassrooms();
 </script>
 
 <div class="mx-auto p-8">
@@ -73,6 +92,8 @@
         {#each classrooms as classroom}
             <li class="border p-4 rounded-md mb-4">
                 {classroom.name} (Created at: {new Date(classroom.created_at).toLocaleString()})
+                <button class="border p-4 rounded-md mb-4" on:click={() => deleteClassroom(classroom.id)}>Delete</button>
+
             </li>
         {/each}
     </ul>
