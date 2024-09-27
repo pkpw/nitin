@@ -4,6 +4,10 @@
 	export let form;
 </script>
 
+<svelte:head>
+  <title>Nitin | Login</title>
+</svelte:head>
+
 <a href="/">Back</a>
 
 {#if form?.success}

@@ -14,5 +14,9 @@
 	}
 </script>
 
+<svelte:head>
+  <title>Nitin | Dashboard</title>
+</svelte:head>
+
 <h1>Dashboard</h1>
 <button on:click={signOut}>Sign out</button>
