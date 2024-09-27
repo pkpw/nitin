@@ -1,6 +1,4 @@
 import { createServerClient } from '@supabase/ssr';
-import { redirect } from '@sveltejs/kit';
-import { sequence } from '@sveltejs/kit/hooks';
 
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 
@@ -62,22 +60,4 @@ const supabase = async ({ event, resolve }) => {
 	});
 };
 
-// const authGuard = async ({ event, resolve }) => {
-// 	const { session, user } = await event.locals.safeGetSession();
-// 	event.locals.session = session;
-// 	event.locals.user = user;
-
-// 	// if (!event.locals.session && event.url.pathname !== '/' && event.url.pathname !== '/auth') {
-// 	// 	redirect(303, '/auth');
-// 	// }
-
-// 	// Redirect to dashboard if user is already signed in
-// 	if (event.locals.session && event.url.pathname === '/auth') {
-// 		redirect(303, '/dashboard');
-// 	}
-
-// 	return resolve(event);
-// };
-
-// export const handle = sequence(supabase, authGuard);
 export const handle = supabase;
