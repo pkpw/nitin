@@ -1,22 +1,10 @@
-<script lang="ts">
-  import { onMount } from 'svelte'
+<script>
   import { supabase } from '$lib/db'
 
-  type Flashdeck = {
-    id: number
-    created_at: string
-    name: string
-  }
-  type Flashcard = {
-    id: number
-    created_at: string
-    name: string
-    front: string
-    back: string
-  }
-  let flashdecks: Flashdeck[] = []
-  let flashdeckName: string = ''
-  let flashdeckRename: string[] = []
+
+  let flashdecks= []
+  let flashdeckName = ''
+  let flashdeckRename = []
 
   const fetchFlashdecks = async () =>{
     const { data: flashdeck, error } = await supabase
@@ -36,7 +24,7 @@
   }
 
   // onMount(fetchFlashdecks)
-  const deleteFlashdeck = async (flashdeckId: number) =>{
+  const deleteFlashdeck = async (flashdeckId) =>{
     const { data: flashdeck, error } = await supabase
       .from('flashdeck')
       .delete()
@@ -45,7 +33,7 @@
       fetchFlashdecks()
   }
 
-  const updateFlashdeckName = async (flashdeckId: number) =>{
+  const updateFlashdeckName = async (flashdeckId) =>{
     const { data: flashdeck, error } = await supabase
       .from('flashdeck')
       .update([{name:flashdeckRename[flashdeckId]}])
