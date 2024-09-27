@@ -19,54 +19,40 @@
   let flashdeckRename: string[] = []
 
   const fetchFlashdecks = async () =>{
-    try {
-      const { data: flashdeck, error } = await supabase
-        .from('flashdeck')
-        .select('*')
-        if (error) throw error
-        flashdecks = flashdeck  
-    } catch (err) {
-      console.log(err)
-    }
+    const { data: flashdeck, error } = await supabase
+      .from('flashdeck')
+      .select('*')
+      if (error) console.error(error)
+      else flashdecks = flashdeck  
   }
   const createFlashdeck = async () =>{
     //can add restrictions for specific wants for flashdeck
-    try {
       const { data: flashdeck, error } = await supabase 
       .from('flashdeck')
       .insert([{name: flashdeckName}])
-      if (error) throw error
+      if (error) console.error(error)
       fetchFlashdecks()
-    } catch (err) {
-      console.log(err)
-    }
+    
   }
 
   // onMount(fetchFlashdecks)
   const deleteFlashdeck = async (flashdeckId: number) =>{
-    try {
-      const { data: flashdeck, error } = await supabase
+    const { data: flashdeck, error } = await supabase
       .from('flashdeck')
       .delete()
       .eq('id',flashdeckId)
-      if (error) throw error
+      if (error) console.error(error)
       fetchFlashdecks()
-    } catch (err) {
-      console.log(err)
-    }
   }
 
   const updateFlashdeckName = async (flashdeckId: number) =>{
-    try {
-      const { data: flashdeck, error } = await supabase
+    const { data: flashdeck, error } = await supabase
       .from('flashdeck')
       .update([{name:flashdeckRename[flashdeckId]}])
       .eq('id',flashdeckId)
-      if (error) throw error
+      if (error) console.error(error)
       fetchFlashdecks()
-    } catch (err) {
-      console.log(err)
-    }
+    
   }
   
 
