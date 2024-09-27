@@ -62,20 +62,22 @@ const supabase = async ({ event, resolve }) => {
 	});
 };
 
-const authGuard = async ({ event, resolve }) => {
-	const { session, user } = await event.locals.safeGetSession();
-	event.locals.session = session;
-	event.locals.user = user;
+// const authGuard = async ({ event, resolve }) => {
+// 	const { session, user } = await event.locals.safeGetSession();
+// 	event.locals.session = session;
+// 	event.locals.user = user;
 
-	if (!event.locals.session && event.url.pathname.startsWith('/private')) {
-		redirect(303, '/auth');
-	}
+// 	// if (!event.locals.session && event.url.pathname !== '/' && event.url.pathname !== '/auth') {
+// 	// 	redirect(303, '/auth');
+// 	// }
 
-	if (event.locals.session && event.url.pathname === '/auth') {
-		redirect(303, '/private');
-	}
+// 	// Redirect to dashboard if user is already signed in
+// 	if (event.locals.session && event.url.pathname === '/auth') {
+// 		redirect(303, '/dashboard');
+// 	}
 
-	return resolve(event);
-};
+// 	return resolve(event);
+// };
 
-export const handle = sequence(supabase, authGuard);
+// export const handle = sequence(supabase, authGuard);
+export const handle = supabase;

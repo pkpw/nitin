@@ -1,6 +1,7 @@
 # nitin
 
 ## Developing
+
 ### Prerequisites
 
 Before beginning development, ensure the following software is installed:
@@ -10,11 +11,13 @@ Before beginning development, ensure the following software is installed:
 - [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started)
 
 Once the prerequisite software is installed, you may install the necessary project dependencies.
+
 ```bash
 npm install
 ```
 
 ### Configure the Local Environment
+
 To begin development, set up your local environment by copying the example environment configuration file:
 
 ```bash
@@ -36,6 +39,7 @@ PUBLIC_SUPABASE_ANON_KEY="<supabase_anon_key>"
 ```
 
 ### Starting the Development Server
+
 To start the development server with hot code reloading capabilities, use the following command:
 
 ```bash
