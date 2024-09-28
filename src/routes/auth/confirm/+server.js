@@ -3,7 +3,7 @@ import { redirect } from '@sveltejs/kit';
 export const GET = async ({ url, locals: { supabase } }) => {
 	const token_hash = url.searchParams.get('token_hash');
 	const type = url.searchParams.get('type');
-	const next = url.searchParams.get('next');
+	const next = url.searchParams.get('next') ?? '/dashboard';
 
 	/**
 	 * Clean up the redirect URL by deleting the Auth flow parameters.
