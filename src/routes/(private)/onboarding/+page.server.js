@@ -7,7 +7,7 @@ const schema = {
 	type: 'object',
 	properties: {
 		firstName: { type: 'string', maxLength: 32 },
-        lastName: { type: 'string', maxLength: 32 }
+		lastName: { type: 'string', maxLength: 32 }
 	},
 	required: ['firstName', 'lastName'],
 	additionalProperties: false,
@@ -22,8 +22,8 @@ export const load = async ({ parent }) => {
 		redirect(303, '/dashboard');
 	}
 
-	const adapter = schemasafe(schema)
-	const form = await superValidate(adapter)
+	const adapter = schemasafe(schema);
+	const form = await superValidate(adapter);
 
 	return {
 		form,
@@ -42,14 +42,17 @@ export const actions = {
 
 		const profile = new Profile(data);
 
-		const adapter = schemasafe(schema)
-		const form = await superValidate(request, adapter)
+		const adapter = schemasafe(schema);
+		const form = await superValidate(request, adapter);
 
 		if (!form.valid) {
-			return fail(400, { form })
+			return fail(400, { form });
 		}
 
-		const { error: onboardingError } = await profile.completeOnboarding(form.data.firstName, form.data.lastName);
+		const { error: onboardingError } = await profile.completeOnboarding(
+			form.data.firstName,
+			form.data.lastName
+		);
 		if (onboardingError) {
 			console.error(onboardingError);
 			return { success: false, message: 'Could not complete onboarding' };

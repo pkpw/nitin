@@ -7,7 +7,7 @@
 	$: ({ supabase } = data);
 
 	const profile = getUserProfile();
-	const { form, errors, constraints, message, enhance } = superForm(data.form)
+	const { form, errors, constraints, message, enhance } = superForm(data.form);
 
 	$: logout = async () => {
 		const { error } = await supabase.auth.signOut();
@@ -27,16 +27,24 @@
 <form method="POST" use:enhance>
 	<label>
 		First Name
-		<input name="firstName" type="text" aria-invalid={$errors.firstName ? 'true' : undefined}
-		bind:value={$form.firstName}
-		{...$constraints.firstName} />
+		<input
+			name="firstName"
+			type="text"
+			aria-invalid={$errors.firstName ? 'true' : undefined}
+			bind:value={$form.firstName}
+			{...$constraints.firstName}
+		/>
 	</label>
 	{#if $errors.firstName}<span class="invalid">Please enter your first name</span>{/if}
 	<label>
 		Last Name
-		<input name="lastName" type="text" aria-invalid={$errors.lastName ? 'true' : undefined}
-		bind:value={$form.lastName}
-		{...$constraints.lastName} />
+		<input
+			name="lastName"
+			type="text"
+			aria-invalid={$errors.lastName ? 'true' : undefined}
+			bind:value={$form.lastName}
+			{...$constraints.lastName}
+		/>
 	</label>
 	{#if $errors.lastName}<span class="invalid">Please enter your last name</span>{/if}
 	<button>Continue</button>
