@@ -28,10 +28,7 @@ export const actions = {
 		const firstName = formData.get('first-name');
 		const lastName = formData.get('last-name');
 
-		const { error: onboardingError } = await profile.completeOnboarding(
-			firstName,
-			lastName
-		);
+		const { error: onboardingError } = await profile.completeOnboarding(firstName, lastName);
 		if (onboardingError) {
 			console.error(onboardingError);
 			return { success: false, message: 'Could not complete onboarding' };

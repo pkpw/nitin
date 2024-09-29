@@ -14,12 +14,12 @@ export class Profile {
 	}
 
 	static async retrieve(userId) {
-		const supabase = getSupabaseClient()
+		const supabase = getSupabaseClient();
 		return await supabase.from('profiles').select().eq('id', userId).single();
 	}
 
 	async save() {
-		const supabase = getSupabaseClient()
+		const supabase = getSupabaseClient();
 		return await supabase
 			.from('profiles')
 			.update({
@@ -33,7 +33,7 @@ export class Profile {
 	}
 
 	async completeOnboarding(firstName, lastName) {
-		const supabase = getSupabaseClient()
+		const supabase = getSupabaseClient();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.isOnboarded = true;
