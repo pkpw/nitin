@@ -1,4 +1,16 @@
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
+import { message, superValidate } from 'sveltekit-superforms';
+import { schemasafe } from 'sveltekit-superforms/adapters';
+
+const schema = {
+	type: 'object',
+	properties: {
+		email: { type: 'string', format: 'email' }
+	},
+	required: ['email'],
+	additionalProperties: false,
+	$schema: 'http://json-schema.org/draft-07/schema#'
+};
 
 export const load = async ({ locals: { safeGetSession }, cookies }) => {
 	const { session, user } = await safeGetSession();
@@ -7,7 +19,11 @@ export const load = async ({ locals: { safeGetSession }, cookies }) => {
 		redirect(303, '/dashboard');
 	}
 
+	const adapter = schemasafe(schema);
+	const form = await superValidate(adapter);
+
 	return {
+		form,
 		session,
 		user,
 		cookies: cookies.getAll()
@@ -16,11 +32,15 @@ export const load = async ({ locals: { safeGetSession }, cookies }) => {
 
 export const actions = {
 	default: async ({ request, locals: { supabase } }) => {
-		const formData = await request.formData();
-		const email = formData.get('email');
+		const adapter = schemasafe(schema);
+		const form = await superValidate(request, adapter);
+
+		if (!form.valid) {
+			return fail(400, { form });
+		}
 
 		const { data, error } = await supabase.auth.signInWithOtp({
-			email: email,
+			email: form.data.email,
 			options: {
 				shouldCreateUser: true
 			}
@@ -31,6 +51,6 @@ export const actions = {
 			redirect(303, '/auth/error');
 		}
 
-		return { success: true };
+		return message(form, 'success');
 	}
 };
