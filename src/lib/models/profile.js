@@ -1,41 +1,80 @@
 import { getSupabaseClient } from '$lib/supabaseClient';
+import { Model } from './model';
 
-export async function fetchProfile(userId) {
-	const supabase = getSupabaseClient();
-	const { data: profile, error } = await supabase.from('profiles').select().eq('id', userId).single();
-	if (error) {
-		return { error };
+export class Profile extends Model {
+	constructor(userId, email = '', firstName = '', lastName = '', isOnboarded = false) {
+		super();
+
+		this.userId = userId;
+		this.email = email;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.isOnboarded = isOnboarded;
 	}
 
-	return { profile };
-}
+	async fetch() {
+		const supabase = getSupabaseClient();
+		const { data: profile, error } = await supabase
+			.from('profiles')
+			.select()
+			.eq('id', this.userId)
+			.single();
 
-export async function saveProfile(self) {
-	const supabase = getSupabaseClient();
-	const { data: profile, error } = await supabase
-		.from('profiles')
-		.update(self)
-		.select()
-		.eq('id', self.id)
-		.single();
-	if (error) {
-		return { error };
+		if (error) {
+			return { error };
+		}
+
+		this.email = profile.email;
+		this.firstName = profile.first_name;
+		this.lastName = profile.last_name;
+		this.isOnboarded = profile.is_onboarded;
+
+		return { profile: this.toJSON() };
 	}
 
-	return { profile };
-}
+	async save() {
+		const supabase = getSupabaseClient();
+		const { error } = await supabase
+			.from('profiles')
+			.update({
+				email: this.email,
+				first_name: this.firstName,
+				last_name: this.lastName,
+				is_onboarded: this.isOnboarded
+			})
+			.eq('id', this.userId);
 
-export async function completeOnboarding(userId, firstName, lastName) {
-	const supabase = getSupabaseClient();
-	const { profile, error } = await saveProfile({
-		id: userId,
-		first_name: firstName,
-		last_name: lastName,
-		is_onboarded: true
-	});
-	if (error) {
-		return { error };
+		if (error) {
+			return { error };
+		}
+
+		return this.toJSON();
 	}
 
-	return { profile };
+	async completeOnboarding(firstName, lastName) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.isOnboarded = true;
+		return this.save();
+	}
+
+	toJSON() {
+		return {
+			id: this.userId,
+			email: this.email,
+			firstName: this.firstName,
+			lastName: this.lastName,
+			is_onboarded: this.isOnboarded
+		};
+	}
+
+	static fromJSON(profile) {
+		return new this(
+			profile.id,
+			profile.email,
+			profile.firstName,
+			profile.lastName,
+			profile.is_onboarded
+		);
+	}
 }

@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 
-export const load = async ({ locals: { safeGetSession }, cookies, url }) => {
-	const { profile, session, user } = await safeGetSession();
+export const load = async ({ parent, cookies, url }) => {
+	const { profile, session, user } = await parent();
 
 	// Redirect unauthenticated users to auth
 	if (!session) {

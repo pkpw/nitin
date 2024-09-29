@@ -1,5 +1,5 @@
-export const load = async ({ cookies, locals: { safeGetSession } }) => {
-	const { profile, session, user } = await safeGetSession();
+export const load = async ({ parent, cookies }) => {
+	const { profile, session, user } = await parent();
 
 	return {
 		profile,

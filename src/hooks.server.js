@@ -1,5 +1,5 @@
+import { Profile } from '$lib/models/profile';
 import { getSupabaseClient } from '$lib/supabaseClient';
-import { fetchProfile } from '$lib/models/profile';
 
 const supabase = async ({ event, resolve }) => {
 	/**
@@ -36,7 +36,7 @@ const supabase = async ({ event, resolve }) => {
 			return { session: null, user: null };
 		}
 
-		let {
+		const {
 			data: { user },
 			error: userError
 		} = await event.locals.supabase.auth.getUser();
@@ -45,12 +45,9 @@ const supabase = async ({ event, resolve }) => {
 			return { profile: null, session: null, user: null };
 		}
 
-		let {
-			profile,
-			error: profileError
-		} = await fetchProfile(user.id)
+		const { profile, error: profileError } = await new Profile(user.id).fetch();
 		if (profileError) {
-			return { profile: null, session: null, user: null }
+			return { profile: null, session: null, user: null };
 		}
 
 		return { profile, session, user };
