@@ -21,7 +21,7 @@ export const load = async ({ parent, locals: { profile }, cookies, url }) => {
 	}
 
 	if (!profile.is_onboarded && !url.pathname.startsWith('/onboarding')) {
-		redirect(303, '/onboarding');
+		redirect(303, `/onboarding?next=${url.pathname}`);
 	}
 
 	return {

@@ -14,12 +14,17 @@ const schema = {
 	$schema: 'http://json-schema.org/draft-07/schema#'
 };
 
-export const load = async ({ parent }) => {
+export const load = async ({ parent, url }) => {
 	const { profile, supabase } = await parent();
+
+	const next = url.searchParams.get('next') ?? '/dashboard';
+	const redirectTo = new URL(url);
+	redirectTo.pathname = next;
+	redirectTo.searchParams.delete('next');
 
 	// Redirect onboarded users to dashboard
 	if (profile.is_onboarded) {
-		redirect(303, '/dashboard');
+		redirect(303, redirectTo);
 	}
 
 	const adapter = schemasafe(schema);
@@ -33,7 +38,7 @@ export const load = async ({ parent }) => {
 };
 
 export const actions = {
-	default: async ({ request, locals: { safeGetSession } }) => {
+	default: async ({ request, locals: { safeGetSession }, url }) => {
 		const { session } = await safeGetSession();
 		const { data, error: profileError } = await Profile.retrieve(session.user.id);
 		if (profileError) {
@@ -58,6 +63,11 @@ export const actions = {
 			return { success: false, message: 'Could not complete onboarding' };
 		}
 
-		redirect(303, '/dashboard');
+		const next = url.searchParams.get('next') ?? '/dashboard';
+		const redirectTo = new URL(url);
+		redirectTo.pathname = next;
+		redirectTo.searchParams.delete('next');
+
+		redirect(303, redirectTo);
 	}
 };
