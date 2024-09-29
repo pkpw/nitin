@@ -1,7 +1,8 @@
+import { Profile } from '$lib/profile.js';
 import { redirect } from '@sveltejs/kit';
 
-export const load = async ({ parent, cookies, url }) => {
-	const { profile, session, user } = await parent();
+export const load = async ({ parent, locals: { profile }, cookies, url }) => {
+	const { session, user } = await parent();
 
 	// Redirect unauthenticated users to auth
 	if (!session) {
@@ -9,14 +10,24 @@ export const load = async ({ parent, cookies, url }) => {
 	}
 
 	// Redirect new users to onboarding
+	if (!profile) {
+		const { data, error } = await Profile.retrieve(user.id);
+
+		if (error) {
+			console.error(error);
+		}
+
+		profile = data;
+	}
+
 	if (!profile.is_onboarded && !url.pathname.startsWith('/onboarding')) {
 		redirect(303, '/onboarding');
 	}
 
 	return {
-		profile,
 		session,
 		user,
+		profile,
 		cookies: cookies.getAll()
 	};
 };

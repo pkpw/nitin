@@ -1,4 +1,3 @@
-import { Profile } from '$lib/models/profile';
 import { getSupabaseClient } from '$lib/supabaseClient';
 
 const supabase = async ({ event, resolve }) => {
@@ -38,19 +37,14 @@ const supabase = async ({ event, resolve }) => {
 
 		const {
 			data: { user },
-			error: userError
+			error
 		} = await event.locals.supabase.auth.getUser();
-		if (userError) {
+		if (error) {
 			// JWT validation has failed
-			return { profile: null, session: null, user: null };
+			return { session: null, user: null };
 		}
 
-		const { profile, error: profileError } = await new Profile(user.id).fetch();
-		if (profileError) {
-			return { profile: null, session: null, user: null };
-		}
-
-		return { profile, session, user };
+		return { session, user };
 	};
 
 	return resolve(event, {

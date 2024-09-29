@@ -1,15 +1,21 @@
 <script>
-	import { enhance } from '$app/forms';
+	import { getUserProfile, setUserProfile } from '$lib/profile.js';
 	import { goto } from '$app/navigation';
+	import { enhance } from '$app/forms';
+
+	export let form;
 
 	export let data;
-	$: ({ supabase, profile } = data);
+	$: ({ supabase } = data);
+
+	const profile = getUserProfile();
 
 	$: logout = async () => {
 		const { error } = await supabase.auth.signOut();
 		if (error) {
 			console.error(error);
 		}
+		setUserProfile(undefined);
 		goto('/auth');
 	};
 </script>
@@ -32,6 +38,10 @@
 	</label>
 	<button>Continue</button>
 </form>
+
+{#if form?.success == false}
+	<p>{form?.message}</p>
+{/if}
 
 <p>
 	If you don't intend to set up a new account at <b>{profile.email}</b>, you can
