@@ -1,6 +1,5 @@
-import { createServerClient } from '@supabase/ssr';
-
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+import { getSupabaseClient } from '$lib/supabaseClient';
+import { fetchProfile } from '$lib/models/profile';
 
 const supabase = async ({ event, resolve }) => {
 	/**
@@ -8,7 +7,7 @@ const supabase = async ({ event, resolve }) => {
 	 *
 	 * The Supabase client gets the Auth token from the request cookies.
 	 */
-	event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+	event.locals.supabase = getSupabaseClient({
 		cookies: {
 			getAll: () => event.cookies.getAll(),
 			/**
@@ -37,16 +36,24 @@ const supabase = async ({ event, resolve }) => {
 			return { session: null, user: null };
 		}
 
-		const {
+		let {
 			data: { user },
-			error
+			error: userError
 		} = await event.locals.supabase.auth.getUser();
-		if (error) {
+		if (userError) {
 			// JWT validation has failed
-			return { session: null, user: null };
+			return { profile: null, session: null, user: null };
 		}
 
-		return { session, user };
+		let {
+			profile,
+			error: profileError
+		} = await fetchProfile(user.id)
+		if (profileError) {
+			return { profile: null, session: null, user: null }
+		}
+
+		return { profile, session, user };
 	};
 
 	return resolve(event, {
