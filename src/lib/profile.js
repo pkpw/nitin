@@ -1,6 +1,6 @@
 import { getContext, setContext } from 'svelte';
 import { writable } from 'svelte/store';
-import { getSupabaseClient } from './supabaseClient';
+import { getSupabaseClient } from './supabase-client';
 
 const USER_PROFILE_CONTEXT = 'user_profile';
 
