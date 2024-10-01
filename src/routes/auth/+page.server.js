@@ -1,30 +1,56 @@
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
+import { message, superValidate } from 'sveltekit-superforms';
+import { schemasafe } from 'sveltekit-superforms/adapters';
+
+const schema = {
+	type: 'object',
+	properties: {
+		email: { type: 'string', format: 'email' }
+	},
+	required: ['email'],
+	additionalProperties: false,
+	$schema: 'http://json-schema.org/draft-07/schema#'
+};
+
+export const load = async ({ locals: { safeGetSession }, cookies }) => {
+	const { session, user } = await safeGetSession();
+
+	if (session) {
+		redirect(303, '/dashboard');
+	}
+
+	const adapter = schemasafe(schema);
+	const form = await superValidate(adapter);
+
+	return {
+		form,
+		session,
+		user,
+		cookies: cookies.getAll()
+	};
+};
 
 export const actions = {
-	signup: async ({ request, locals: { supabase } }) => {
-		const formData = await request.formData();
-		const email = formData.get('email');
-		const password = formData.get('password');
+	default: async ({ request, locals: { supabase } }) => {
+		const adapter = schemasafe(schema);
+		const form = await superValidate(request, adapter);
 
-		const { error } = await supabase.auth.signUp({ email, password });
+		if (!form.valid) {
+			return fail(400, { form });
+		}
+
+		const { data, error } = await supabase.auth.signInWithOtp({
+			email: form.data.email,
+			options: {
+				shouldCreateUser: true
+			}
+		});
+
 		if (error) {
 			console.error(error);
 			redirect(303, '/auth/error');
-		} else {
-			redirect(303, '/');
 		}
-	},
-	login: async ({ request, locals: { supabase } }) => {
-		const formData = await request.formData();
-		const email = formData.get('email');
-		const password = formData.get('password');
 
-		const { error } = await supabase.auth.signInWithPassword({ email, password });
-		if (error) {
-			console.error(error);
-			redirect(303, '/auth/error');
-		} else {
-			redirect(303, '/private');
-		}
+		return message(form, 'success');
 	}
 };

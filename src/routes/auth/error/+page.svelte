@@ -1,3 +1,5 @@
-<div class="container mx-auto text-center py-12">
-    <p class="text-red-500">Login error</p>
-</div>
+<svelte:head>
+	<title>Nitin | Login Error</title>
+</svelte:head>
+
+<p>Login error</p>

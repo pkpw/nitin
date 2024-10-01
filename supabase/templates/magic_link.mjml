@@ -1,0 +1,27 @@
+<mjml>
+	<mj-body>
+		<mj-section>
+			<mj-column>
+				<!--<mj-image width="100px" src="/assets/img/logo-small.png"></mj-image>-->
+				<mj-text align="center" font-size="28px" font-family="helvetica" font-weight="800"
+					>Nitin</mj-text
+				>
+				<mj-text align="center" font-size="28px" font-family="helvetica" font-weight="400"
+					>Let's get you signed in</mj-text
+				>
+				<mj-text align="center" font-size="18px" font-family="helvetica"
+					>All you have to do is click this button and we'll sign you in with a secure link</mj-text
+				>
+				<mj-button
+					background-color="#0ea5e9"
+					font-size="18px"
+					href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=magiclink"
+					>Sign in to Nitin</mj-button
+				>
+				<mj-text align="center" font-size="16px" font-family="helvetica"
+					>If you didn't request this email, you can safely ignore it.</mj-text
+				>
+			</mj-column>
+		</mj-section>
+	</mj-body>
+</mjml>
