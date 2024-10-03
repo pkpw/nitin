@@ -23,3 +23,5 @@
 <h1>Dashboard</h1>
 <h2>Welcome back {$profile.firstName} {$profile.lastName}</h2>
 <button on:click={logout}>Logout</button>
+<br>
+<a href="/canvas">Canvas</a>

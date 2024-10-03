@@ -12,10 +12,13 @@
 	let start = { x: 0, y: 0 };
 	let canvasOffsetTop = 0;
 	let canvasOffsetLeft = 0;
-  
+	let dataURL;
+	let line_width = 3;
+	
+
 	onMount(() => {
 	  context = canvas.getContext('2d');
-	  context.lineWidth = 3;
+	  context.lineWidth = line_width;
 	  updateCanvasSize();
 	  loadDrawing(); // Load saved drawing when the component mounts
 	});
@@ -41,6 +44,8 @@
 	  context.beginPath();
 	  context.moveTo(x, y);
 	  context.lineTo(offsetX, offsetY);
+	  context.lineJoin = "round";
+	  context.lineCap = "round";
 	  context.stroke();
   
 	  start = { x: offsetX, y: offsetY };
@@ -52,7 +57,7 @@
 	}
   
 	function saveDrawing() {
-	  const dataURL = canvas.toDataURL();
+	  dataURL = canvas.toDataURL();
 	  localStorage.setItem('savedDrawing', dataURL);
 	}
   
@@ -82,6 +87,24 @@
 	function handleColorChange(event) {
 	  color = event.target.value; // Update the pen color based on the selected color
 	}
+
+	function changeLineWidth(event){
+		var line_width = document.getElementById("widthslider").value;
+		if(context.lineWidth != line_width){
+			context.lineWidth = line_width;
+		}
+	}
+
+	function changeLineOpacity(event){
+		var line_opacity = document.getElementById("opacityslider").value;
+		if(context.globalAlpha != line_opacity){
+			context.globalAlpha = line_opacity;
+		}
+	}
+
+	const erase = () => context.globalCompositeOperation = 'destination-out'
+	const pen = () => context.globalCompositeOperation = 'source-over'
+
   </script>
   
   <svelte:window on:resize={updateCanvasSize} />
@@ -99,15 +122,31 @@
 	on:touchend={handleEnd}
 	on:touchmove={e => handleMove({ offsetX: e.touches[0].clientX - canvasOffsetLeft, offsetY: e.touches[0].clientY - canvasOffsetTop })}
   />
+    <!-- Color Picker -->
+	<button class="bg-sky-500 text-white text-lg font-semibold hover:underline p-2 rounded"on:click={pen}>Pen</button>
+	<button class="bg-sky-500 text-white text-lg font-semibold hover:underline p-2 rounded" on:click={erase}>Eraser</button>
+	<input
+	  id="color-picker"
+	  type="color"
+	  value={color}
+	  on:input={handleColorChange}
+	/>
+	<button class="bg-sky-500 text-white text-lg font-semibold hover:underline p-2 rounded" on:click={clearDrawing}>Clear</button>
+	<br>
+	<h1>Size:</h1>
+	<div class="slidecontainer">
+		<input type="range" min="1" max="10" value="3" class="slider" id="widthslider" on:click={changeLineWidth}>
+	</div>
+	<h1>Opacity:</h1>
+	<div class="slidecontainer">
+		<input type="range" min="0" max="1" value="1" step = "0.1" class="slider" id="opacityslider" on:click={changeLineOpacity}>
+	</div>
+	{#if dataURL}
+		<div style="word-wrap: break-word; max-width: 300px; margin-top: 10px;">
+			<strong>Data URL:</strong> {dataURL}
+		</div>
+	{/if}
   
-  <button on:click={clearDrawing}>Clear Drawing</button>
   
-  <!-- Color Picker -->
-  <label for="color-picker">Pen Color:</label>
-  <input
-	id="color-picker"
-	type="color"
-	value={color}
-	on:input={handleColorChange}
-  />
+
   
