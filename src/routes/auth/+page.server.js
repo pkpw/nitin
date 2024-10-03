@@ -19,6 +19,9 @@ export const load = async ({ locals: { safeGetSession }, cookies }) => {
 		redirect(303, '/dashboard');
 	}
 
+	// Artificial delay to test form loading spinner
+	// await new Promise((resolve) => setTimeout(resolve, 5000));
+
 	const adapter = schemasafe(schema);
 	const form = await superValidate(adapter);
 
