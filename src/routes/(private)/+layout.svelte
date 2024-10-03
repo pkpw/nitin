@@ -2,7 +2,7 @@
 	import { setUserProfile, getUserProfile } from '$lib/profile';
 
 	export let data;
-	$: ({ profile } = data);
+	$: ({ profile, supabase, navigationBar } = data);
 	$: setUserProfile(profile);
 </script>
 
