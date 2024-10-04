@@ -1,17 +1,21 @@
-import { error } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 
-export const DELETE = async ({ params, locals: { supabase } }) => {
-	const classroomId = params.id;
+export async function PUT({ request, locals: { supabase }, params }) {
+    const { name } = await request.json();
 
-	const { error: deleteError } = await supabase
-		.from('classrooms')
-		.delete()
-		.eq('id', classroomId);
+    if (!name || name.length < 3 || name.length > 32) {
+        return fail(400, { error: 'Classroom name must be between 3 and 32 characters' });
+    }
 
-	if (deleteError) {
-		console.error('Error deleting classroom:', deleteError);
-		throw error(500, 'Failed to delete classroom');
-	}
+    const { error } = await supabase
+        .from('classrooms')
+        .update({ name })
+        .eq('id', params.id);
 
-	return new Response(null, { status: 204 }); 
-};
+    if (error) {
+        console.error('Error updating classroom:', error);
+        return fail(500, { error: 'Failed to update classroom' });
+    }
+
+    return new Response(JSON.stringify({ success: true }), { status: 200 });
+}
