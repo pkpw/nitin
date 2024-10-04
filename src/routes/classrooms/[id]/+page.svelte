@@ -24,10 +24,6 @@
             console.error('Error while updating classroom name:', err);
         }
     }
-
-    function goBack() {
-        history.back();
-    }
 </script>
 
 <svelte:head>
@@ -36,12 +32,6 @@
 </svelte:head>
 
 <div class="bg-black min-h-screen p-8 text-white flex flex-col items-center">
-    <div class="absolute top-4 left-4">
-        <button class="text-blue-500" on:click={goBack}>
-            ← Back
-        </button>
-    </div>
-
     <div class="w-full max-w-4xl mb-8 flex items-center justify-center">
         {#if isEditing}
             <input
@@ -86,13 +76,5 @@
 
     h1 {
         display: inline;
-    }
-
-    button {
-        font-size: 16px;
-    }
-
-    .absolute {
-        position: absolute;
     }
 </style>
