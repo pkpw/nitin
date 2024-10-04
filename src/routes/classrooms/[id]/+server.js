@@ -1,4 +1,4 @@
-import { fail } from '@sveltejs/kit';
+import { error, fail, json } from '@sveltejs/kit';
 
 export async function PUT({ request, locals: { supabase }, params }) {
     const { name } = await request.json();
@@ -18,4 +18,19 @@ export async function PUT({ request, locals: { supabase }, params }) {
     }
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
+}
+export async function DELETE({ params, locals: { supabase } }) {
+    const { id } = params;
+
+    const { error: deleteError } = await supabase
+        .from('classrooms')
+        .delete()
+        .eq('id', id);
+
+    if (deleteError) {
+        console.error('Error deleting classroom:', deleteError);
+        throw error(500, 'Failed to delete classroom');
+    }
+
+    return json({ success: true });
 }
