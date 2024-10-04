@@ -1,5 +1,6 @@
 <script>
 	import { superForm } from 'sveltekit-superforms';
+
 	export let data;
 	const { form, errors, constraints, message, enhance } = superForm(data.form);
 	let classrooms = data.classrooms;
@@ -11,7 +12,7 @@
 
 <a href="/">Back</a>
 
-<form method="POST" use:enhance>
+<form method="POST" action="?/createClassroom" use:enhance>
 	<label>
 		Classroom Name
 		<input
@@ -29,7 +30,13 @@
 <h2>Existing Classrooms</h2>
 <ul>
 	{#each classrooms as classroom}
-		<li>{classroom.name}</li>
+		<li>
+			{classroom.name}
+			<form method="POST" action="?/deleteClassroom">
+				<input type="hidden" name="id" value={classroom.id} />
+				<button type="submit">Delete</button>
+			</form>
+		</li>
 	{/each}
 </ul>
 

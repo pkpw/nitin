@@ -29,7 +29,7 @@ export const load = async ({ locals: { supabase } }) => {
 };
 
 export const actions = {
-	default: async ({ request, locals: { supabase } }) => {
+	createClassroom: async ({ request, locals: { supabase } }) => {
 		const form = await superValidate(request, schemasafe(schema));
 
 		if (!form.valid) {
@@ -41,6 +41,21 @@ export const actions = {
 			console.error('Error creating classroom:', error);
 			return fail(500, { error: 'Failed to create classroom' });
 		}
+
 		return { success: true, form };
+	},
+
+	deleteClassroom: async ({ request, locals: { supabase } }) => {
+		const formData = await request.formData();
+		const classroomId = formData.get('id');
+
+		const { error } = await supabase.from('classrooms').delete().eq('id', classroomId);
+
+		if (error) {
+			console.error('Error deleting classroom:', error);
+			return fail(500, { error: 'Failed to delete classroom' });
+		}
+
+		return { success: true };
 	}
 };
