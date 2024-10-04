@@ -1,5 +1,6 @@
 <script>
     import { superForm } from 'sveltekit-superforms';
+    import { goto } from '$app/navigation'; 
     export let data;
     const { form, errors, constraints, message, enhance } = superForm(data.form);
     let classrooms = data.classrooms;
@@ -53,7 +54,7 @@
     <ul class="mt-4 space-y-4">
       {#each classrooms as classroom}
         <li class="border border-white p-4 rounded-md bg-black text-white">
-          <span class="text-lg">{classroom.name}</span> 
+            <a href={`/classrooms/${classroom.id}`} class="text-blue-500 underline">{classroom.name}</a>
           <span class="text-sm">(Created at: {new Date(classroom.created_at).toLocaleString()})</span>
           <button
             class="ml-4 px-2 py-1 bg-red-500 text-white rounded-md"

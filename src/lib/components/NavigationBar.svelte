@@ -97,7 +97,7 @@
 					</div>
 					<div class="flex w-full flex-row items-center px-12 py-8 text-white hover:bg-stone-800">
 						<img class="mr-4" src={School} alt="Classrooms" width="32" height="32" />
-						<a href="/dashboard">Classrooms</a>
+						<a href="/classrooms">Classrooms</a>
 					</div>
 					<div class="flex w-full flex-row items-center px-12 py-8 text-white hover:bg-stone-800">
 						<a href="/dashboard">Canvas</a>
