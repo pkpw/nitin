@@ -1,27 +1,26 @@
 <script>
     import { superForm } from 'sveltekit-superforms';
-    import { goto } from '$app/navigation'; 
     export let data;
     const { form, errors, constraints, message, enhance } = superForm(data.form);
     let classrooms = data.classrooms;
   
     async function deleteClassroom(classroomId) {
-      try {
-        const response = await fetch(`/classrooms/${classroomId}`, {
-          method: 'DELETE',
-        });
-  
-        if (!response.ok) {
-          console.error('Error deleting classroom:', response.statusText);
-          return;
+        try {
+            const response = await fetch(`/classrooms/${classroomId}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                console.error('Error deleting classroom:', response.statusText);
+                return;
+            }
+
+            classrooms = classrooms.filter((classroom) => classroom.id !== classroomId);
+        } catch (err) {
+            console.error('Error while deleting classroom:', err);
         }
-  
-        classrooms = classrooms.filter((classroom) => classroom.id !== classroomId);
-      } catch (err) {
-        console.error('Error while deleting classroom:', err);
-      }
     }
-  </script>
+</script>
   
   <svelte:head>
     <title>Classrooms</title>
@@ -55,7 +54,7 @@
       {#each classrooms as classroom}
         <li class="border border-white p-4 rounded-md bg-black text-white">
             <a href={`/classrooms/${classroom.id}`} class="text-blue-500 underline">{classroom.name}</a>
-          <span class="text-sm">(Created at: {new Date(classroom.created_at).toLocaleString()})</span>
+            <span class="text-sm">(Created at: {new Date(classroom.created_at).toLocaleString()})</span>
           <button
             class="ml-4 px-2 py-1 bg-red-500 text-white rounded-md"
             on:click={() => deleteClassroom(classroom.id)}
