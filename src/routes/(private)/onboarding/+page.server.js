@@ -15,7 +15,7 @@ const schema = {
 };
 
 export const load = async ({ parent, url }) => {
-	const { profile, supabase } = await parent();
+	const { profile } = await parent();
 
 	const next = url.searchParams.get('next') ?? '/dashboard';
 	const redirectTo = new URL(url);
@@ -32,8 +32,7 @@ export const load = async ({ parent, url }) => {
 
 	return {
 		form,
-		profile,
-		supabase
+		profile
 	};
 };
 
