@@ -17,8 +17,8 @@
 <div class="mx-auto flex min-h-screen flex-col items-center justify-center overflow-hidden">
 	<div class="mx-auto max-w-sm p-4">
 		{#if $message}
-			<h1 class="pb-20 text-center text-4xl font-bold text-white">You're all set!</h1>
-			<div in:fade class="rounded-md border border-stone-700 p-8 text-center text-white">
+			<h1 class="pb-20 text-center text-4xl font-bold">You're all set!</h1>
+			<div in:fade class="rounded-md border border-stone-700 p-8 text-center">
 				<div class="relative mx-auto mb-8 w-fit">
 					<div class="rounded-full border border-stone-700 p-8">
 						<img src={Mail} alt="Email" width="72" height="72" />
@@ -33,7 +33,7 @@
 				<p class="text-lg">A sign in link has been sent to your email.</p>
 			</div>
 		{:else}
-			<h1 class="pb-20 text-center text-4xl font-bold text-white">Study smarter today.</h1>
+			<h1 class="pb-20 text-center text-4xl font-bold">Study smarter today.</h1>
 			<form class="rounded-md border border-stone-700 p-8" method="POST" use:enhance>
 				<div class="mb-4">
 					<input
@@ -47,12 +47,12 @@
 					/>
 					{#if $errors.email}
 						<div in:fade class="mt-1 flex items-center justify-start">
-							<img src={Error} alt="Error" />
+							<img class="icon" src={Error} alt="Error" width="20" height="20" />
 							<span class="ml-2 text-sm font-semibold text-red-500">Email is not valid.</span>
 						</div>
 					{/if}
 				</div>
-				<button class="btn">
+				<button class="btn-primary w-full">
 					{#if $delayed}
 						<div in:fade>
 							<Spinner />

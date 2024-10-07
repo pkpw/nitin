@@ -6,8 +6,8 @@ import { Profile } from '$lib/profile.js';
 const schema = {
 	type: 'object',
 	properties: {
-		firstName: { type: 'string', maxLength: 32 },
-		lastName: { type: 'string', maxLength: 32 }
+		firstName: { type: 'string', maxLength: 32, pattern: '[^\\s]+' },
+		lastName: { type: 'string', maxLength: 32, pattern: '[^\\s]+' }
 	},
 	required: ['firstName', 'lastName'],
 	additionalProperties: false,
@@ -41,7 +41,7 @@ export const actions = {
 		const { session } = await safeGetSession();
 		const { data, error: profileError } = await Profile.retrieve(session.user.id);
 		if (profileError) {
-			return { success: false, message: 'Could not retrieve user profile' };
+			return fail(400);
 		}
 
 		const profile = new Profile(data);
@@ -59,7 +59,7 @@ export const actions = {
 		);
 		if (onboardingError) {
 			console.error(onboardingError);
-			return { success: false, message: 'Could not complete onboarding' };
+			return fail(400);
 		}
 
 		const next = url.searchParams.get('next') ?? '/dashboard';
