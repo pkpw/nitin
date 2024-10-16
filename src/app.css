@@ -8,7 +8,7 @@ body {
 }
 
 .btn {
-	@apply flex flex-row items-center justify-center px-4 py-2 font-semibold outline-none transition-all duration-300 hover:cursor-pointer;
+	@apply flex flex-row items-center justify-center px-4 py-2 font-semibold outline-none transition-all duration-300 will-change-transform hover:cursor-pointer;
 }
 
 .btn-primary {
@@ -31,6 +31,18 @@ body {
 	@apply pointer-events-none object-cover;
 }
 
+.form-label {
+	@apply font-medium text-stone-400;
+}
+
 .form-input {
 	@apply my-1 block w-full rounded-md border border-stone-700 bg-stone-800 px-3 py-2 text-white hover:border-stone-500 focus:border-stone-500 focus:outline-none;
+}
+
+.form-dropdown {
+	@apply float-right rounded-md border border-stone-700 bg-stone-900 px-2 py-3 text-white hover:cursor-pointer hover:border-stone-500 hover:bg-stone-800 focus:border-stone-500 focus:outline-none;
+}
+
+.checkbox {
+	@apply h-5 w-5 appearance-none rounded-md border border-stone-700 bg-stone-900 outline-none checked:border-transparent checked:bg-blue-500 hover:border-stone-500 hover:checked:border-stone-300 focus:border-stone-500 checked:focus:border-stone-300;
 }
