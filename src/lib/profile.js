@@ -1,52 +1,56 @@
-import { getContext, setContext } from 'svelte';
 import { writable } from 'svelte/store';
-import { getSupabaseClient } from './supabase-client';
+import { getContext, setContext } from 'svelte';
+import { browser } from '$app/environment';
+import { goto } from '$app/navigation';
 
 const USER_PROFILE_CONTEXT = 'user_profile';
+const profile = writable();
 
-export class Profile {
-	constructor(initialData) {
-		this.userId = initialData.id;
-		this.email = initialData.email;
-		this.firstName = initialData.first_name;
-		this.lastName = initialData.last_name;
-		this.isOnboarded = initialData.is_onboarded;
+export const retrieve_profile = async (supabase, id) => {
+	return supabase.from('profiles').select().eq('id', id).single();
+};
+
+export const save_profile = async (supabase, data) => {
+	return supabase
+		.from('profiles')
+		.update(...data)
+		.eq('id', data.id);
+};
+
+export const onboard_profile = async (supabase, id, firstName, lastName) => {
+	return supabase
+		.from('profiles')
+		.update({
+			first_name: firstName,
+			last_name: lastName,
+			is_onboarded: true,
+			onboarded_at: new Date().toISOString()
+		})
+		.eq('id', id);
+};
+
+export const get_profile = () => {
+	if (browser) {
+		return getContext(USER_PROFILE_CONTEXT);
+	}
+};
+
+export const set_profile = (data) => {
+	if (browser) {
+		profile.set(data);
+		setContext(USER_PROFILE_CONTEXT, profile);
+	}
+};
+
+export const logout = async (supabase) => {
+	if (!browser) {
+		return;
 	}
 
-	static async retrieve(userId) {
-		const supabase = getSupabaseClient();
-		return await supabase.from('profiles').select().eq('id', userId).single();
+	const { data, error } = await supabase.auth.signOut();
+	if (error) {
+		error(500, { message: 'Unable to logout' });
 	}
 
-	async save() {
-		const supabase = getSupabaseClient();
-		return await supabase
-			.from('profiles')
-			.update({
-				id: this.id,
-				email: this.email,
-				first_name: this.firstName,
-				last_name: this.lastName,
-				is_onboarded: this.isOnboarded
-			})
-			.eq('id', this.userId);
-	}
-
-	async completeOnboarding(firstName, lastName) {
-		const supabase = getSupabaseClient();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.isOnboarded = true;
-		return await this.save(supabase);
-	}
-}
-
-export function setUserProfile(initialData) {
-	const userProfile = writable(initialData ? new Profile(initialData) : undefined);
-	setContext(USER_PROFILE_CONTEXT, userProfile);
-	return userProfile;
-}
-
-export function getUserProfile() {
-	return getContext(USER_PROFILE_CONTEXT);
-}
+	goto('/auth');
+};

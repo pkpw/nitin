@@ -1,9 +1,10 @@
 <script>
-	import { setUserProfile, getUserProfile } from '$lib/profile';
+	import { get_profile, set_profile } from '$lib/profile.js';
+	import { setContext } from 'svelte';
+	import { get, writable } from 'svelte/store';
 
 	export let data;
-	$: ({ profile, supabase } = data);
-	$: setUserProfile(profile);
+	$: set_profile(data.profile);
 </script>
 
 <slot />

@@ -1,5 +1,5 @@
 <script>
-	import { getUserProfile } from '$lib/profile.js';
+	import { get_profile } from '$lib/profile.js';
 
 	const colors = [
 		'bg-red-500',
@@ -13,11 +13,15 @@
 	];
 	export let color = colors[Math.floor(Math.random() * colors.length)];
 
-	const profile = getUserProfile();
+	const profile = get_profile();
 </script>
 
 <div
 	class="flex h-10 min-h-10 w-10 min-w-10 items-center justify-center rounded-full text-center {color}"
 >
-	<span class="text-lg font-extrabold text-white">{$profile.firstName[0].toUpperCase()}</span>
+	<span class="text-lg font-extrabold text-white"
+		>{#if $profile}
+			{$profile.first_name?.length > 0 ? $profile.first_name[0].toUpperCase() : 'A'}
+		{/if}
+	</span>
 </div>

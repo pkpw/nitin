@@ -1,68 +1,30 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { schemasafe } from 'sveltekit-superforms/adapters';
-import { Profile } from '$lib/profile.js';
-
-const schema = {
-	type: 'object',
-	properties: {
-		firstName: { type: 'string', maxLength: 32, pattern: '[^\\s]+' },
-		lastName: { type: 'string', maxLength: 32, pattern: '[^\\s]+' }
-	},
-	required: ['firstName', 'lastName'],
-	additionalProperties: false,
-	$schema: 'http://json-schema.org/draft-07/schema#'
-};
-
-export const load = async ({ parent, url }) => {
-	const { profile } = await parent();
-
-	const next = url.searchParams.get('next') ?? '/dashboard';
-	const redirectTo = new URL(url);
-	redirectTo.pathname = next;
-	redirectTo.searchParams.delete('next');
-
-	// Redirect onboarded users to dashboard
-	if (profile.is_onboarded) {
-		redirect(303, redirectTo);
-	}
-
-	const adapter = schemasafe(schema);
-	const form = await superValidate(adapter);
-
-	return {
-		form,
-		profile
-	};
-};
+import { onboard_profile } from '$lib/profile.js';
+import { schema } from './form.js';
 
 export const actions = {
-	default: async ({ request, locals: { safeGetSession }, url }) => {
+	default: async ({ request, locals: { supabase, safeGetSession }, url }) => {
 		const { session } = await safeGetSession();
-		const { data, error: profileError } = await Profile.retrieve(session.user.id);
-		if (profileError) {
-			return fail(400);
-		}
-
-		const profile = new Profile(data);
 
 		const adapter = schemasafe(schema);
 		const form = await superValidate(request, adapter);
-
 		if (!form.valid) {
 			return fail(400, { form });
 		}
 
-		const { error: onboardingError } = await profile.completeOnboarding(
-			form.data.firstName,
-			form.data.lastName
+		const { profile, error } = await onboard_profile(
+			supabase,
+			session.user.id,
+			form.data.first_name,
+			form.data.last_name
 		);
-		if (onboardingError) {
-			console.error(onboardingError);
-			return fail(400);
+		if (error) {
+			return fail(400, { form });
 		}
 
-		const next = url.searchParams.get('next') ?? '/dashboard';
+		const next = url.searchParams.get('next') ?? 'dashboard';
 		const redirectTo = new URL(url);
 		redirectTo.pathname = next;
 		redirectTo.searchParams.delete('next');
