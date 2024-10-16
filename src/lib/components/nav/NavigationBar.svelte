@@ -6,7 +6,7 @@
 	import Menu from '$lib/assets/icons/menu_32dp_FAFAF9_FILL0_wght400_GRAD0_opsz40.svg';
 	import Close from '$lib/assets/icons/close_32dp_FAFAF9_FILL1_wght400_GRAD0_opsz40.svg';
 
-	export let title = '';
+	export let title = undefined;
 	export let shown = false;
 
 	let menuButton;
