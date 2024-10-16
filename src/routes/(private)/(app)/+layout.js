@@ -1,10 +1,11 @@
 import { writable } from 'svelte/store';
 
-export function load({ data }) {
+export const load = ({ data }) => {
 	return {
 		...data,
 		navigationBar: {
+			shown: false,
 			pageTitle: writable('')
 		}
 	};
-}
+};

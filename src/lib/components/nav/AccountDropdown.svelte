@@ -1,5 +1,5 @@
 <script>
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import Avatar from '../Avatar.svelte';
@@ -8,6 +8,7 @@
 	import DropdownArrowUp from '$lib/assets/icons/arrow_drop_up_32dp_FAFAF9_FILL1_wght400_GRAD0_opsz40.svg';
 	import Settings from '$lib/assets/icons/settings_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 	import Logout from '$lib/assets/icons/logout_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
+	import { logout } from '$lib/profile';
 
 	export let supabase;
 
@@ -22,14 +23,6 @@
 		if (enabled && !dropdownButton.contains(event.target)) {
 			enabled = false;
 		}
-	};
-
-	$: logout = async () => {
-		const { error } = await supabase.auth.signOut();
-		if (error) {
-			console.error(error);
-		}
-		goto('/auth');
 	};
 </script>
 
@@ -68,7 +61,7 @@
 			</a>
 			<button
 				class="flex w-full items-center justify-around rounded-b-md p-4 hover:bg-stone-800"
-				on:click={logout}
+				on:click={logout(supabase)}
 			>
 				<img class="h-6 w-6 object-cover" src={Logout} alt="Logout" width="24" height="24" />
 				Logout

@@ -6,24 +6,25 @@
 	import Menu from '$lib/assets/icons/menu_32dp_FAFAF9_FILL0_wght400_GRAD0_opsz40.svg';
 	import Close from '$lib/assets/icons/close_32dp_FAFAF9_FILL1_wght400_GRAD0_opsz40.svg';
 
-	export let title = undefined;
+	export let title = '';
+	export let shown = false;
 
 	let menuButton;
 	let navMenu;
-	let enabled = false;
 
 	$: toggle = () => {
-		enabled = !enabled;
+		shown = !shown;
 	};
 
 	$: hide = (event) => {
 		if (
+			shown &&
 			navMenu &&
 			menuButton &&
 			!navMenu.contains(event.target) &&
 			!menuButton.contains(event.target)
 		) {
-			enabled = false;
+			shown = false;
 		}
 	};
 
@@ -40,12 +41,8 @@
 >
 	<div class="container mx-auto flex items-center justify-between">
 		<div class="flex w-full flex-row items-center">
-			<button
-				class="btn-outline relative h-10 w-10"
-				bind:this={menuButton}
-				on:click={toggle}
-			>
-				{#if enabled}
+			<button class="btn-outline relative h-10 w-10" bind:this={menuButton} on:click={toggle}>
+				{#if shown}
 					<img
 						in:send
 						out:receive
@@ -76,12 +73,12 @@
 			<slot name="right"></slot>
 		</div>
 	</div>
-	{#if enabled}
+	{#if shown}
 		<div
 			in:slide={{ axis: 'x' }}
 			out:slide={{ axis: 'x' }}
 			bind:this={navMenu}
-			class="absolute left-0 top-[69px] mx-auto h-[calc(100vh-69px)] w-full border-r-stone-700 bg-stone-950 md:w-1/2 md:border-r xl:w-1/3 xl:max-w-lg"
+			class="absolute left-0 top-[69px] mx-auto h-[calc(100vh-69px)] w-full border-r-stone-700 bg-stone-950 md:w-1/2 md:border-r xl:w-1/3 xl:max-w-[496px]"
 		>
 			<div class="w-full min-w-80">
 				<slot name="menu"></slot>

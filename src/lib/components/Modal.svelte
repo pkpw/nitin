@@ -3,16 +3,16 @@
 	import { fade } from 'svelte/transition';
 
 	let dialog;
-	export let enabled = writable(false);
+	export let shown = writable(false);
 
 	$: hide = (event) => {
-		if (enabled && !dialog.contains(event.target)) {
-			enabled.set(false);
+		if (shown && !dialog.contains(event.target)) {
+			shown.set(false);
 		}
 	};
 </script>
 
-{#if $enabled}
+{#if $shown}
 	<button
 		in:fade={{ delay: 0, duration: 150 }}
 		out:fade={{ delay: 0, duration: 150 }}
