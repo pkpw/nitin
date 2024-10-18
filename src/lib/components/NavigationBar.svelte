@@ -100,7 +100,7 @@
 						<a href="/dashboard">Classrooms</a>
 					</div>
 					<div class="flex w-full flex-row items-center px-12 py-8 text-white hover:bg-stone-800">
-						<a href="/dashboard">Canvas</a>
+						<a href="/canvas">Canvas</a>
 					</div>
 				</div>
 			</div>

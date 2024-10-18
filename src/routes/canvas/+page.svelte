@@ -41,19 +41,30 @@
 	  if (!isDrawing) return;
   
 	  const { x, y } = start;
-	  context.beginPath();
-	  context.moveTo(x, y);
-	  context.lineTo(offsetX, offsetY);
-	  context.lineJoin = "round";
-	  context.lineCap = "round";
-	  context.stroke();
-  
+
+	  const dx = offsetX - x;
+	  const dy = offsetY - y;
+	  const distance = Math.sqrt(dx * dx + dy * dy);
+
+	  const steps = Math.ceil(distance / 2);
+	  for (let i = 0; i < steps; i++){
+		const intermediateX = x + (dx / steps) * i;
+		const intermediateY = y + (dy / steps) * i;
+
+		context.beginPath();
+		context.moveTo(intermediateX, intermediateY);
+		context.lineTo(intermediateX + 0.5, intermediateY + 0.5);
+		context.lineJoin = "round";
+		context.lineCap = "round";
+		context.stroke();
+	  }
+	
 	  start = { x: offsetX, y: offsetY };
-	  saveDrawing(); // Automatically save on drawing move
 	}
   
 	function handleEnd() {
 	  isDrawing = false;
+	  saveDrawing(); // Automatically save on drawing move
 	}
   
 	function saveDrawing() {
@@ -97,9 +108,7 @@
 
 	function changeLineOpacity(event){
 		var line_opacity = document.getElementById("opacityslider").value;
-		if(context.globalAlpha != line_opacity){
-			context.globalAlpha = line_opacity;
-		}
+		context.globalAlpha = line_opacity;
 	}
 
 	const erase = () => context.globalCompositeOperation = 'destination-out'
@@ -133,11 +142,11 @@
 	/>
 	<button class="bg-sky-500 text-white text-lg font-semibold hover:underline p-2 rounded" on:click={clearDrawing}>Clear</button>
 	<br>
-	<h1>Size:</h1>
+	<h1 style="color:white;">Size:</h1>
 	<div class="slidecontainer">
 		<input type="range" min="1" max="10" value="3" class="slider" id="widthslider" on:click={changeLineWidth}>
 	</div>
-	<h1>Opacity:</h1>
+	<h1 style="color:white;">Opacity:</h1>
 	<div class="slidecontainer">
 		<input type="range" min="0" max="1" value="1" step = "0.1" class="slider" id="opacityslider" on:click={changeLineOpacity}>
 	</div>
