@@ -1,27 +1,28 @@
 <script>
     export let data;
     let classroom = data.classroom;
+    let profiles = data.profiles; // The list of profiles
 
-    let isEditing = false;
-    let newClassroomName = classroom.name;
+    let selectedUserId = '';
+    let role = 'student'; // Default role is set to 'student'
 
-    async function updateClassroomName() {
+    async function addUserToClassroom() {
         try {
-            const response = await fetch(`/classrooms/${classroom.id}`, {
-                method: 'PUT',
+            const response = await fetch(`/classrooms/${classroom.id}/addUser`, {
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: newClassroomName })
+                body: JSON.stringify({ userId: selectedUserId, role })
             });
 
             if (!response.ok) {
-                console.error('Error updating classroom name:', response.statusText);
+                console.error('Error adding user to classroom:', response.statusText);
                 return;
             }
 
-            classroom.name = newClassroomName;
-            isEditing = false;
+            console.log('User added to classroom successfully!');
+            selectedUserId = ''; // Clear the selection after adding
         } catch (err) {
-            console.error('Error while updating classroom name:', err);
+            console.error('Error while adding user to classroom:', err);
         }
     }
 </script>
@@ -33,48 +34,35 @@
 
 <div class="bg-black min-h-screen p-8 text-white flex flex-col items-center">
     <div class="w-full max-w-4xl mb-8 flex items-center justify-center">
-        {#if isEditing}
-            <input
-                type="text"
-                bind:value={newClassroomName}
-                class="p-2 border border-blue-500 rounded-md bg-black text-white w-1/2"
-            />
-            <button
-                class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md"
-                on:click={updateClassroomName}
-            >
-                Save
-            </button>
-            <button
-                class="ml-2 px-4 py-2 bg-gray-500 text-white rounded-md"
-                on:click={() => isEditing = false}
-            >
-                Cancel
-            </button>
-        {:else}
-            <h1 class="text-5xl font-bold text-center">{classroom.name}</h1>
-            <button class="ml-2" on:click={() => isEditing = true}>
-                <span class="material-symbols-rounded">
-                    edit
-                </span>
-            </button>
-        {/if}
+        <h1 class="text-5xl font-bold text-center">{classroom.name}</h1>
     </div>
 
-    <div class="w-full max-w-4xl">
-        <h3 class="block text-lg mb-4 text-left">Members:</h3>
-        <h3 class="block text-lg mb-4 text-left">Flashcard Sets:</h3>
+    <div class="w-full max-w-4xl mt-8">
+        <h3 class="text-2xl font-semibold">Add User to Classroom</h3>
+        <form on:submit|preventDefault={addUserToClassroom} class="mt-4">
+            <label class="block">
+              Select User:
+              <select bind:value={selectedUserId} required class="mt-1 p-2 border border-white rounded-md w-full bg-black text-white">
+                <option value="" disabled>Select a user</option>
+                {#each profiles as profile}
+                    <option value={profile.id}>{profile.first_name} {profile.last_name}</option>
+                {/each}
+              </select>
+            </label>
+            <label class="mt-2 block">
+              Role:
+              <select bind:value={role} class="mt-1 p-2 border border-white rounded-md w-full bg-black text-white">
+                <option value="student">Student</option>
+                <option value="instructor">Instructor</option>
+              </select>
+            </label>
+            <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md" type="submit">Add User</button>
+        </form>
     </div>
 </div>
 
 <style>
-    .material-symbols-rounded {
-        font-size: 32px;
-        vertical-align: middle;
-        color: #FFFFFF;
-    }
-
-    h1 {
-        display: inline;
+    .invalid {
+      color: red;
     }
 </style>
