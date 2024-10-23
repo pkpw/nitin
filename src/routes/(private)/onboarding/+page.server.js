@@ -1,12 +1,15 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { schemasafe } from 'sveltekit-superforms/adapters';
-import { onboard_profile } from '$lib/profile.js';
 import { schema } from './form.js';
+import { Profile } from '$lib/profile.js';
 
 export const actions = {
 	default: async ({ request, locals: { supabase, safeGetSession }, url }) => {
 		const { session } = await safeGetSession();
+		if (!session) {
+			redirect(303, '/auth');
+		}
 
 		const adapter = schemasafe(schema);
 		const form = await superValidate(request, adapter);
@@ -14,7 +17,7 @@ export const actions = {
 			return fail(400, { form });
 		}
 
-		const { profile, error } = await onboard_profile(
+		const { error } = await Profile.onboard(
 			supabase,
 			session.user.id,
 			form.data.first_name,

@@ -2,9 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
+html {
+	@apply m-0 p-0;
+}
+
 body {
-	@apply m-0 bg-stone-950 p-0 text-white;
+	@apply m-0 bg-stone-50 p-0 text-stone-900 transition-colors duration-300 ease-in-out dark:bg-stone-950 dark:text-stone-50;
 }
 
 .btn {
@@ -12,35 +15,31 @@ body {
 }
 
 .btn-primary {
-	@apply btn rounded-full bg-blue-500 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-blue-600 focus:scale-105;
+	@apply btn rounded-full bg-blue-500 text-stone-50 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-blue-600 focus:scale-105;
 }
 
 .btn-secondary {
-	@apply btn rounded-full bg-stone-700 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-stone-500 focus:scale-105;
+	@apply btn rounded-full bg-stone-700 text-stone-50 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-stone-500 focus:scale-105;
 }
 
 .btn-danger {
-	@apply btn rounded-full bg-red-500 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-red-600 focus:scale-105;
+	@apply btn rounded-full bg-red-500 text-stone-50 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-red-600 focus:scale-105;
 }
 
 .btn-outline {
-	@apply btn rounded-md border border-stone-700 hover:cursor-pointer hover:border-stone-500;
-}
-
-.icon {
-	@apply pointer-events-none object-cover;
+	@apply btn rounded-md border border-stone-400 bg-stone-50 hover:cursor-pointer hover:border-stone-700 hover:bg-stone-100 dark:border-stone-700 dark:bg-stone-950 dark:hover:border-stone-500 hover:dark:bg-stone-800;
 }
 
 .form-label {
-	@apply font-medium text-stone-400;
+	@apply font-medium text-stone-600 dark:text-stone-400;
 }
 
 .form-input {
-	@apply my-1 block w-full rounded-md border border-stone-700 bg-stone-800 px-3 py-2 text-white hover:border-stone-500 focus:border-stone-500 focus:outline-none;
+	@apply my-1 block w-full rounded-md border border-stone-400 bg-stone-50 px-3 py-2 hover:border-stone-700 hover:bg-stone-100 focus:border-stone-900 focus:outline-none dark:border-stone-700 dark:bg-stone-800 dark:hover:border-stone-500 dark:hover:bg-stone-700 dark:focus:border-stone-500;
 }
 
 .form-dropdown {
-	@apply float-right rounded-md border border-stone-700 bg-stone-900 px-2 py-3 text-white hover:cursor-pointer hover:border-stone-500 hover:bg-stone-800 focus:border-stone-500 focus:outline-none;
+	@apply float-right rounded-md border border-stone-400 bg-stone-100 px-2 py-3 hover:cursor-pointer hover:border-stone-700 hover:bg-stone-200 focus:border-stone-900 focus:outline-none dark:border-stone-700 dark:bg-stone-900 dark:hover:border-stone-500 dark:hover:bg-stone-700 dark:focus:border-stone-500;
 }
 
 .checkbox {

@@ -1,8 +1,8 @@
 export const schema = {
 	type: 'object',
 	properties: {
-		first_name: { type: 'string', maxLength: 32, pattern: '[^\\s]+' },
-		last_name: { type: 'string', maxLength: 32, pattern: '[^\\s]+' }
+		first_name: { type: 'string', maxLength: 32, pattern: '^\\S+$' },
+		last_name: { type: 'string', maxLength: 32, pattern: '^\\S+$' }
 	},
 	required: ['first_name', 'last_name'],
 	additionalProperties: false,
