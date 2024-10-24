@@ -6,25 +6,25 @@
 	import { Icons } from '$lib/icons';
 	import Icon from '../Icon.svelte';
 
-	export let title = undefined;
-	export let shown = false;
+	export let title = writable(undefined);
+	export let visible = false;
 
 	let menuButton;
 	let navMenu;
 
 	$: toggle = () => {
-		shown = !shown;
+		visible = !visible;
 	};
 
 	$: hide = (event) => {
 		if (
-			shown &&
+			visible &&
 			navMenu &&
 			menuButton &&
 			!navMenu.contains(event.target) &&
 			!menuButton.contains(event.target)
 		) {
-			shown = false;
+			visible = false;
 		}
 	};
 
@@ -34,7 +34,7 @@
 	});
 </script>
 
-<svelte:window on:click={hide} />
+<svelte:window on:click={hide} on:linkClick={() => visible = false} />
 
 <nav
 	class="sticky left-0 top-0 z-50 mb-2 h-[69px] w-full border-b border-b-stone-400 bg-stone-50 bg-opacity-95 px-4 py-3 backdrop-blur transition-colors duration-300 ease-in-out dark:border-b-stone-700 dark:bg-stone-950"
@@ -42,7 +42,7 @@
 	<div class="container mx-auto flex items-center justify-between">
 		<div class="flex w-full flex-row items-center">
 			<button class="btn-outline relative h-10 w-10" bind:this={menuButton} on:click={toggle}>
-				{#if shown}
+				{#if visible}
 					<div in:send out:receive class="absolute left-[3px] top-[3px] h-8 w-8">
 						<Icon icon={Icons.Close} alt="Close" width="32" height="32" />
 					</div>
@@ -61,7 +61,7 @@
 			<slot name="right"></slot>
 		</div>
 	</div>
-	{#if shown}
+	{#if visible}
 		<div
 			in:slide={{ axis: 'x' }}
 			out:slide={{ axis: 'x' }}

@@ -3,15 +3,15 @@
 	import { fade } from 'svelte/transition';
 
 	let button;
-	export let shown = false;
+	export let visible = false;
 
 	$: toggle = () => {
-		shown = !shown;
+		visible = !visible;
 	};
 
 	$: hide = (event) => {
-		if (shown && !button.contains(event.target)) {
-			shown = false;
+		if (visible && !button.contains(event.target)) {
+			visible = false;
 		}
 	};
 </script>
@@ -22,7 +22,7 @@
 	<div role="button" bind:this={button} on:click={toggle} on:keydown={() => {}} tabindex="-1">
 		<slot name="button" />
 	</div>
-	{#if shown}
+	{#if visible}
 		<div in:fade={{ delay: 0, duration: 100 }}>
 			<slot name="popup" />
 		</div>

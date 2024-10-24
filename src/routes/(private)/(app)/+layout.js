@@ -4,7 +4,7 @@ export const load = ({ data }) => {
 	return {
 		...data,
 		navigationBar: {
-			shown: false,
+			visible: false,
 			pageTitle: writable('')
 		}
 	};

@@ -9,20 +9,20 @@
 
 	export let supabase;
 
-	let shown;
+	let visible;
 </script>
 
-<Popup {shown}>
+<Popup {visible}>
 	<svelte:fragment slot="button">
 		<div
-			class="flex flex-row items-center rounded-full {shown
+			class="flex flex-row items-center rounded-full {visible
 				? 'bg-stone-800 dark:bg-stone-700'
 				: 'bg-stone-700 dark:bg-stone-800'} p-0.5 hover:cursor-pointer hover:bg-stone-800 dark:hover:bg-stone-700"
 		>
 			<Avatar />
 			<div class="px-0.5">
 				<Icon
-					icon={shown ? Icons.ArrowDropup : Icons.ArrowDropdown}
+					icon={visible ? Icons.ArrowDropup : Icons.ArrowDropdown}
 					alt="Dropdown"
 					width="32"
 					height="32"

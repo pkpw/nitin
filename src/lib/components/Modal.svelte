@@ -1,18 +1,17 @@
 <script>
-	import { writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 
 	let dialog;
-	export let shown = writable(false);
+	export let visible = false;
 
 	$: hide = (event) => {
-		if (shown && !dialog.contains(event.target)) {
-			shown.set(false);
+		if (visible && !dialog.contains(event.target)) {
+			visible = false;
 		}
 	};
 </script>
 
-{#if $shown}
+{#if visible}
 	<button
 		in:fade={{ delay: 0, duration: 150 }}
 		out:fade={{ delay: 0, duration: 150 }}

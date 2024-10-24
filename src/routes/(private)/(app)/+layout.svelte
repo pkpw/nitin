@@ -7,13 +7,13 @@
 	$: ({ supabase, navigationBar } = data);
 </script>
 
-<NavigationBar title={navigationBar.pageTitle} shown={navigationBar.shown}>
+<NavigationBar title={navigationBar.pageTitle} visible={navigationBar.visible}>
 	<svelte:fragment slot="left"></svelte:fragment>
 	<svelte:fragment slot="right">
 		<AccountDropdown {supabase} />
 	</svelte:fragment>
 	<svelte:fragment slot="menu">
-		<NavigationMenu on:linkClick={() => (navigationBar.shown = false)} />
+		<NavigationMenu />
 	</svelte:fragment>
 </NavigationBar>
 
