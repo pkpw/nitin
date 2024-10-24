@@ -68,7 +68,7 @@
 						</div>
 					{/if}
 				</div>
-				<button class="btn-primary w-full">
+				<button class="btn-primary w-full rounded-full">
 					{#if $delayed}
 						<div in:fade>
 							<Spinner />

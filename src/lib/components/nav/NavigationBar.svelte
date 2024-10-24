@@ -41,7 +41,7 @@
 >
 	<div class="container mx-auto flex items-center justify-between">
 		<div class="flex w-full flex-row items-center">
-			<button class="btn-outline relative h-10 w-10" bind:this={menuButton} on:click={toggle}>
+			<button class="btn-outline rounded-md relative h-10 w-10" bind:this={menuButton} on:click={toggle}>
 				{#if visible}
 					<div in:send out:receive class="absolute left-[3px] top-[3px] h-8 w-8">
 						<Icon icon={Icons.Close} alt="Close" width="32" height="32" />

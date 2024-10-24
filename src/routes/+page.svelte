@@ -9,7 +9,7 @@
 <NavigationBar>
 	<svelte:fragment slot="left"></svelte:fragment>
 	<svelte:fragment slot="right">
-		<a class="btn-primary w-20" href="/auth">Login</a>
+		<a class="btn-primary w-20 rounded-full" href="/auth">Login</a>
 	</svelte:fragment>
 	<svelte:fragment slot="menu"></svelte:fragment>
 </NavigationBar>

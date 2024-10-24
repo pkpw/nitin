@@ -15,19 +15,19 @@ body {
 }
 
 .btn-primary {
-	@apply btn rounded-full bg-blue-500 text-stone-50 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-blue-600 focus:scale-105;
+	@apply btn bg-blue-500 text-stone-50 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-blue-600 focus:scale-105;
 }
 
 .btn-secondary {
-	@apply btn rounded-full bg-stone-700 text-stone-50 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-stone-500 focus:scale-105;
+	@apply btn bg-stone-700 text-stone-50 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-stone-800 dark:hover:bg-stone-500 focus:scale-105;
 }
 
 .btn-danger {
-	@apply btn rounded-full bg-red-500 text-stone-50 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-red-600 focus:scale-105;
+	@apply btn bg-red-500 text-stone-50 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-red-600 focus:scale-105;
 }
 
 .btn-outline {
-	@apply btn rounded-md border border-stone-400 bg-stone-50 hover:cursor-pointer hover:border-stone-700 hover:bg-stone-100 dark:border-stone-700 dark:bg-stone-950 dark:hover:border-stone-500 hover:dark:bg-stone-800;
+	@apply btn border border-stone-400 bg-stone-50 hover:cursor-pointer hover:border-stone-700 hover:bg-stone-100 dark:border-stone-700 dark:bg-stone-950 dark:hover:border-stone-500 hover:dark:bg-stone-800;
 }
 
 .form-label {

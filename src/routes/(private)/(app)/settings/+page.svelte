@@ -63,7 +63,7 @@
 </svelte:head>
 
 <div class="mb-8 flex flex-row items-center">
-	<a class="btn-outline mr-8 h-10 w-10" href={previous_page ?? '/dashboard'}>
+	<a class="btn-outline mr-8 h-10 w-10 rounded-md" href={previous_page ?? '/dashboard'}>
 		<div class="absolute left-[3px] top-[3px] h-8 w-8">
 			<Icon icon={Icons.BackArrow} alt="Back" width="32" height="32" />
 		</div>
@@ -144,7 +144,7 @@
 		</div>
 	</div> -->
 	<div class="float-right flex flex-col items-center justify-end">
-		<button class="btn-primary"
+		<button class="btn-primary rounded-full"
 			>{#if $delayed}
 				<div in:fade>
 					<Spinner />
