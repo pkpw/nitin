@@ -1,4 +1,5 @@
-import { getSupabaseClient } from '$lib/supabase-client';
+import { createServerClient } from '@supabase/ssr';
+import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public';
 
 const supabase = async ({ event, resolve }) => {
 	/**
@@ -6,7 +7,7 @@ const supabase = async ({ event, resolve }) => {
 	 *
 	 * The Supabase client gets the Auth token from the request cookies.
 	 */
-	event.locals.supabase = getSupabaseClient({
+	event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
 		cookies: {
 			getAll: () => event.cookies.getAll(),
 			/**

@@ -1,9 +1,15 @@
 <script>
-	import { setUserProfile, getUserProfile } from '$lib/profile';
+	import { setContext } from 'svelte';
+	import { Profile } from '$lib/profile.js';
+	import { Theme } from '$lib/theme.js';
 
 	export let data;
-	$: ({ profile, supabase, navigationBar } = data);
-	$: setUserProfile(profile);
+
+	let profile = Profile.get();
+	$: Profile.set(data.profile);
+	$: Theme.set(data.profile.theme);
+
+	Profile.set_context();
 </script>
 
 <slot />

@@ -1,52 +1,65 @@
-import { getContext, setContext } from 'svelte';
 import { writable } from 'svelte/store';
-import { getSupabaseClient } from './supabase-client';
+import { getContext, setContext } from 'svelte';
+import { browser } from '$app/environment';
+import { goto } from '$app/navigation';
+import { Theme } from './theme';
 
-const USER_PROFILE_CONTEXT = 'user_profile';
+const CONTEXT = 'user_profile';
+const profile = writable({});
 
-export class Profile {
-	constructor(initialData) {
-		this.userId = initialData.id;
-		this.email = initialData.email;
-		this.firstName = initialData.first_name;
-		this.lastName = initialData.last_name;
-		this.isOnboarded = initialData.is_onboarded;
-	}
-
-	static async retrieve(userId) {
-		const supabase = getSupabaseClient();
-		return await supabase.from('profiles').select().eq('id', userId).single();
-	}
-
-	async save() {
-		const supabase = getSupabaseClient();
-		return await supabase
+export const Profile = {
+	retrieve: async (supabase, id) => {
+		return supabase.from('profiles').select().eq('id', id).single();
+	},
+	save: async (supabase, id, data) => {
+		return supabase
 			.from('profiles')
 			.update({
-				id: this.id,
-				email: this.email,
-				first_name: this.firstName,
-				last_name: this.lastName,
-				is_onboarded: this.isOnboarded
+				...data,
+				updated_at: new Date().toISOString()
 			})
-			.eq('id', this.userId);
+			.eq('id', id);
+	},
+	onboard: async (supabase, id, firstName, lastName, avatarColor) => {
+		const date = new Date().toISOString();
+		return supabase
+			.from('profiles')
+			.update({
+				first_name: firstName,
+				last_name: lastName,
+				is_onboarded: true,
+				onboarded_at: date,
+				avatar_color: avatarColor,
+				updated_at: date
+			})
+			.eq('id', id);
+	},
+	get: () => {
+		if (browser) {
+			return getContext(CONTEXT);
+		}
+	},
+	set: (data) => {
+		if (browser) {
+			profile.set(data);
+		}
+	},
+	set_context: () => {
+		if (browser) {
+			setContext(CONTEXT, profile);
+		}
+	},
+	logout: async (supabase) => {
+		if (!browser) {
+			return;
+		}
+
+		const { error } = await supabase.auth.signOut();
+		if (error) {
+			error(500, { message: 'Unable to logout' });
+		}
+
+		Theme.set('system');
+		goto('/auth');
 	}
-
-	async completeOnboarding(firstName, lastName) {
-		const supabase = getSupabaseClient();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.isOnboarded = true;
-		return await this.save(supabase);
-	}
-}
-
-export function setUserProfile(initialData) {
-	const userProfile = writable(initialData ? new Profile(initialData) : undefined);
-	setContext(USER_PROFILE_CONTEXT, userProfile);
-	return userProfile;
-}
-
-export function getUserProfile() {
-	return getContext(USER_PROFILE_CONTEXT);
-}
+};
