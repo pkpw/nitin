@@ -8,6 +8,7 @@
 	import Popup from '../Popup.svelte';
 
 	export let supabase;
+	const profile = Profile.get();
 
 	let visible;
 </script>
@@ -19,7 +20,7 @@
 				? 'bg-stone-800 dark:bg-stone-700'
 				: 'bg-stone-700 dark:bg-stone-800'} p-0.5 hover:cursor-pointer hover:bg-stone-800 dark:hover:bg-stone-700"
 		>
-			<Avatar />
+			<Avatar color={$profile?.avatar_color} />
 			<div class="px-0.5">
 				<Icon
 					icon={visible ? Icons.ArrowDropup : Icons.ArrowDropdown}

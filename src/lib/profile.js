@@ -20,14 +20,17 @@ export const Profile = {
 			})
 			.eq('id', id);
 	},
-	onboard: async (supabase, id, firstName, lastName) => {
+	onboard: async (supabase, id, firstName, lastName, avatarColor) => {
+		const date = new Date().toISOString();
 		return supabase
 			.from('profiles')
 			.update({
 				first_name: firstName,
 				last_name: lastName,
 				is_onboarded: true,
-				onboarded_at: new Date().toISOString()
+				onboarded_at: date,
+				avatar_color: avatarColor,
+				updated_at: date
 			})
 			.eq('id', id);
 	},
