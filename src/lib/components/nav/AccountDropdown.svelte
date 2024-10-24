@@ -1,53 +1,37 @@
 <script>
-	import { goto, invalidate } from '$app/navigation';
-	import { get, writable } from 'svelte/store';
-	import { fade } from 'svelte/transition';
 	import { Profile } from '$lib/profile';
 
 	import { Icons } from '$lib/icons';
 	import Icon from '../Icon.svelte';
 
 	import Avatar from '../Avatar.svelte';
+	import Popup from '../Popup.svelte';
 
 	export let supabase;
 
-	let dropdownButton;
-	let enabled = false;
-
-	$: toggle = () => {
-		enabled = !enabled;
-	};
-
-	$: hide = (event) => {
-		if (enabled && !dropdownButton.contains(event.target)) {
-			enabled = false;
-		}
-	};
+	let shown;
 </script>
 
-<svelte:window on:click={hide} />
-
-<div class="relative inline-block">
-	<button bind:this={dropdownButton} on:click={toggle}>
+<Popup {shown}>
+	<svelte:fragment slot="button">
 		<div
-			class="flex flex-row items-center rounded-full {enabled
+			class="flex flex-row items-center rounded-full {shown
 				? 'bg-stone-800 dark:bg-stone-700'
 				: 'bg-stone-700 dark:bg-stone-800'} p-0.5 hover:cursor-pointer hover:bg-stone-800 dark:hover:bg-stone-700"
 		>
 			<Avatar />
 			<div class="px-0.5">
 				<Icon
-					icon={enabled ? Icons.ArrowDropup : Icons.ArrowDropdown}
+					icon={shown ? Icons.ArrowDropup : Icons.ArrowDropdown}
 					alt="Dropdown"
 					width="32"
 					height="32"
 				/>
 			</div>
 		</div>
-	</button>
-	{#if enabled}
+	</svelte:fragment>
+	<svelte:fragment slot="popup">
 		<div
-			in:fade={{ delay: 0, duration: 100 }}
 			class="absolute right-0 m-2 mt-2 min-w-32 rounded-md border border-stone-700 bg-stone-50 dark:border-stone-500 dark:bg-stone-950"
 		>
 			<a
@@ -65,5 +49,5 @@
 				Logout
 			</button>
 		</div>
-	{/if}
-</div>
+	</svelte:fragment>
+</Popup>
