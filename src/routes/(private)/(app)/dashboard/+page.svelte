@@ -18,4 +18,3 @@
 			class="mx-2 h-6 w-24 animate-pulse rounded-2xl bg-stone-400 dark:bg-stone-700"
 		></div>{/if}.
 </h2>
-<div class="h-screen"></div>
