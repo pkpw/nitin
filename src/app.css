@@ -43,5 +43,19 @@ body {
 }
 
 .checkbox {
-	@apply h-5 w-5 appearance-none rounded-md border border-stone-700 bg-stone-900 outline-none checked:border-transparent checked:bg-blue-500 hover:border-stone-500 hover:checked:border-stone-300 focus:border-stone-500 checked:focus:border-stone-300;
+	@apply flex h-6 w-6 appearance-none items-center justify-center rounded-md border border-stone-400 bg-stone-50 outline-none checked:border-stone-700 checked:bg-blue-500 hover:border-stone-700 hover:bg-stone-100 hover:checked:bg-blue-600 focus:border-stone-700 focus:bg-stone-100 focus:checked:border-stone-700 focus:checked:bg-blue-600 dark:border-stone-700 dark:bg-stone-950 dark:checked:border-stone-300 dark:checked:bg-blue-500 dark:hover:border-stone-500 dark:hover:bg-stone-800 dark:hover:checked:border-stone-300 dark:hover:checked:bg-blue-600 dark:focus:border-stone-500 dark:focus:bg-stone-800 dark:focus:checked:border-stone-300 dark:focus:checked:bg-blue-500;
+}
+
+.checkbox::before {
+	@apply block h-3 w-3 scale-0 bg-white transition-all duration-150 ease-in-out;
+	content: '';
+	clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.checkbox:checked::before {
+	@apply scale-100;
+}
+
+.colorpicker {
+	@apply appearance-none bg-stone-50 dark:bg-stone-950;
 }
