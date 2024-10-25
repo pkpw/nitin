@@ -1,26 +1,34 @@
 <script>
+	import { getSupabaseClient } from '$lib/supabase-client.js';
 	import { onMount } from 'svelte';
   
 	export let width = 300;
 	export let height = 300;
 	export let color = '#333'; // Default pen color
 	export let background = '#fff';
+
+	export let data;
+	$: ({ supabase } = data);
+
   
+	//Canvas Drawing Vars
 	let canvas;
 	let context;
 	let isDrawing = false;
 	let start = { x: 0, y: 0 };
 	let canvasOffsetTop = 0;
 	let canvasOffsetLeft = 0;
-	let dataURL;
 	let line_width = 3;
-	
+
+	//Canvas saving/loading vars
+	let flashcard_id = '46de8ae6-0823-4c26-8501-5f14f98b29f9';
+	let canvas_id = true;
 
 	onMount(() => {
 	  context = canvas.getContext('2d');
 	  context.lineWidth = line_width;
 	  updateCanvasSize();
-	  loadDrawing(); // Load saved drawing when the component mounts
+	  fetchSavedCanvas();
 	});
   
 	$: if (context) {
@@ -30,7 +38,7 @@
 	function handleStart({ offsetX, offsetY }) {
 	  if (color === background) {
 		context.clearRect(0, 0, width, height);
-		saveDrawing(); // Automatically save after clearing
+		saveCanvasToSupabase(); // Automatically save after clearing
 	  } else {
 		isDrawing = true;
 		start = { x: offsetX, y: offsetY };
@@ -64,29 +72,13 @@
   
 	function handleEnd() {
 	  isDrawing = false;
-	  saveDrawing(); // Automatically save on drawing move
+	  saveCanvasToSupabase(); // Automatically save
 	}
-  
-	function saveDrawing() {
-	  dataURL = canvas.toDataURL();
-	  localStorage.setItem('savedDrawing', dataURL);
-	}
-  
-	function loadDrawing() {
-	  const savedDataURL = localStorage.getItem('savedDrawing');
-	  if (savedDataURL) {
-		const img = new Image();
-		img.onload = () => {
-		  context.clearRect(0, 0, width, height);
-		  context.drawImage(img, 0, 0);
-		};
-		img.src = savedDataURL;
-	  }
-	}
-  
+
+	
 	function clearDrawing() {
 	  context.clearRect(0, 0, width, height);
-	  localStorage.removeItem('savedDrawing'); // Remove the saved drawing from local storage
+	  saveCanvasToSupabase();
 	}
   
 	function updateCanvasSize() {
@@ -94,7 +86,10 @@
 	  canvasOffsetTop = top;
 	  canvasOffsetLeft = left;
 	}
-  
+
+
+	
+	//Pen adjustment Functions
 	function handleColorChange(event) {
 	  color = event.target.value; // Update the pen color based on the selected color
 	}
@@ -114,6 +109,76 @@
 	const erase = () => context.globalCompositeOperation = 'destination-out'
 	const pen = () => context.globalCompositeOperation = 'source-over'
 
+
+
+	//-----------------------------------------------------------------------------------
+	// Canvas - Database saving
+	//-----------------------------------------------------------------------------------
+	function drawSavedCanvas(imageData) {
+		const ctx = canvas.getContext('2d');
+		const img = new Image();
+		img.onload = () => {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.drawImage(img, 0, 0);
+		};
+		img.src = imageData;
+	}
+
+	async function fetchSavedCanvas(){
+		const { data, error } = await supabase
+			.from('canvas')
+			.select('canvas_data')
+			.where('id', 0)
+			.single();
+
+		if (error) {
+			console.error('Error fetching canvas data', error);
+		} else {
+			console.log(data);
+			drawSavedCanvas(data.canvas_data);
+		}
+	}
+
+	async function saveCanvasToSupabase() {
+		const canvasDataURL = canvas.toDataURL();
+		console.log(canvasDataURL);
+
+		if (!supabase) {
+			console.error('Supabase client is not initialized');
+			return; 
+		}
+
+		const { data: updateData, error: updateError } = await supabase
+			.from('canvas')
+			.update({
+				canvas_data: canvasDataURL,
+			})
+			.eq('id', 0);
+
+		if (updateError) {
+			console.error('Error saving canvas to database', updateError);
+		} else {
+			console.log('Update successful:', updateData);
+			
+			const { data: fetchedData, error: fetchError } = await supabase
+				.from('canvas')
+				.select('canvas_data')
+				.eq('id', 0);
+			
+			if (fetchError) {
+				console.error('Error fetching updated canvas data', fetchError);
+			} else {
+				console.log('Updated canvas_data:', fetchedData);
+				if (fetchedData.length > 0) {
+					console.log('Fetched canvas_data:', fetchedData.canvas_data);
+				} else {
+					console.log('No data found for id 0');
+				}
+			}
+		}
+	}
+
+  
   </script>
   
   <svelte:window on:resize={updateCanvasSize} />
@@ -131,6 +196,7 @@
 	on:touchend={handleEnd}
 	on:touchmove={e => handleMove({ offsetX: e.touches[0].clientX - canvasOffsetLeft, offsetY: e.touches[0].clientY - canvasOffsetTop })}
   />
+
     <!-- Color Picker -->
 	<button class="bg-sky-500 text-white text-lg font-semibold hover:underline p-2 rounded"on:click={pen}>Pen</button>
 	<button class="bg-sky-500 text-white text-lg font-semibold hover:underline p-2 rounded" on:click={erase}>Eraser</button>
@@ -150,12 +216,6 @@
 	<div class="slidecontainer">
 		<input type="range" min="0" max="1" value="1" step = "0.1" class="slider" id="opacityslider" on:click={changeLineOpacity}>
 	</div>
-	{#if dataURL}
-		<div style="word-wrap: break-word; max-width: 300px; margin-top: 10px;">
-			<strong>Data URL:</strong> {dataURL}
-		</div>
-	{/if}
-  
   
 
   
