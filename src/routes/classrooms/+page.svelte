@@ -3,7 +3,6 @@
     export let data;
     const { form, errors, constraints, message, enhance } = superForm(data.form);
     let classrooms = data.classrooms;
-
     let userId = '';
     let role = 'student'; // Default role is set to 'student'
 
@@ -52,9 +51,8 @@
 
 <div class="bg-black min-h-screen p-8 text-white">
     <a href="/" class="text-blue-500">Back</a>
-
     <h1 class="text-3xl font-bold text-white">Create a New Classroom</h1>
-    <form method="POST" use:enhance class="mt-6">
+    <form method="POST" action="?/createClassroom" use:enhance class="mt-6">
       <label class="block text-lg">
         Classroom Name
         <input
@@ -72,7 +70,6 @@
       {/if}
       <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md">Create Classroom</button>
     </form>
-
     <h2 class="text-2xl mt-8 font-semibold text-white">Existing Classrooms</h2>
     <ul class="mt-4 space-y-4">
       {#each classrooms as classroom}
@@ -88,7 +85,7 @@
 
           <div class="mt-4">
             <h3 class="text-lg font-semibold">Add User to Classroom</h3>
-            <form on:submit|preventDefault={() => addUserToClassroom(classroom.id, userId, role)}>
+            <form method="POST" action="?/addUser" on:submit|preventDefault={() => addUserToClassroom(classroom.id, userId, role)}>
                 <label>
                   User ID:
                   <input type="text" bind:value={userId} required class="mt-1 p-2 border border-white rounded-md w-full bg-black text-white" />

@@ -2,7 +2,6 @@
     export let data;
     let classroom = data.classroom;
     let profiles = data.profiles; // The list of profiles
-
     let selectedUserId = '';
     let role = 'student'; // Default role is set to 'student'
 
