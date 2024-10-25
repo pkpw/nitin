@@ -2,8 +2,8 @@ import BackArrowLight from '$lib/assets/icons/light/arrow_back_24dp_0C0A09_FILL1
 import BackArrowDark from '$lib/assets/icons/dark/arrow_back_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 import CloseLight from '$lib/assets/icons/light/close_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
 import CloseDark from '$lib/assets/icons/dark/close_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
-import DragIndicatorLight from '$lib/assets/icons/light/drag_indicator_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg'
-import DragIndicatorDark from '$lib/assets/icons/dark/drag_indicator_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg'
+import DragIndicatorLight from '$lib/assets/icons/light/drag_indicator_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
+import DragIndicatorDark from '$lib/assets/icons/dark/drag_indicator_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 import EditLight from '$lib/assets/icons/light/edit_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
 import EditDark from '$lib/assets/icons/dark/edit_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 import MailLight from '$lib/assets/icons/light/mail_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
