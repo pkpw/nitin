@@ -30,3 +30,24 @@ export async function DELETE({ params, locals: { supabase } }) {
 
   return json({ success: true });
 }
+
+export async function POST({ request, locals: { supabase } }) {
+  const { userIds } = await request.json();
+  
+  const { data: profiles, error } = await supabase
+      .from('profiles')
+      .select('id, first_name, last_name, email')
+      .in('id', userIds);  
+  
+  if (error) {
+      return {
+          status: 500,
+          body: { error: 'Error fetching user profiles' }
+      };
+  }
+
+  return {
+      status: 200,
+      body: { profiles }
+  };
+}

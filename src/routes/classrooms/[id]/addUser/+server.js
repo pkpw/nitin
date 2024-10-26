@@ -1,5 +1,5 @@
 import { addUserToClassroom } from '$lib/classroom';
-import { json } from '@sveltejs/kit';
+import { json, error } from '@sveltejs/kit';
 
 export const POST = async ({ request, locals: { supabase }, params }) => {
     try {
@@ -37,3 +37,39 @@ export const POST = async ({ request, locals: { supabase }, params }) => {
         return json({ error: 'Internal Server Error' }, { status: 500 });
     }
 };
+
+export async function GET({ params, locals: { supabase } }) {
+    const classroomId = params.id;
+
+    // Fetch the classroom data
+    const { data: classroom, error: classroomError } = await supabase
+        .from('classrooms')
+        .select('instructors, students')
+        .eq('id', classroomId)
+        .single();
+
+    if (classroomError || !classroom) {
+        throw error(404, { message: 'Classroom not found' });
+    }
+
+    // Fetch profiles for instructors and students
+    const userIds = [...classroom.instructors, ...classroom.students];
+
+    const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, first_name, last_name, email')
+        .in('id', userIds);
+
+    if (profilesError) {
+        throw error(500, { message: 'Failed to fetch user profiles' });
+    }
+
+    // Separate instructors and students
+    const instructors = profiles.filter(profile => classroom.instructors.includes(profile.id));
+    const students = profiles.filter(profile => classroom.students.includes(profile.id));
+
+    return {
+        status: 200,
+        body: { instructors, students }
+    };
+}
