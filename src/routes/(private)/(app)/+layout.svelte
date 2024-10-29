@@ -18,7 +18,7 @@
 </NavigationBar>
 
 <div class="mb-8 mt-8 px-4">
-	<div class="container relative mx-auto">
+	<div class="container relative mx-auto h-[calc(100vh-133px)]">
 		<slot />
 	</div>
 </div>
