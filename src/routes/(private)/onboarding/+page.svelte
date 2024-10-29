@@ -47,7 +47,7 @@
 </svelte:head>
 
 <div
-	class="mx-auto flex min-h-screen flex-col items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat"
+	class="mx-auto flex min-h-screen flex-col items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat px-4"
 	style="background-image: url('{Background}');"
 >
 	<h1 class="pb-16 text-center text-5xl font-medium text-white font-serif">Let's Get Started.</h1>
