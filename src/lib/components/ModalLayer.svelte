@@ -24,10 +24,10 @@
 	<div
 		in:fade={{ delay: 0, duration: 150 }}
 		out:fade={{ delay: 0, duration: 150 }}
-		class="fixed left-0 top-0 z-50 flex h-screen w-screen flex-col items-center justify-center overflow-clip bg-stone-950 bg-opacity-80 backdrop-blur-sm"
+		class="fixed left-0 top-0 z-50 flex h-screen w-screen flex-col items-center justify-center overflow-clip bg-stone-950 bg-opacity-80 backdrop-blur-sm p-4"
 	>
 		<div
-			class="m-2 max-w-sm rounded-2xl border border-stone-400 bg-stone-50 p-8 dark:border-stone-700 dark:bg-stone-950"
+			class="w-full md:max-w-sm rounded-2xl border border-stone-400 bg-stone-50 p-8 dark:border-stone-700 dark:bg-stone-950"
 		>
 			<svelte:component this={open.modal} />
 			<div class="flex flex-row items-center justify-end space-x-4 pt-4">
