@@ -2,22 +2,22 @@ import { getContext, setContext } from 'svelte';
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 
-const CONTEXT = 'profile'
+const CONTEXT = 'profile';
 
 function initialize() {
 	if (browser) {
-		setContext(CONTEXT, writable())
+		setContext(CONTEXT, writable());
 	}
 }
 
 function get() {
 	if (browser) {
-		const profileStore = getContext(CONTEXT)
+		const profileStore = getContext(CONTEXT);
 		if (!profileStore) {
-			throw new Error('Profile not initialized!')
+			throw new Error('Profile not initialized!');
 		}
 
-		return profileStore
+		return profileStore;
 	}
 }
 

@@ -50,7 +50,7 @@ function themeStore() {
 				}
 			});
 		}
-	}
+	};
 }
 
 export const Theme = {

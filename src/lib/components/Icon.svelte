@@ -9,7 +9,7 @@
 		height = 32;
 
 	const theme = Theme.get();
-	$: dark_mode = Theme.isDarkMode($theme)
+	$: dark_mode = Theme.isDarkMode($theme);
 
 	onMount(() => {
 		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {

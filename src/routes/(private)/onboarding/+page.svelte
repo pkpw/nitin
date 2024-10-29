@@ -38,8 +38,8 @@
 	});
 
 	onMount(() => {
-		theme.set(Theme.AUTOMATIC)
-	})
+		theme.set(Theme.AUTOMATIC);
+	});
 </script>
 
 <svelte:head>

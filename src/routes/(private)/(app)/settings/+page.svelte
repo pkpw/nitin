@@ -20,7 +20,7 @@
 	$: ({ supabase, navigationBar } = data);
 	$: navigationBar.pageTitle.set('Settings');
 
-	const theme = Theme.get()
+	const theme = Theme.get();
 	const modals = Modals.get();
 	const profile = Profile.get();
 
@@ -47,7 +47,7 @@
 	// Double binding for $form.theme and Theme.get()
 	// Theme.get() returns a writable, so call get() to retrieve the value
 	// Using the writable itself causes the form to become tainted even though it was unchanged
-	let themeDropdown
+	let themeDropdown;
 	$: $form.theme = themeDropdown;
 	$: theme?.set(themeDropdown);
 

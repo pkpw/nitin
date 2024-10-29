@@ -11,9 +11,9 @@
 	const theme = Theme.get();
 
 	onMount(() => {
-		profile.set(data.profile)
-		theme.set(data.profile.theme)
-	})
+		profile.set(data.profile);
+		theme.set(data.profile.theme);
+	});
 </script>
 
 <slot />
