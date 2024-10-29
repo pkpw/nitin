@@ -17,8 +17,8 @@
 	</svelte:fragment>
 </NavigationBar>
 
-<div class="mb-64 mt-8 px-4">
-	<div class="container mx-auto">
+<div class="mb-8 mt-8 px-4">
+	<div class="container relative mx-auto">
 		<slot />
 	</div>
 </div>

@@ -9,39 +9,38 @@
 	import { Icons } from '$lib/icons.js';
 	import Icon from '$lib/components/Icon.svelte';
 
+	import { Modals } from '$lib/modals.js';
+	import TaintedModal from '$lib/components/modals/TaintedModal.svelte';
+
 	import Spinner from '$lib/components/Spinner.svelte';
-	import Modal from '$lib/components/Modal.svelte';
 
 	import Background from '$lib/assets/Background.avif';
+	import { onMount } from 'svelte';
 
 	export let data;
 	$: ({ supabase, navigationBar } = data);
-	$: Theme.set('system');
 
 	const profile = Profile.get();
+	const modals = Modals.get();
+	const theme = Theme.get();
 
-	let is_tainted_modal_visible = false;
-	let on_modal_confirm = null;
-	const { form, errors, constraints, message, enhance, delayed } = superForm(data.form, {
+	const { form, errors, constraints, message, enhance, delayed, isTainted } = superForm(data.form, {
 		resetForm: false,
 		clearOnSubmit: 'none',
 		taintedMessage: () => {
 			return new Promise((resolve) => {
-				on_modal_confirm = resolve;
-				is_tainted_modal_visible = true;
+				modals.trigger({
+					type: Modals.CONTINUE,
+					modal: TaintedModal,
+					response: resolve
+				});
 			});
 		}
 	});
 
-	function handle_modal_submit(confirmed) {
-		if (on_modal_confirm) {
-			on_modal_confirm(confirmed);
-			on_modal_confirm = null;
-		}
-
-		// Hide modal
-		is_tainted_modal_visible = false;
-	}
+	onMount(() => {
+		theme.set(Theme.AUTOMATIC)
+	})
 </script>
 
 <svelte:head>
@@ -105,19 +104,9 @@
 			If you don't intend to set up a new account at <span class="font-medium"
 				>{$profile?.email}</span
 			>, you can
-			<button
-				class="text-blue-500 hover:text-blue-600 hover:underline"
-				on:click={Profile.logout(supabase)}>login with another email.</button
+			<a class="text-blue-500 hover:text-blue-600 hover:underline" href="/logout"
+				>login with another email.</a
 			>
 		</p>
 	</form>
 </div>
-
-<Modal visible={is_tainted_modal_visible}>
-	<h1 class="justify-items-start text-xl font-semibold">Unsaved Changes</h1>
-	<p class="text-lg">Any changes you have made are unsaved.</p>
-	<div class="flex flex-row items-center justify-end space-x-4 pt-4">
-		<button on:click={() => handle_modal_submit(false)} class="btn-secondary">Cancel</button>
-		<button on:click={() => handle_modal_submit(true)} class="btn-primary">Continue</button>
-	</div>
-</Modal>

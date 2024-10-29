@@ -4,12 +4,17 @@
 	import { onMount } from 'svelte';
 	import { invalidate } from '$app/navigation';
 	import { Theme } from '$lib/theme';
+	import { Modals } from '$lib/modals';
+	import ModalLayer from '$lib/components/ModalLayer.svelte';
 
 	export let data;
 	$: ({ session, supabase } = data);
 
-	Theme.set('system');
-	Theme.set_context();
+	Modals.initialize();
+
+	Theme.initialize();
+	const theme = Theme.get();
+	$: theme?.switch();
 
 	onMount(() => {
 		// Invalid user session if it expires
@@ -21,7 +26,7 @@
 
 		// Add event event listener for device color scheme preferences
 		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-			Theme.update();
+			theme.switch();
 		});
 
 		return () => data.subscription.unsubscribe();
@@ -31,7 +36,6 @@
 <svelte:head>
 	<script isinline>
 		const theme = sessionStorage.theme;
-		// update_theme has to be duplicated here because it is not yet bundled at this point
 		if (
 			theme === 'dark' ||
 			(theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
@@ -42,5 +46,7 @@
 		}
 	</script>
 </svelte:head>
+
+<ModalLayer />
 
 <slot />

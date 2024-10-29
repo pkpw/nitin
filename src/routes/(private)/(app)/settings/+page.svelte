@@ -10,25 +10,36 @@
 	import { Icons } from '$lib/icons.js';
 	import Icon from '$lib/components/Icon.svelte';
 
+	import { Modals } from '$lib/modals.js';
+	import TaintedModal from '$lib/components/modals/TaintedModal.svelte';
+
 	import NavigationBar from '$lib/components/nav/NavigationBar.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
-	import Modal from '$lib/components/Modal.svelte';
 
 	export let data;
 	$: ({ supabase, navigationBar } = data);
 	$: navigationBar.pageTitle.set('Settings');
 
+	const theme = Theme.get()
+	const modals = Modals.get();
 	const profile = Profile.get();
 
-	let is_tainted_modal_visible = false;
-	let on_modal_confirm = null;
 	const { form, errors, constraints, message, enhance, delayed } = superForm(data.form, {
 		resetForm: false,
 		clearOnSubmit: 'none',
 		taintedMessage: () => {
 			return new Promise((resolve) => {
-				on_modal_confirm = resolve;
-				is_tainted_modal_visible = true;
+				modals.trigger({
+					type: Modals.CONTINUE,
+					modal: TaintedModal,
+					response: (confirmed) => {
+						if (confirmed) {
+							themeDropdown = $profile.theme;
+						}
+
+						resolve(confirmed);
+					}
+				});
 			});
 		}
 	});
@@ -36,26 +47,15 @@
 	// Double binding for $form.theme and Theme.get()
 	// Theme.get() returns a writable, so call get() to retrieve the value
 	// Using the writable itself causes the form to become tainted even though it was unchanged
-	let theme = get(Theme.get());
-	$: $form.theme = theme;
-	$: Theme.set(theme);
+	let themeDropdown
+	$: $form.theme = themeDropdown;
+	$: theme?.set(themeDropdown);
 
 	// Get previous page for back button
 	let previous_page;
 	afterNavigate(({ from }) => {
 		previous_page = from?.url.pathname;
 	});
-
-	function handle_modal_submit(confirmed) {
-		if (on_modal_confirm) {
-			on_modal_confirm(confirmed);
-			on_modal_confirm = null;
-			theme = $profile.theme; // Reset theme
-		}
-
-		// Hide modal
-		is_tainted_modal_visible = false;
-	}
 </script>
 
 <svelte:head>
@@ -117,7 +117,7 @@
 	</div>
 	<div class="mb-4 flex items-center justify-between">
 		<label for="theme" class="form-label">Theme</label>
-		<select class="form-dropdown" id="theme" name="theme" bind:value={theme}>
+		<select class="form-dropdown" id="theme" name="theme" bind:value={themeDropdown}>
 			<option value="system">Automatic</option>
 			<option value="light">Light</option>
 			<option value="dark">Dark</option>
@@ -158,12 +158,3 @@
 		{/if}
 	</div>
 </form>
-
-<Modal visible={is_tainted_modal_visible}>
-	<h1 class="justify-items-start text-xl font-semibold">Unsaved Changes</h1>
-	<p class="text-lg">Any changes you have made are unsaved.</p>
-	<div class="flex flex-row items-center justify-end space-x-4 pt-4">
-		<button on:click={() => handle_modal_submit(false)} class="btn-secondary">Cancel</button>
-		<button on:click={() => handle_modal_submit(true)} class="btn-primary">Continue</button>
-	</div>
-</Modal>
