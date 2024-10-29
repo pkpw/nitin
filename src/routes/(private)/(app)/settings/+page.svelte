@@ -1,6 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
+	import { get, writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms';
 	import { goto, afterNavigate } from '$app/navigation';
@@ -47,7 +46,7 @@
 	// Double binding for $form.theme and Theme.get()
 	// Theme.get() returns a writable, so call get() to retrieve the value
 	// Using the writable itself causes the form to become tainted even though it was unchanged
-	let themeDropdown;
+	let themeDropdown = get(theme);
 	$: $form.theme = themeDropdown;
 	$: theme?.set(themeDropdown);
 
