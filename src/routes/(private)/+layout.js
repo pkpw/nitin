@@ -1,11 +1,11 @@
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ data, fetch, url }) {
-	const res = await fetch('/profile', {
+	const response = await fetch('/profile', {
 		method: 'GET'
 	});
 
-	const { data: profile, error } = await res.json();
+	const { data: profile, error } = await response.json();
 	if (error) {
 		error(500, { message: 'Unable to fetch profile' });
 	}
