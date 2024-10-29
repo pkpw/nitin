@@ -11,10 +11,14 @@
 	const theme = Theme.get();
 	$: dark_mode = Theme.isDarkMode($theme);
 
+	let loaded = false
+
 	onMount(() => {
 		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
 			dark_mode = Theme.isDarkMode($theme);
 		});
+
+		loaded = true
 	});
 
 	export let hover = writable(false);
@@ -22,10 +26,14 @@
 
 <div role="img" on:mouseenter={() => hover.set(true)} on:mouseleave={() => hover.set(false)}>
 	<picture class="pointer-events-none object-cover">
-		{#if dark_mode}
-			<img src={$hover && icon.hover ? icon.hover.dark : icon.dark} {alt} {width} {height} />
+		{#if loaded}
+			{#if dark_mode}
+				<img src={$hover && icon.hover ? icon.hover.dark : icon.dark} {alt} {width} {height} />
+			{:else}
+				<img src={$hover && icon.hover ? icon.hover.light : icon.light} {alt} {width} {height} />
+			{/if}
 		{:else}
-			<img src={$hover && icon.hover ? icon.hover.light : icon.light} {alt} {width} {height} />
+			<div class="w-[{width}px] h-[{height}px]"></div>
 		{/if}
 	</picture>
 </div>
