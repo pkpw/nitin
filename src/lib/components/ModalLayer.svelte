@@ -29,7 +29,7 @@
 		<div
 			class="m-2 w-full min-w-80 max-w-sm rounded-2xl border border-stone-400 bg-stone-50 p-4 dark:border-stone-700 dark:bg-stone-950"
 		>
-			<svelte:component this={open.modal} />
+			<svelte:component this={open.modal} {...open?.props} />
 			<div class="flex flex-row items-center justify-end space-x-4 pt-4">
 				{#if open.type === Modals.CONTINUE || open.type === Modals.SAVE}
 					<button class="btn-secondary rounded-full" on:click={() => close(false)}>Cancel</button>
@@ -42,26 +42,5 @@
 				{/if}
 			</div>
 		</div>
-
-		<!-- <div
-		bind:this={dialog}
-		class="m-1 rounded-md border border-stone-400 bg-stone-50 p-8 dark:border-stone-700 dark:bg-stone-950"
-	>
-		<slot />
-	</div>
-	<div class="flex flex-row items-center justify-end space-x-4 pt-4">
-		{#if type == Modal.CONTINUE}
-			<button on:click={on_close()} class="btn-secondary">Cancel</button>
-			<button on:click={on_close(true)} class="btn-primary">Continue</button>
-		{:else if type == Modal.DELETE}
-			<button on:click={() => on_close()} class="btn-secondary">Cancel</button>
-			<button on:click={() => on_close(true)} class="btn-danger">Delete</button>
-		{:else if type == Modal.SAVE}
-			<button on:click={() => on_close()} class="btn-secondary">Cancel</button>
-			<button on:click={() => on_close(true)} class="btn-primary">Save</button>
-		{:else}
-			<button on:click={() => on_close(true)} class="btn-primary">Ok</button>
-		{/if}
-	</div> -->
 	</div>
 {/if}
