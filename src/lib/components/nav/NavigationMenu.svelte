@@ -14,7 +14,7 @@
 		>
 			<a
 				href={item.href}
-				class="flex h-24 flex-row items-center rounded-full px-20 font-semibold transition-all duration-300 will-change-transform hover:cursor-pointer"
+				class="flex h-20 flex-row items-center rounded-full px-20 font-semibold transition-all duration-300 will-change-transform hover:cursor-pointer"
 				on:click={() => dispatch('linkClick')}
 			>
 				<div class="mr-4 h-8 w-8">
@@ -27,7 +27,7 @@
 	<div class="w-11/12 rounded-3xl hover:bg-stone-200 dark:hover:bg-stone-800">
 		<a
 			href="/canvas"
-			class="flex h-24 flex-row items-center rounded-full px-20 font-semibold transition-all duration-300 will-change-transform hover:cursor-pointer"
+			class="flex h-20 flex-row items-center rounded-full px-20 font-semibold transition-all duration-300 will-change-transform hover:cursor-pointer"
 			>Canvas</a
 		>
 	</div>
