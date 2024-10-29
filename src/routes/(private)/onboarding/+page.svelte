@@ -1,4 +1,5 @@
 <script>
+	import { onMount } from 'svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import { writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
@@ -12,10 +13,8 @@
 	import { Modals } from '$lib/modals.js';
 	import TaintedModal from '$lib/components/modals/TaintedModal.svelte';
 
-	import Spinner from '$lib/components/Spinner.svelte';
-
 	import Background from '$lib/assets/Background.avif';
-	import { onMount } from 'svelte';
+	import Spinner from '$lib/components/Spinner.svelte';
 
 	export let data;
 	$: ({ supabase, navigationBar } = data);
