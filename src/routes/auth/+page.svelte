@@ -22,12 +22,11 @@
 	class="min-w-screen mx-auto flex min-h-screen flex-col items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat"
 	style="background-image: url('{Background}');"
 >
-	<div class="mx-auto max-w-sm p-4">
+	<div class="mx-2">
 		{#if $message}
-			<h1 class="pb-20 text-center text-4xl font-bold text-white">You're all set!</h1>
 			<div
 				in:fade
-				class="rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 text-center backdrop-blur dark:border-stone-700 dark:bg-stone-950"
+				class="mx-auto max-w-sm rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 text-center backdrop-blur dark:border-stone-700 dark:bg-stone-950"
 			>
 				<div class="relative mx-auto mb-8 w-fit">
 					<div
@@ -42,12 +41,12 @@
 					</div>
 				</div>
 				<h1 class="text-xl font-semibold">Check your inbox</h1>
-				<p class="text-lg">A sign in link has been sent to your email.</p>
+				<p class="text-lg">A sign in link has been sent to<br /> your email.</p>
 			</div>
 		{:else}
-			<h1 class="pb-20 text-center text-4xl font-bold text-white">Study smarter today.</h1>
+			<h1 class="pb-10 text-center font-serif text-6xl text-white">Study smarter<br /> today.</h1>
 			<form
-				class="rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 backdrop-blur dark:border-stone-700 dark:bg-stone-950"
+				class="mx-auto max-w-sm rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 backdrop-blur dark:border-stone-700 dark:bg-stone-950"
 				method="POST"
 				use:enhance
 			>
