@@ -37,7 +37,7 @@
 <svelte:window on:click={hide} />
 
 <nav
-	class="sticky left-0 top-0 z-30 h-[69px] w-full border-b border-b-stone-400 bg-stone-50 bg-opacity-95 px-4 py-3 backdrop-blur transition-colors duration-300 ease-in-out dark:border-b-stone-700 dark:bg-stone-950"
+	class="sticky left-0 top-0 z-40 h-[69px] w-full border-b border-b-stone-400 bg-stone-50/85 px-4 py-3 backdrop-blur transition-colors duration-300 ease-in-out dark:border-b-stone-700 dark:bg-stone-950/85"
 >
 	<div class="container mx-auto flex items-center justify-between">
 		<div class="flex w-full flex-row items-center">

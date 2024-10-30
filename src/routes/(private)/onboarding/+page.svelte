@@ -29,7 +29,6 @@
 		taintedMessage: () => {
 			return new Promise((resolve) => {
 				modals.trigger({
-					type: Modals.CONTINUE,
 					modal: TaintedModal,
 					response: resolve
 				});
@@ -50,7 +49,7 @@
 	class="mx-auto flex min-h-screen flex-col items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat px-4"
 	style="background-image: url('{Background}');"
 >
-	<h1 class="pb-16 text-center text-5xl font-medium text-white font-serif">Let's Get Started.</h1>
+	<h1 class="pb-16 text-center font-serif text-5xl font-medium text-white">Let's Get Started.</h1>
 	<form
 		class="mx-auto max-w-80 rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 backdrop-blur dark:border-stone-700 dark:bg-stone-950"
 		method="POST"

@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ data, fetch, url }) {
-	const response = await fetch('/profile', {
+	const response = await fetch('/api/profile', {
 		method: 'GET'
 	});
 

@@ -1,12 +1,19 @@
 <script>
 	import { writable } from 'svelte/store';
+	import { Modals } from '$lib/modals';
 
 	import { Icons } from '$lib/icons';
 	import Icon from '../Icon.svelte';
 
 	import Popup from '../Popup.svelte';
+	import DeleteModal from '../modals/decks/DeleteModal.svelte';
+	import ModalLayer from '../ModalLayer.svelte';
+	import RenameModal from '../modals/decks/RenameModal.svelte';
 
-	export let id;
+	export let deck, data;
+	$: deleteForm = data.deleteForm
+
+	const modals = Modals.get();
 
 	let visible = writable(false);
 </script>
@@ -15,8 +22,8 @@
 	<svelte:fragment slot="button">
 		<button
 			class="relative h-10 w-10 rounded-full {$visible
-				? 'bg-stone-950/50 dark:bg-stone-50/50'
-				: ''} transition-colors duration-150 ease-in-out hover:bg-stone-950/50 dark:hover:bg-stone-50/50"
+				? 'bg-stone-50/50'
+				: ''} transition-colors duration-150 ease-in-out hover:bg-stone-50/50"
 		>
 			<div class="absolute left-[4px] top-[4px] h-8 w-8">
 				<Icon icon={Icons.MoreVert} alt="More" width="32" height="32" />
@@ -29,12 +36,24 @@
 		>
 			<button
 				class="flex w-full items-center space-x-2 border-b border-b-stone-700 p-4 hover:bg-stone-100 dark:border-b-stone-500 dark:hover:bg-stone-800"
+				on:click={() =>
+					modals.trigger({
+						modal: RenameModal,
+						props: { data: data.renameForm, deck },
+						response: async (confirmed) => {}
+					})}
 			>
 				<Icon icon={Icons.Edit} alt="Rename" width="24" height="24" />
 				<span>Rename</span>
 			</button>
 			<button
 				class="flex w-full items-center space-x-2 p-4 hover:bg-stone-100 dark:hover:bg-stone-800"
+				on:click={() =>
+					modals.trigger({
+						modal: DeleteModal,
+						props: { data, deck },
+						response: async (confirmed) => {}
+					})}
 			>
 				<Icon icon={Icons.Delete} alt="Delete" width="24" height="24" />
 				<span>Delete</span>

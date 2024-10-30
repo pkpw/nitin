@@ -24,11 +24,4 @@
 			</a>
 		</div>
 	{/each}
-	<div class="w-11/12 rounded-3xl hover:bg-stone-200 dark:hover:bg-stone-800">
-		<a
-			href="/canvas"
-			class="flex h-20 flex-row items-center rounded-full px-20 font-semibold transition-all duration-300 will-change-transform hover:cursor-pointer"
-			>Canvas</a
-		>
-	</div>
 </div>

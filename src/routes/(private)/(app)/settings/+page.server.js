@@ -1,5 +1,5 @@
-import { fail, redirect } from '@sveltejs/kit';
-import { message, superValidate } from 'sveltekit-superforms';
+import { redirect } from '@sveltejs/kit';
+import { fail, message, superValidate } from 'sveltekit-superforms';
 import { schemasafe } from 'sveltekit-superforms/adapters';
 import { schema } from './form.js';
 import { Profile } from '$lib/profile.js';

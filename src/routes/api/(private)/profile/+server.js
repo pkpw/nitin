@@ -1,7 +1,7 @@
 import { Profile } from '$lib/profile.js';
 import { json } from '@sveltejs/kit';
 
-export const GET = async ({ locals: { supabase, safeGetSession } }) => {
+export async function GET({ locals: { supabase, safeGetSession } }) {
 	const { session } = await safeGetSession();
 	if (!session) {
 		return json({ error: 'No user session' });
@@ -13,4 +13,4 @@ export const GET = async ({ locals: { supabase, safeGetSession } }) => {
 	}
 
 	return json({ data: data });
-};
+}

@@ -18,8 +18,10 @@
 </script>
 
 <div
-	class="flex h-10 min-h-10 w-10 min-w-10 items-center justify-center rounded-full text-center {$profile ? '' : 'animate-pulse'} bg-stone-400 dark:bg-stone-600"
-	style="{$profile ? `background-color: ${color} !important;` : ''}"
+	class="flex h-10 min-h-10 w-10 min-w-10 items-center justify-center rounded-full text-center {$profile
+		? ''
+		: 'animate-pulse'} bg-stone-400 dark:bg-stone-600"
+	style={$profile ? `background-color: ${color} !important;` : ''}
 >
 	<span class="text-lg font-extrabold text-white"
 		>{#if $profile}

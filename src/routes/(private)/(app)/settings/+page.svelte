@@ -29,7 +29,6 @@
 		taintedMessage: () => {
 			return new Promise((resolve) => {
 				modals.trigger({
-					type: Modals.CONTINUE,
 					modal: TaintedModal,
 					response: (confirmed) => {
 						if (confirmed) {

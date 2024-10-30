@@ -9,7 +9,6 @@
 	import Avatar from '../Avatar.svelte';
 	import Popup from '../Popup.svelte';
 
-	export let supabase;
 	const profile = Profile.get();
 
 	let visible = writable(false);
