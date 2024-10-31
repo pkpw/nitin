@@ -147,6 +147,11 @@ ALTER TABLE "public"."profiles" OWNER TO "postgres";
 
 
 ALTER TABLE ONLY "public"."decks"
+    ADD CONSTRAINT "decks_id_key" UNIQUE ("id");
+
+
+
+ALTER TABLE ONLY "public"."decks"
     ADD CONSTRAINT "decks_pkey" PRIMARY KEY ("id", "owner_id");
 
 
@@ -168,6 +173,11 @@ ALTER TABLE ONLY "public"."profiles"
 
 ALTER TABLE ONLY "public"."decks"
     ADD CONSTRAINT "decks_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "public"."profiles"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."flashcards"
+    ADD CONSTRAINT "flashcards_deck_id_fkey" FOREIGN KEY ("deck_id") REFERENCES "public"."decks"("id") ON DELETE CASCADE;
 
 
 
