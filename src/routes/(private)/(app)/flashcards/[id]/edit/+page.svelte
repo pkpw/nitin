@@ -32,7 +32,7 @@
 	<svelte:fragment slot="left"></svelte:fragment>
 	<svelte:fragment slot="right">
 		<!-- Replace with Participants dropdown -->
-		<AccountDropdown {supabase} />
+		<AccountDropdown />
 		<!-- Cloud Connection Indicator -->
 	</svelte:fragment>
 	<svelte:fragment slot="menu">
