@@ -6,8 +6,8 @@
 	import { Icons } from './icons';
 	import Icon from './Icon.svelte';
 
-	import ArrowDropup from '$lib/assets/icons/arrow_drop_up_32dp_FAFAF9_FILL1_wght400_GRAD0_opsz40.svg'
-	import ArrowDropdown from '$lib/assets/icons/arrow_drop_down_32dp_FAFAF9_FILL1_wght400_GRAD0_opsz40.svg'
+	import ArrowDropup from '$lib/assets/icons/arrow_drop_up_32dp_FAFAF9_FILL1_wght400_GRAD0_opsz40.svg';
+	import ArrowDropdown from '$lib/assets/icons/arrow_drop_down_32dp_FAFAF9_FILL1_wght400_GRAD0_opsz40.svg';
 
 	import Avatar from './Avatar.svelte';
 	import Popup from './Popup.svelte';
@@ -26,12 +26,7 @@
 		>
 			<Avatar color={$profile?.avatar_color} />
 			<div class="px-0.5">
-				<img
-					src={$visible ? ArrowDropup : ArrowDropdown}
-					alt="Dropdown"
-					width="32"
-					height="32"
-				/>
+				<img src={$visible ? ArrowDropup : ArrowDropdown} alt="Dropdown" width="32" height="32" />
 			</div>
 		</div>
 	</svelte:fragment>

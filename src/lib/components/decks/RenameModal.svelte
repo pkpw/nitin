@@ -14,7 +14,7 @@
 		validators: schemasafe(schema),
 		onUpdate: ({ form }) => {
 			if (form.valid) {
-				close(true)
+				close(true);
 			}
 		}
 	});
@@ -25,8 +25,8 @@
 
 	function handleKeyDown(event) {
 		if (event.key === 'Enter') {
-			event.preventDefault()
-			submit()
+			event.preventDefault();
+			submit();
 		}
 	}
 </script>
@@ -66,7 +66,6 @@
 		<button class="btn-secondary rounded-full" on:click|preventDefault={() => close(false)}
 			>Cancel</button
 		>
-		<button class="btn-primary rounded-full" type="submit">Save</button
-		>
+		<button class="btn-primary rounded-full" type="submit">Save</button>
 	</div>
 </form>

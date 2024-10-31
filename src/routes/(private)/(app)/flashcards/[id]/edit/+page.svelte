@@ -1,7 +1,7 @@
 <script>
 	import 'quill/dist/quill.snow.css';
 	// import 'quill/dist/quill.core.css';
-	
+
 	import { onMount } from 'svelte';
 
 	import Icon from '$lib/components/Icon.svelte';

@@ -17,13 +17,16 @@ export async function createDeck(supabase, owner_id, title) {
 		'#ec4899' // pink-500
 	];
 
-	const { count, countError } = await supabase.from('decks').select('*', { count: 'exact'}).eq('title', title)
+	const { count, countError } = await supabase
+		.from('decks')
+		.select('*', { count: 'exact' })
+		.eq('title', title);
 	if (countError) {
-		return { error: countError }
+		return { error: countError };
 	}
 
 	if (count > 0) {
-		return { error: 'Flashcard deck already exists!' }
+		return { error: 'Flashcard deck already exists!' };
 	}
 
 	const { data: deck, deckError } = await supabase
@@ -52,13 +55,16 @@ export async function deleteDeck(supabase, id, owner_id) {
 }
 
 export async function renameDeck(supabase, id, owner_id, title) {
-	const { count, countError } = await supabase.from('decks').select('*', { count: 'exact'}).eq('title', title)
+	const { count, countError } = await supabase
+		.from('decks')
+		.select('*', { count: 'exact' })
+		.eq('title', title);
 	if (countError) {
-		return { error: countError }
+		return { error: countError };
 	}
 
 	if (count > 0) {
-		return { error: 'Flashcard deck already exists!' }
+		return { error: 'Flashcard deck already exists!' };
 	}
 
 	return supabase

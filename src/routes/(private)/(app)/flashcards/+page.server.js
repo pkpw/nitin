@@ -43,7 +43,7 @@ export const actions = {
 		const { error } = await db.createDeck(supabase, session.user.id, form.data.title);
 		if (error) {
 			if (error == 'Flashcard deck already exists!') {
-				return setError(form, 'title', error)
+				return setError(form, 'title', error);
 			} else {
 				return fail(400, { form });
 			}
@@ -77,7 +77,7 @@ export const actions = {
 		const { error } = await db.renameDeck(supabase, form.data.id, session.user.id, form.data.title);
 		if (error) {
 			if (error == 'Flashcard deck already exists!') {
-				return setError(form, 'title', error)
+				return setError(form, 'title', error);
 			} else {
 				return fail(400, { form });
 			}
