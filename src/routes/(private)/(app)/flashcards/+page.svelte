@@ -47,8 +47,8 @@
 <h1 class="pb-8 text-4xl font-bold">My Flashcards</h1>
 
 {#if decks?.length > 0}
-{#each decks as deck}
-		<div class="grid place-items-center gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+	<div class="grid place-items-center gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+		{#each decks as deck}
 			<div
 				class="h-[450px] w-full min-w-80 max-w-sm overflow-hidden rounded-lg border border-stone-400 bg-stone-50 dark:border-stone-700 dark:bg-stone-950"
 			>
@@ -87,10 +87,10 @@
 					</div>
 				</div>
 			</div>
-		</div>
 		{/each}
-	{:else}
-		<div class="my-24 text-center">
-			<h1 class="text-xl text-stone-400">Press the + button to create a new flashcard deck.</h1>
-		</div>
-	{/if}
+	</div>
+{:else}
+	<div class="my-24 text-center">
+		<h1 class="text-xl text-stone-400">Press the + button to create a new flashcard deck.</h1>
+	</div>
+{/if}
