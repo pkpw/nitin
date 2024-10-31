@@ -128,7 +128,7 @@
 		const { data, error } = await supabase
 			.from('canvas')
 			.select('canvas_data')
-			.where('id', 0)
+			.eq('id', 0)
 			.single();
 
 		if (error) {
@@ -157,9 +157,7 @@
 
 		if (updateError) {
 			console.error('Error saving canvas to database', updateError);
-		} else {
-			console.log('Update successful:', updateData);
-			
+		} else { 
 			const { data: fetchedData, error: fetchError } = await supabase
 				.from('canvas')
 				.select('canvas_data')

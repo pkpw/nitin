@@ -1,9 +1,13 @@
 <script>
 	import { superForm } from 'sveltekit-superforms';
 	import { fade } from 'svelte/transition';
-	import Mail from '$lib/assets/icons/mail_72dp_FAFAF9_FILL1_wght400_GRAD0_opsz48.svg';
-	import Error from '$lib/assets/icons/error_20dp_EF4444_FILL1_wght400_GRAD0_opsz20.svg';
+
+	import { Icons } from '$lib/icons.js';
+	import Icon from '$lib/components/Icon.svelte';
+
 	import Spinner from '$lib/components/Spinner.svelte';
+
+	import Background from '$lib/assets/Background.avif';
 
 	export let data;
 
@@ -14,17 +18,25 @@
 	<title>Nitin | Login</title>
 </svelte:head>
 
-<div class="mx-auto flex min-h-screen flex-col items-center justify-center overflow-hidden">
+<div
+	class="min-w-screen mx-auto flex min-h-screen flex-col items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat"
+	style="background-image: url('{Background}');"
+>
 	<div class="mx-auto max-w-sm p-4">
 		{#if $message}
 			<h1 class="pb-20 text-center text-4xl font-bold text-white">You're all set!</h1>
-			<div in:fade class="rounded-md border border-stone-700 p-8 text-center text-white">
+			<div
+				in:fade
+				class="rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 text-center backdrop-blur dark:border-stone-700 dark:bg-stone-950"
+			>
 				<div class="relative mx-auto mb-8 w-fit">
-					<div class="rounded-full border border-stone-700 p-8">
-						<img src={Mail} alt="Email" width="72" height="72" />
+					<div
+						class="rounded-full border border-stone-400 bg-stone-100 p-8 dark:border-stone-700 dark:bg-stone-950"
+					>
+						<Icon icon={Icons.Mail} alt="Email" width="72" height="72" />
 						<div class="absolute right-7 top-8 flex items-center justify-center">
 							<div class="flex h-6 w-6 items-center justify-center rounded-full bg-red-500">
-								<span class="text-sm">1</span>
+								<span class="text-sm text-white">1</span>
 							</div>
 						</div>
 					</div>
@@ -34,7 +46,11 @@
 			</div>
 		{:else}
 			<h1 class="pb-20 text-center text-4xl font-bold text-white">Study smarter today.</h1>
-			<form class="rounded-md border border-stone-700 p-8" method="POST" use:enhance>
+			<form
+				class="rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 backdrop-blur dark:border-stone-700 dark:bg-stone-950"
+				method="POST"
+				use:enhance
+			>
 				<div class="mb-4">
 					<input
 						class="form-input"
@@ -47,12 +63,12 @@
 					/>
 					{#if $errors.email}
 						<div in:fade class="mt-1 flex items-center justify-start">
-							<img src={Error} alt="Error" />
+							<Icon icon={Icons.Error} alt="Error" width="20" height="20" />
 							<span class="ml-2 text-sm font-semibold text-red-500">Email is not valid.</span>
 						</div>
 					{/if}
 				</div>
-				<button class="btn">
+				<button class="btn-primary w-full">
 					{#if $delayed}
 						<div in:fade>
 							<Spinner />
@@ -61,7 +77,7 @@
 						Continue with email
 					{/if}
 				</button>
-				<p class="mt-8 text-center text-sm text-stone-400">
+				<p class="mt-8 text-center text-sm text-stone-500 dark:text-stone-400">
 					By clicking continue, you acknowledge and agree to the <a
 						class="text-blue-500 hover:text-blue-600 hover:underline"
 						href="/terms-of-service"
