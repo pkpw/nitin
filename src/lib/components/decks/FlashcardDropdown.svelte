@@ -1,19 +1,18 @@
 <script>
 	import { writable } from 'svelte/store';
-	import { Modals } from '$lib/modals';
 
-	import { Icons } from '$lib/icons';
+	import { Icons } from '$lib/components/icons';
 	import Icon from '../Icon.svelte';
 
+	import { useModals } from '$lib/stores/modals';
+	import DeleteModal from './DeleteModal.svelte';
+	import RenameModal from './RenameModal.svelte';
+
 	import Popup from '../Popup.svelte';
-	import DeleteModal from '../modals/decks/DeleteModal.svelte';
-	import ModalLayer from '../ModalLayer.svelte';
-	import RenameModal from '../modals/decks/RenameModal.svelte';
 
 	export let deck, data;
-	$: deleteForm = data.deleteForm
 
-	const modals = Modals.get();
+	const modals = useModals();
 
 	let visible = writable(false);
 </script>
@@ -51,7 +50,7 @@
 				on:click={() =>
 					modals.trigger({
 						modal: DeleteModal,
-						props: { data, deck },
+						props: { data: data.deleteForm, deck },
 						response: async (confirmed) => {}
 					})}
 			>

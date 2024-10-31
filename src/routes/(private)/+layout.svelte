@@ -1,14 +1,13 @@
 <script>
-	import { onMount, setContext } from 'svelte';
-	import { Profile } from '$lib/profile.js';
-	import { Theme } from '$lib/theme.js';
+	import { useTheme } from '$lib/stores/theme.js';
+	import { setProfile, useProfile } from '$lib/stores/profile.js';
 
 	export let data;
 
-	Profile.initialize();
+	setProfile();
 
-	const profile = Profile.get();
-	const theme = Theme.get();
+	const theme = useTheme();
+	const profile = useProfile();
 
 	$: profile?.set(data.profile);
 	$: theme?.set(data.profile.theme);

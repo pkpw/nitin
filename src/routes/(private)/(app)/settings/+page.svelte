@@ -1,38 +1,37 @@
 <script>
-	import { get, writable } from 'svelte/store';
+	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms';
 	import { goto, afterNavigate } from '$app/navigation';
-	import { Profile } from '$lib/profile.js';
-	import { Theme } from '$lib/theme.js';
+	import { useTheme } from '$lib/stores/theme.js';
+	import { useProfile } from '$lib/stores/profile.js';
 
-	import { Icons } from '$lib/icons.js';
+	import { Icons } from '$lib/components/icons.js';
 	import Icon from '$lib/components/Icon.svelte';
 
-	import { Modals } from '$lib/modals.js';
-	import TaintedModal from '$lib/components/modals/TaintedModal.svelte';
+	import { useModals } from '$lib/stores/modals.js';
+	import TaintedModal from '$lib/components/TaintedModal.svelte';
 
-	import NavigationBar from '$lib/components/nav/NavigationBar.svelte';
+	import NavigationBar from '$lib/components/NavBar.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
 
 	export let data;
-	$: ({ supabase, navigationBar } = data);
-	$: navigationBar.pageTitle.set('Settings');
+	$: ({ supabase, navBar } = data);
 
-	const theme = Theme.get();
-	const modals = Modals.get();
-	const profile = Profile.get();
+	const profile = useProfile();
+	const theme = useTheme();
+	const modals = useModals();
 
 	const { form, errors, constraints, message, enhance, delayed } = superForm(data.form, {
 		resetForm: false,
-		clearOnSubmit: 'none',
 		taintedMessage: () => {
 			return new Promise((resolve) => {
 				modals.trigger({
 					modal: TaintedModal,
-					response: (confirmed) => {
+					response: async (confirmed) => {
 						if (confirmed) {
-							themeDropdown = $profile.theme;
+							$form.theme = $profile.theme;
 						}
 
 						resolve(confirmed);
@@ -42,17 +41,20 @@
 		}
 	});
 
-	// Double binding for $form.theme and Theme.get()
-	// Theme.get() returns a writable, so call get() to retrieve the value
+	// When theme dropdown updates:
+	// 1. Update value in form
+	// 2. Update value in store
 	// Using the writable itself causes the form to become tainted even though it was unchanged
-	let themeDropdown = get(theme);
-	$: $form.theme = themeDropdown;
-	$: theme?.set(themeDropdown);
+	$: theme?.set($form.theme);
 
 	// Get previous page for back button
 	let previous_page;
 	afterNavigate(({ from }) => {
 		previous_page = from?.url.pathname;
+	});
+
+	onMount(() => {
+		navBar.title.set('Settings');
 	});
 </script>
 
@@ -115,7 +117,7 @@
 	</div>
 	<div class="mb-4 flex items-center justify-between">
 		<label for="theme" class="form-label">Theme</label>
-		<select class="form-dropdown" id="theme" name="theme" bind:value={themeDropdown}>
+		<select class="form-dropdown" id="theme" name="theme" bind:value={$form.theme}>
 			<option value="system">Automatic</option>
 			<option value="light">Light</option>
 			<option value="dark">Dark</option>
@@ -142,7 +144,7 @@
 		</div>
 	</div> -->
 	<div class="float-right flex flex-col items-center justify-end">
-		<button class="btn-primary rounded-full"
+		<button class="btn-primary rounded-full" type="submit"
 			>{#if $delayed}
 				<div in:fade>
 					<Spinner />

@@ -4,14 +4,15 @@
 	import { writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { goto } from '$app/navigation';
-	import { Profile } from '$lib/profile.js';
-	import { Theme } from '$lib/theme.js';
 
-	import { Icons } from '$lib/icons.js';
+	import { useProfile } from '$lib/stores/profile.js';
+	import { Theme, useTheme } from '$lib/stores/theme.js';
+
+	import { useModals } from '$lib/stores/modals.js';
+	import TaintedModal from '$lib/components/TaintedModal.svelte';
+
+	import { Icons } from '$lib/components/icons.js';
 	import Icon from '$lib/components/Icon.svelte';
-
-	import { Modals } from '$lib/modals.js';
-	import TaintedModal from '$lib/components/modals/TaintedModal.svelte';
 
 	import Background from '$lib/assets/Background.avif';
 	import Spinner from '$lib/components/Spinner.svelte';
@@ -19,9 +20,9 @@
 	export let data;
 	$: ({ supabase, navigationBar } = data);
 
-	const profile = Profile.get();
-	const modals = Modals.get();
-	const theme = Theme.get();
+	const profile = useProfile();
+	const theme = useTheme();
+	const modals = useModals();
 
 	const { form, errors, constraints, message, enhance, delayed, isTainted } = superForm(data.form, {
 		resetForm: false,
@@ -30,7 +31,7 @@
 			return new Promise((resolve) => {
 				modals.trigger({
 					modal: TaintedModal,
-					response: resolve
+					response: async (confirmed) => resolve(confirmed)
 				});
 			});
 		}
@@ -102,7 +103,7 @@
 			If you don't intend to set up a new account at <span class="font-medium"
 				>{$profile?.email}</span
 			>, you can
-			<a class="text-blue-500 hover:text-blue-600 hover:underline" href="/logout"
+			<a class="text-blue-500 hover:text-blue-600 hover:underline" href="/auth/logout"
 				>login with another email.</a
 			>
 		</p>

@@ -1,24 +1,20 @@
 <script>
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
-	import { Theme } from '$lib/theme';
+	import { useTheme } from '$lib/stores/theme';
 
 	export let icon,
 		alt = '',
 		width = 32,
 		height = 32;
 
-	const theme = Theme.get();
-	$: dark_mode = Theme.isDarkMode($theme);
-
-	let loaded = false
+	const theme = useTheme();
+	let darkMode,
+		loaded = false;
 
 	onMount(() => {
-		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-			dark_mode = Theme.isDarkMode($theme);
-		});
-
-		loaded = true
+		theme.isDarkMode.subscribe((value) => (darkMode = value));
+		loaded = true;
 	});
 
 	export let hover = writable(false);
@@ -27,13 +23,11 @@
 <div role="img" on:mouseenter={() => hover.set(true)} on:mouseleave={() => hover.set(false)}>
 	<picture class="pointer-events-none object-cover">
 		{#if loaded}
-			{#if dark_mode}
+			{#if darkMode}
 				<img src={$hover && icon.hover ? icon.hover.dark : icon.dark} {alt} {width} {height} />
 			{:else}
 				<img src={$hover && icon.hover ? icon.hover.light : icon.light} {alt} {width} {height} />
 			{/if}
-		{:else}
-			<div class="w-[{width}px] h-[{height}px]"></div>
 		{/if}
 	</picture>
 </div>

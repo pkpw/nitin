@@ -1,5 +1,5 @@
 <script>
-	import { Profile } from '$lib/profile.js';
+	import { useProfile } from '$lib/stores/profile';
 
 	const colors = [
 		'#ef4444', // red-500
@@ -14,7 +14,7 @@
 	];
 	export let color = colors[Math.floor(Math.random() * colors.length)];
 
-	const profile = Profile.get();
+	const profile = useProfile();
 </script>
 
 <div

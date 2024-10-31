@@ -1,26 +1,26 @@
 <script>
-	import { Profile } from '$lib/profile.js';
+	import { onMount } from 'svelte';
+	import { useProfile } from '$lib/stores/profile.js';
 
-	import { Icons } from '$lib/icons';
+	import { Icons } from '$lib/components/icons.js';
 	import Icon from '$lib/components/Icon.svelte';
 
-	import { Modals } from '$lib/modals';
-	import CreateModal from '$lib/components/modals/decks/CreateModal.svelte';
+	import { useModals } from '$lib/stores/modals.js';
+	import CreateModal from '$lib/components/decks/CreateModal.svelte';
 
 	import FlashcardDropdown from '$lib/components/decks/FlashcardDropdown.svelte';
 	import Edit from '$lib/assets/icons/dark/edit_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 	import Study from '$lib/assets/icons/dark/local_library_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
-	import { superForm } from 'sveltekit-superforms';
 
-	export let data, form;
-	$: ({ supabase, navigationBar, flashcard_decks, error } = data);
-	$: if (form) {
-		data.deleteForm = form
-	}
-	$: navigationBar.pageTitle.set('Flashcards');
+	export let data;
+	$: ({ supabase, navBar, decks } = data);
 
-	const modals = Modals.get();
-	const profile = Profile.get();
+	const profile = useProfile();
+	const modals = useModals();
+
+	onMount(() => {
+		navBar.title.set('Flashcards');
+	});
 </script>
 
 <svelte:head>
@@ -28,7 +28,7 @@
 </svelte:head>
 
 <div class="container pointer-events-none fixed left-auto top-0 z-30 h-screen">
-	<div class="pointer-events-auto sticky top-[82vh] float-right mr-6">
+	<div class="pointer-events-auto sticky top-[82vh] float-right mr-12 md:mr-6">
 		<button
 			on:click={() =>
 				modals.trigger({
@@ -46,9 +46,9 @@
 
 <h1 class="pb-8 text-4xl font-bold">My Flashcards</h1>
 
-<div class="grid place-items-center gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-	{#if flashcard_decks}
-		{#each flashcard_decks as deck}
+{#if decks?.length > 0}
+{#each decks as deck}
+		<div class="grid place-items-center gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
 			<div
 				class="h-[450px] w-full min-w-80 max-w-sm overflow-hidden rounded-lg border border-stone-400 bg-stone-50 dark:border-stone-700 dark:bg-stone-950"
 			>
@@ -59,7 +59,7 @@
     	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);"
 				>
 					<div class="self-end">
-						<FlashcardDropdown {deck} {data} />
+						<FlashcardDropdown {data} {deck} />
 					</div>
 
 					<h1 class="text-2xl font-semibold">{deck.title}</h1>
@@ -87,6 +87,10 @@
 					</div>
 				</div>
 			</div>
+		</div>
 		{/each}
+	{:else}
+		<div class="my-24 text-center">
+			<h1 class="text-xl text-stone-400">Press the + button to create a new flashcard deck.</h1>
+		</div>
 	{/if}
-</div>

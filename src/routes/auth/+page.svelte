@@ -2,7 +2,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { fade } from 'svelte/transition';
 
-	import { Icons } from '$lib/icons.js';
+	import { Icons } from '$lib/components/icons.js';
 	import Icon from '$lib/components/Icon.svelte';
 
 	import Spinner from '$lib/components/Spinner.svelte';

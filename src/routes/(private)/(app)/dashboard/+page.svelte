@@ -1,11 +1,15 @@
 <script>
-	import { Profile } from '$lib/profile.js';
+	import { onMount } from 'svelte';
+	import { useProfile } from '$lib/stores/profile.js';
 
 	export let data;
-	$: ({ supabase, navigationBar } = data);
-	$: navigationBar.pageTitle.set('Dashboard');
+	$: ({ supabase, navBar } = data);
 
-	const profile = Profile.get();
+	const profile = useProfile();
+
+	onMount(() => {
+		navBar.title.set('Dashboard');
+	});
 </script>
 
 <svelte:head>
@@ -14,7 +18,5 @@
 
 <h1 class="text-4xl font-bold">Dashboard</h1>
 <h2 class="flex flex-row items-center text-2xl">
-	Welcome back, {#if $profile}{$profile.first_name}{:else}<div
-			class="mx-2 h-6 w-24 animate-pulse rounded-2xl bg-stone-400 dark:bg-stone-700"
-		></div>{/if}.
+	Welcome back, {$profile.first_name}.
 </h2>
