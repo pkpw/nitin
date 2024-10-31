@@ -74,13 +74,13 @@
 					<div class="flex w-full flex-row space-x-4 pt-24">
 						<a class="btn-secondary w-full rounded-md" href="/flashcards/{deck.id}/study">
 							<div class="mr-4">
-								<img src={Study} alt="Study" width="32" height="32" />
+								<img src={Study} alt="" width="32" height="32" />
 							</div>
 							Study
 						</a>
 						<a class="btn-primary w-full rounded-md" href="/flashcards/{deck.id}/edit">
 							<div class="mr-4">
-								<img src={Edit} alt="Edit" width="32" height="32" />
+								<img src={Edit} alt="" width="32" height="32" />
 							</div>
 							Edit
 						</a>
