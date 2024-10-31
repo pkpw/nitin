@@ -63,7 +63,10 @@ export async function deleteDeck(supabase, id, owner_id) {
 }
 
 export async function renameDeck(supabase, id, owner_id, title) {
-	if (doesDeckExist(supabase, owner_id, title)) {
+	const { exists, error } = await doesDeckExist(supabase, owner_id, title)
+	if (error) {
+		return { error }
+	} else if (exists) {
 		return { error: 'Flashcard deck already exists!' };
 	}
 
