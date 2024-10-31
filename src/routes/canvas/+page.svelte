@@ -114,67 +114,6 @@
 	//-----------------------------------------------------------------------------------
 	// Canvas - Database saving
 	//-----------------------------------------------------------------------------------
-	function drawSavedCanvas(imageData) {
-		const ctx = canvas.getContext('2d');
-		const img = new Image();
-		img.onload = () => {
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.drawImage(img, 0, 0);
-		};
-		img.src = imageData;
-	}
-
-	async function fetchSavedCanvas(){
-		const { data, error } = await supabase
-			.from('canvas')
-			.select('canvas_data')
-			.eq('id', 0)
-			.single();
-
-		if (error) {
-			console.error('Error fetching canvas data', error);
-		} else {
-			console.log(data);
-			drawSavedCanvas(data.canvas_data);
-		}
-	}
-
-	async function saveCanvasToSupabase() {
-		const canvasDataURL = canvas.toDataURL();
-		console.log(canvasDataURL);
-
-		if (!supabase) {
-			console.error('Supabase client is not initialized');
-			return; 
-		}
-
-		const { data: updateData, error: updateError } = await supabase
-			.from('canvas')
-			.update({
-				canvas_data: canvasDataURL,
-			})
-			.eq('id', 0);
-
-		if (updateError) {
-			console.error('Error saving canvas to database', updateError);
-		} else { 
-			const { data: fetchedData, error: fetchError } = await supabase
-				.from('canvas')
-				.select('canvas_data')
-				.eq('id', 0);
-			
-			if (fetchError) {
-				console.error('Error fetching updated canvas data', fetchError);
-			} else {
-				console.log('Updated canvas_data:', fetchedData);
-				if (fetchedData.length > 0) {
-					console.log('Fetched canvas_data:', fetchedData.canvas_data);
-				} else {
-					console.log('No data found for id 0');
-				}
-			}
-		}
-	}
 
   
   </script>
