@@ -101,6 +101,34 @@ SET default_tablespace = '';
 SET default_table_access_method = "heap";
 
 
+CREATE TABLE IF NOT EXISTS "public"."decks" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "owner_id" "uuid" NOT NULL,
+    "title" "text",
+    "color" "text"
+);
+
+
+ALTER TABLE "public"."decks" OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."flashcards" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "title" "text",
+    "front" "json",
+    "back" "json",
+    "deck_id" "uuid" NOT NULL,
+    "order" bigint NOT NULL
+);
+
+
+ALTER TABLE "public"."flashcards" OWNER TO "postgres";
+
+
 CREATE TABLE IF NOT EXISTS "public"."profiles" (
     "id" "uuid" NOT NULL,
     "first_name" "text",
@@ -118,6 +146,16 @@ CREATE TABLE IF NOT EXISTS "public"."profiles" (
 ALTER TABLE "public"."profiles" OWNER TO "postgres";
 
 
+ALTER TABLE ONLY "public"."decks"
+    ADD CONSTRAINT "decks_pkey" PRIMARY KEY ("id", "owner_id");
+
+
+
+ALTER TABLE ONLY "public"."flashcards"
+    ADD CONSTRAINT "flashcards_pkey" PRIMARY KEY ("id", "deck_id");
+
+
+
 ALTER TABLE ONLY "public"."profiles"
     ADD CONSTRAINT "profiles_email_key" UNIQUE ("email");
 
@@ -128,8 +166,23 @@ ALTER TABLE ONLY "public"."profiles"
 
 
 
+ALTER TABLE ONLY "public"."decks"
+    ADD CONSTRAINT "decks_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "public"."profiles"("id") ON DELETE CASCADE;
+
+
+
 ALTER TABLE ONLY "public"."profiles"
     ADD CONSTRAINT "profiles_id_fkey" FOREIGN KEY ("id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+
+
+
+CREATE POLICY "Owners can modify their flashcard decks." ON "public"."decks" USING (("auth"."uid"() = "owner_id"));
+
+
+
+CREATE POLICY "Owners of a flashcard deck can modify the flashcards in it." ON "public"."flashcards" USING (("deck_id" IN ( SELECT "decks"."id"
+   FROM "public"."decks"
+  WHERE ("decks"."owner_id" = "auth"."uid"()))));
 
 
 
@@ -147,6 +200,12 @@ CREATE POLICY "Users can delete a profile." ON "public"."profiles" FOR DELETE TO
 
 CREATE POLICY "Users can update their own profile." ON "public"."profiles" FOR UPDATE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "id")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "id"));
 
+
+
+ALTER TABLE "public"."decks" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."flashcards" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."profiles" ENABLE ROW LEVEL SECURITY;
@@ -368,6 +427,18 @@ GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "service_role";
 
 
 
+
+
+
+GRANT ALL ON TABLE "public"."decks" TO "anon";
+GRANT ALL ON TABLE "public"."decks" TO "authenticated";
+GRANT ALL ON TABLE "public"."decks" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."flashcards" TO "anon";
+GRANT ALL ON TABLE "public"."flashcards" TO "authenticated";
+GRANT ALL ON TABLE "public"."flashcards" TO "service_role";
 
 
 

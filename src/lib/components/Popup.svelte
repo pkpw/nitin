@@ -1,17 +1,17 @@
 <script>
-	import { writable } from 'svelte/store';
+	import { get, writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 
 	let button;
-	export let visible = false;
+	export let visible = writable(false);
 
 	$: toggle = () => {
-		visible = !visible;
+		visible.update((v) => !v);
 	};
 
 	$: hide = (event) => {
-		if (visible && !button.contains(event.target)) {
-			visible = false;
+		if (get(visible) && !button.contains(event.target)) {
+			visible.set(false);
 		}
 	};
 </script>
@@ -22,7 +22,7 @@
 	<div role="button" bind:this={button} on:click={toggle} on:keydown={() => {}} tabindex="-1">
 		<slot name="button" />
 	</div>
-	{#if visible}
+	{#if $visible}
 		<div in:fade={{ delay: 0, duration: 100 }}>
 			<slot name="popup" />
 		</div>
