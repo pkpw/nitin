@@ -6,6 +6,7 @@
 	import { schemasafe } from 'sveltekit-superforms/adapters';
 	import { schema } from './createForm';
 	import { onMount } from 'svelte';
+	import Spinner from '../Spinner.svelte';
 
 	export let close, data;
 	const { form, errors, constraints, enhance, delayed, submit } = superForm(data, {
@@ -59,6 +60,14 @@
 		<button class="btn-secondary rounded-full" on:click|preventDefault={() => close(false)}
 			>Cancel</button
 		>
-		<button class="btn-primary rounded-full" type="submit">Create</button>
+		<button class="btn-primary rounded-full" type="submit">
+			{#if $delayed}
+				<div in:fade>
+					<Spinner />
+				</div>
+			{:else}
+				Create
+			{/if}
+		</button>
 	</div>
 </form>

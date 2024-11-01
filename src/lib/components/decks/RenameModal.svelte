@@ -8,6 +8,7 @@
 
 	import Icon from '$lib/components/Icon.svelte';
 	import { Icons } from '$lib/components/icons';
+	import Spinner from '../Spinner.svelte';
 
 	export let close, data, deck;
 	const { form, errors, constraints, enhance, delayed, submit } = superForm(data, {
@@ -66,6 +67,14 @@
 		<button class="btn-secondary rounded-full" on:click|preventDefault={() => close(false)}
 			>Cancel</button
 		>
-		<button class="btn-primary rounded-full" type="submit">Save</button>
+		<button class="btn-primary rounded-full" type="submit">
+			{#if $delayed}
+				<div in:fade>
+					<Spinner />
+				</div>
+			{:else}
+				Save
+			{/if}
+		</button>
 	</div>
 </form>

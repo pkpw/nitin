@@ -1,10 +1,13 @@
 <script>
 	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms';
 	import { schema } from './deleteForm';
 
 	import { Icons } from '$lib/components/icons';
 	import Icon from '$lib/components/Icon.svelte';
+
+	import Spinner from '../Spinner.svelte';
 
 	export let close, data, deck;
 	const { form, errors, constraints, enhance, delayed, submit } = superForm(data);
@@ -23,8 +26,14 @@
 		<button class="btn-secondary rounded-full" on:click|preventDefault={() => close(false)}
 			>Cancel</button
 		>
-		<button class="btn-danger rounded-full" type="submit" on:click={() => close(true)}
-			>Delete</button
-		>
+		<button class="btn-danger rounded-full" type="submit" on:click={() => close(true)}>
+			{#if $delayed}
+				<div in:fade>
+					<Spinner />
+				</div>
+			{:else}
+				Delete
+			{/if}
+		</button>
 	</div>
 </form>
