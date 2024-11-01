@@ -1,63 +1,22 @@
 import { getSupabaseClient } from './supabase-client';
 
-export async function getClassroomById(id, supabase) {
-  return await supabase
-    .from('classrooms')
-    .select('*')
-    .eq('id', id)
-    .single();
+// Function to get all classrooms from Supabase
+export async function getAllClassrooms() {
+  const supabase = getSupabaseClient();
+  const { data, error } = await supabase.from('classrooms').select('*');
+  return { data, error };
 }
 
-export async function getAllClassrooms(supabase) {
-  return await supabase.from('classrooms').select('*');
+// Function to create a new classroom in Supabase
+export async function createClassroom(name) {
+  const supabase = getSupabaseClient();
+  const { data, error } = await supabase.from('classrooms').insert({ name });
+  return { data, error };
 }
 
-export async function createClassroom(name, supabase) {
-  return await supabase
-    .from('classrooms')
-    .insert({ name });
-}
-
-export async function updateClassroom(id, name, supabase) {
-  return await supabase
-    .from('classrooms')
-    .update({ name })
-    .eq('id', id);
-}
-
-export async function deleteClassroom(id, supabase) {
-  return await supabase
-    .from('classrooms')
-    .delete()
-    .eq('id', id);
-}
-
-export async function addUserToClassroom(classroomId, userId, role, supabase) {
-    const column = role === 'instructor' ? 'instructors' : 'students';
-
-    const { data: classroom, error: fetchError } = await supabase
-        .from('classrooms')
-        .select(column)
-        .eq('id', classroomId)
-        .single();
-
-    if (fetchError || !classroom) {
-        return { error: 'Failed to fetch classroom data' };
-    }
-
-    const currentArray = classroom[column] || [];
-    const updatedArray = [...currentArray, userId]; 
-
-    const { data, error } = await supabase
-        .from('classrooms')
-        .update({ [column]: updatedArray }) 
-        .eq('id', classroomId);
-
-    return { data, error };
-}
-
-export async function getAllProfiles(supabase) {
-    return await supabase
-        .from('profiles')
-        .select('id, first_name, last_name');  
+// Delete a classroom
+export async function deleteClassroom(classroomId) {
+  const supabase = getSupabaseClient(); // Retrieve the client here
+  const { error } = await supabase.from('classrooms').delete().eq('id', classroomId);
+  return { error };
 }
