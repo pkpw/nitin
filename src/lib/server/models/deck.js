@@ -5,16 +5,20 @@ export async function getDecks(supabase, owner_id) {
 }
 
 export async function getDeck(supabase, id, owner_id) {
-	return supabase.from('decks').select().eq('id', id).eq('owner_id', owner_id)
+	return supabase.from('decks').select().eq('id', id).eq('owner_id', owner_id);
 }
 
 export async function doesDeckExist(supabase, owner_id, title) {
-	const { data, error } = await supabase.from('decks').select().eq('owner_id', owner_id).eq('title', title)
+	const { data, error } = await supabase
+		.from('decks')
+		.select()
+		.eq('owner_id', owner_id)
+		.eq('title', title);
 	if (error) {
-		return { error }
+		return { error };
 	}
 
-	return { exists: data && data.length > 0 }
+	return { exists: data && data.length > 0 };
 }
 
 export async function createDeck(supabase, owner_id, title) {
@@ -30,9 +34,9 @@ export async function createDeck(supabase, owner_id, title) {
 		'#ec4899' // pink-500
 	];
 
-	const { exists, error } = await doesDeckExist(supabase, owner_id, title)
+	const { exists, error } = await doesDeckExist(supabase, owner_id, title);
 	if (error) {
-		return { error }
+		return { error };
 	} else if (exists) {
 		return { error: 'Flashcard deck already exists!' };
 	}
@@ -63,9 +67,9 @@ export async function deleteDeck(supabase, id, owner_id) {
 }
 
 export async function renameDeck(supabase, id, owner_id, title) {
-	const { exists, error } = await doesDeckExist(supabase, owner_id, title)
+	const { exists, error } = await doesDeckExist(supabase, owner_id, title);
 	if (error) {
-		return { error }
+		return { error };
 	} else if (exists) {
 		return { error: 'Flashcard deck already exists!' };
 	}
