@@ -1,6 +1,6 @@
 <script>
-    export let canvasData;
-	console.log('Received canvasData:', canvasData); // Debug
+    export let data;
+	$: ({ canvasData } = data);
 
     import { onMount } from 'svelte';
     import { Canvas, Stroke } from '$lib/canvas';
@@ -21,11 +21,11 @@
     let canvasOffsetLeft = 0;
 
 	onMount(() => {
+		//console.log(canvasData) //DEBUG------------------------
 		context = canvas.getContext('2d');
 		myCanvas = new Canvas(width, height);
-
 		// Draw canvas if canvasData is defined and is of the expected type
-		if (canvasData && typeof canvasData === 'object') {
+		if (typeof canvasData === 'string') {
 			drawSavedCanvas(canvasData);
 		} else {
 			console.warn('canvasData is undefined or invalid, initializing empty canvas.');
@@ -85,29 +85,47 @@
     }
 
     function drawSavedCanvas(data) {
-		// Ensure canvasData is correctly formatted
+		let parsedData;
+
 		if (typeof data === 'string') {
-			const parsedData = JSON.parse(data);
-			context.clearRect(0, 0, width, height);
-
-			parsedData.strokes.forEach(stroke => {
-				context.beginPath();
-				context.strokeStyle = stroke.color;
-				context.lineWidth = stroke.lineWidth || line_width; // Ensure stroke lineWidth is defined
-
-				stroke.points.forEach((point, index) => {
-					if (index === 0) {
-						context.moveTo(point.x, point.y);
-					} else {
-						context.lineTo(point.x, point.y);
-					}
-				});
-
-				context.stroke();
-			});
+			try {
+				parsedData = JSON.parse(data);
+			} catch (error) {
+				console.error("Error parsing canvas data:", error);
+				return;
+			}
+		} else if (typeof data === 'object') {
+			parsedData = data;
 		} else {
 			console.warn('Invalid canvas data format:', data);
+			return;
 		}
+
+		// Verify parsedData is an array
+		if (!Array.isArray(parsedData)) {
+			console.warn('Canvas data format invalid, expected an array of strokes:', parsedData);
+			return;
+		}
+
+		// Clear canvas
+		context.clearRect(0, 0, width, height);
+
+		// Draw each stroke
+		parsedData.forEach(stroke => {
+			context.beginPath();
+			context.strokeStyle = stroke.color;
+			context.lineWidth = stroke.lineWidth || line_width;
+
+			stroke.points.forEach((point, index) => {
+				if (index === 0) {
+					context.moveTo(point.x, point.y);
+				} else {
+					context.lineTo(point.x, point.y);
+				}
+			});
+
+			context.stroke();
+		});
 	}
 
 

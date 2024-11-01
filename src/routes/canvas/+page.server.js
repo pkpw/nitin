@@ -1,6 +1,11 @@
 import { fail } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 
-export const load = async ({ locals: { supabase } }) => {
+export async function load({ locals: { supabase, safeGetSession }}) {
+    const { session } = await safeGetSession();
+	if (!session) {
+		return json({ error: 'No user session' });
+	}
     console.log('Load function called'); 
     // Fetch the user
     const { data: userData, error: userError } = await supabase.auth.getUser();
