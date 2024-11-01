@@ -50,6 +50,7 @@
 		if (on_modal_confirm) {
 			on_modal_confirm(confirmed);
 			on_modal_confirm = null;
+			theme = $profile.theme; // Reset theme
 		}
 
 		// Hide modal
