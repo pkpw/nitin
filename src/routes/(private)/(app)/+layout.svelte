@@ -1,24 +1,24 @@
 <script>
-	import NavigationBar from '$lib/components/nav/NavigationBar.svelte';
-	import AccountDropdown from '$lib/components/nav/AccountDropdown.svelte';
-	import NavigationMenu from '$lib/components/nav/NavigationMenu.svelte';
+	import NavBar from '$lib/components/NavBar.svelte';
+	import NavMenu from '$lib/components/NavMenu.svelte';
+	import AccountDropdown from '$lib/components/AccountDropdown.svelte';
 
 	export let data;
-	$: ({ supabase, navigationBar } = data);
+	$: ({ supabase, navBar } = data);
 </script>
 
-<NavigationBar title={navigationBar.pageTitle} visible={navigationBar.visible}>
+<NavBar {...navBar}>
 	<svelte:fragment slot="left"></svelte:fragment>
 	<svelte:fragment slot="right">
-		<AccountDropdown {supabase} />
+		<AccountDropdown />
 	</svelte:fragment>
 	<svelte:fragment slot="menu">
-		<NavigationMenu on:linkClick={() => (navigationBar.visible = false)} />
+		<NavMenu on:linkClick={() => (navBar.visible = false)} />
 	</svelte:fragment>
-</NavigationBar>
+</NavBar>
 
-<div class="mb-64 mt-8 px-4">
-	<div class="container mx-auto">
+<div class="mb-8 mt-8 px-4">
+	<div class="container relative mx-auto">
 		<slot />
 	</div>
 </div>

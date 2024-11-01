@@ -1,15 +1,16 @@
 <script>
-	import { setContext } from 'svelte';
-	import { Profile } from '$lib/profile.js';
-	import { Theme } from '$lib/theme.js';
+	import { useTheme } from '$lib/stores/theme.js';
+	import { setProfile, useProfile } from '$lib/stores/profile.js';
 
 	export let data;
 
-	let profile = Profile.get();
-	$: Profile.set(data.profile);
-	$: Theme.set(data.profile.theme);
+	setProfile();
 
-	Profile.set_context();
+	const theme = useTheme();
+	const profile = useProfile();
+
+	$: profile?.set(data.profile);
+	$: theme?.set(data.profile.theme);
 </script>
 
 <slot />

@@ -3,8 +3,8 @@
 	import { crossfade, slide } from 'svelte/transition';
 	import { quadOut } from 'svelte/easing';
 
-	import { Icons } from '$lib/icons';
-	import Icon from '../Icon.svelte';
+	import { Icons } from '$lib/components/icons';
+	import Icon from './Icon.svelte';
 
 	export let title = writable(undefined);
 	export let visible = false;
@@ -37,11 +37,15 @@
 <svelte:window on:click={hide} />
 
 <nav
-	class="sticky left-0 top-0 z-50 mb-2 h-[69px] w-full border-b border-b-stone-400 bg-stone-50 bg-opacity-95 px-4 py-3 backdrop-blur transition-colors duration-300 ease-in-out dark:border-b-stone-700 dark:bg-stone-950"
+	class="sticky left-0 top-0 z-40 h-[69px] w-full border-b border-b-stone-400 bg-stone-50/85 px-4 py-3 backdrop-blur transition-colors duration-300 ease-in-out dark:border-b-stone-700 dark:bg-stone-950/85"
 >
 	<div class="container mx-auto flex items-center justify-between">
 		<div class="flex w-full flex-row items-center">
-			<button class="btn-outline relative h-10 w-10" bind:this={menuButton} on:click={toggle}>
+			<button
+				class="btn-outline relative h-10 w-10 rounded-md"
+				bind:this={menuButton}
+				on:click={toggle}
+			>
 				{#if visible}
 					<div in:send out:receive class="absolute left-[3px] top-[3px] h-8 w-8">
 						<Icon icon={Icons.Close} alt="Close" width="32" height="32" />

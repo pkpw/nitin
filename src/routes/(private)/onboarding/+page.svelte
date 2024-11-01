@@ -1,47 +1,45 @@
 <script>
+	import { onMount } from 'svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import { writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { goto } from '$app/navigation';
-	import { Profile } from '$lib/profile.js';
-	import { Theme } from '$lib/theme.js';
 
-	import { Icons } from '$lib/icons.js';
+	import { useProfile } from '$lib/stores/profile.js';
+	import { Theme, useTheme } from '$lib/stores/theme.js';
+
+	import { useModals } from '$lib/stores/modals.js';
+	import TaintedModal from '$lib/components/TaintedModal.svelte';
+
+	import { Icons } from '$lib/components/icons.js';
 	import Icon from '$lib/components/Icon.svelte';
 
-	import Spinner from '$lib/components/Spinner.svelte';
-	import Modal from '$lib/components/Modal.svelte';
-
 	import Background from '$lib/assets/Background.avif';
+	import Spinner from '$lib/components/Spinner.svelte';
 
 	export let data;
 	$: ({ supabase, navigationBar } = data);
-	$: Theme.set('system');
 
-	const profile = Profile.get();
+	const profile = useProfile();
+	const theme = useTheme();
+	const modals = useModals();
 
-	let is_tainted_modal_visible = false;
-	let on_modal_confirm = null;
-	const { form, errors, constraints, message, enhance, delayed } = superForm(data.form, {
+	const { form, errors, constraints, message, enhance, delayed, isTainted } = superForm(data.form, {
 		resetForm: false,
 		clearOnSubmit: 'none',
 		taintedMessage: () => {
 			return new Promise((resolve) => {
-				on_modal_confirm = resolve;
-				is_tainted_modal_visible = true;
+				modals.trigger({
+					modal: TaintedModal,
+					response: async (confirmed) => resolve(confirmed)
+				});
 			});
 		}
 	});
 
-	function handle_modal_submit(confirmed) {
-		if (on_modal_confirm) {
-			on_modal_confirm(confirmed);
-			on_modal_confirm = null;
-		}
-
-		// Hide modal
-		is_tainted_modal_visible = false;
-	}
+	onMount(() => {
+		theme.set(Theme.AUTOMATIC);
+	});
 </script>
 
 <svelte:head>
@@ -49,10 +47,10 @@
 </svelte:head>
 
 <div
-	class="mx-auto flex min-h-screen flex-col items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat"
+	class="mx-auto flex min-h-screen flex-col items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat px-4"
 	style="background-image: url('{Background}');"
 >
-	<h1 class="pb-16 text-center text-4xl font-bold text-white">Let's Get Started.</h1>
+	<h1 class="pb-16 text-center font-serif text-5xl font-medium text-white">Let's Get Started.</h1>
 	<form
 		class="mx-auto max-w-80 rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 backdrop-blur dark:border-stone-700 dark:bg-stone-950"
 		method="POST"
@@ -92,7 +90,7 @@
 				</div>
 			{/if}
 		</div>
-		<button class="btn-primary w-full">
+		<button class="btn-primary w-full rounded-full">
 			{#if $delayed}
 				<div in:fade>
 					<Spinner />
@@ -105,19 +103,9 @@
 			If you don't intend to set up a new account at <span class="font-medium"
 				>{$profile?.email}</span
 			>, you can
-			<button
-				class="text-blue-500 hover:text-blue-600 hover:underline"
-				on:click={Profile.logout(supabase)}>login with another email.</button
+			<a class="text-blue-500 hover:text-blue-600 hover:underline" href="/auth/logout"
+				>login with another email.</a
 			>
 		</p>
 	</form>
 </div>
-
-<Modal visible={is_tainted_modal_visible}>
-	<h1 class="justify-items-start text-xl font-semibold">Unsaved Changes</h1>
-	<p class="text-lg">Any changes you have made are unsaved.</p>
-	<div class="flex flex-row items-center justify-end space-x-4 pt-4">
-		<button on:click={() => handle_modal_submit(false)} class="btn-secondary">Cancel</button>
-		<button on:click={() => handle_modal_submit(true)} class="btn-primary">Continue</button>
-	</div>
-</Modal>

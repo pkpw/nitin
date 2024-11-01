@@ -4,41 +4,48 @@
 	import { fade } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms';
 	import { goto, afterNavigate } from '$app/navigation';
-	import { Profile } from '$lib/profile.js';
-	import { Theme } from '$lib/theme.js';
+	import { useTheme } from '$lib/stores/theme.js';
+	import { useProfile } from '$lib/stores/profile.js';
 
-	import { Icons } from '$lib/icons.js';
+	import { Icons } from '$lib/components/icons.js';
 	import Icon from '$lib/components/Icon.svelte';
 
-	import NavigationBar from '$lib/components/nav/NavigationBar.svelte';
+	import { useModals } from '$lib/stores/modals.js';
+	import TaintedModal from '$lib/components/TaintedModal.svelte';
+
+	import NavigationBar from '$lib/components/NavBar.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
-	import Modal from '$lib/components/Modal.svelte';
 
 	export let data;
-	$: ({ supabase, navigationBar } = data);
-	$: navigationBar.pageTitle.set('Settings');
+	$: ({ supabase, navBar } = data);
 
-	const profile = Profile.get();
+	const profile = useProfile();
+	const theme = useTheme();
+	const modals = useModals();
 
-	let is_tainted_modal_visible = false;
-	let on_modal_confirm = null;
 	const { form, errors, constraints, message, enhance, delayed } = superForm(data.form, {
 		resetForm: false,
-		clearOnSubmit: 'none',
 		taintedMessage: () => {
 			return new Promise((resolve) => {
-				on_modal_confirm = resolve;
-				is_tainted_modal_visible = true;
+				modals.trigger({
+					modal: TaintedModal,
+					response: async (confirmed) => {
+						if (confirmed) {
+							$form.theme = $profile.theme;
+						}
+
+						resolve(confirmed);
+					}
+				});
 			});
 		}
 	});
 
-	// Double binding for $form.theme and Theme.get()
-	// Theme.get() returns a writable, so call get() to retrieve the value
+	// When theme dropdown updates:
+	// 1. Update value in form
+	// 2. Update value in store
 	// Using the writable itself causes the form to become tainted even though it was unchanged
-	let theme = get(Theme.get());
-	$: $form.theme = theme;
-	$: Theme.set(theme);
+	$: theme?.set($form.theme);
 
 	// Get previous page for back button
 	let previous_page;
@@ -46,16 +53,9 @@
 		previous_page = from?.url.pathname;
 	});
 
-	function handle_modal_submit(confirmed) {
-		if (on_modal_confirm) {
-			on_modal_confirm(confirmed);
-			on_modal_confirm = null;
-			theme = $profile.theme; // Reset theme
-		}
-
-		// Hide modal
-		is_tainted_modal_visible = false;
-	}
+	onMount(() => {
+		navBar.title.set('Settings');
+	});
 </script>
 
 <svelte:head>
@@ -63,7 +63,7 @@
 </svelte:head>
 
 <div class="mb-8 flex flex-row items-center">
-	<a class="btn-outline mr-8 h-10 w-10" href={previous_page ?? '/dashboard'}>
+	<a class="btn-outline mr-8 h-10 w-10 rounded-md" href={previous_page ?? '/dashboard'}>
 		<div class="absolute left-[3px] top-[3px] h-8 w-8">
 			<Icon icon={Icons.BackArrow} alt="Back" width="32" height="32" />
 		</div>
@@ -117,7 +117,7 @@
 	</div>
 	<div class="mb-4 flex items-center justify-between">
 		<label for="theme" class="form-label">Theme</label>
-		<select class="form-dropdown" id="theme" name="theme" bind:value={theme}>
+		<select class="form-dropdown" id="theme" name="theme" bind:value={$form.theme}>
 			<option value="system">Automatic</option>
 			<option value="light">Light</option>
 			<option value="dark">Dark</option>
@@ -144,7 +144,7 @@
 		</div>
 	</div> -->
 	<div class="float-right flex flex-col items-center justify-end">
-		<button class="btn-primary"
+		<button class="btn-primary rounded-full" type="submit"
 			>{#if $delayed}
 				<div in:fade>
 					<Spinner />
@@ -158,12 +158,3 @@
 		{/if}
 	</div>
 </form>
-
-<Modal visible={is_tainted_modal_visible}>
-	<h1 class="justify-items-start text-xl font-semibold">Unsaved Changes</h1>
-	<p class="text-lg">Any changes you have made are unsaved.</p>
-	<div class="flex flex-row items-center justify-end space-x-4 pt-4">
-		<button on:click={() => handle_modal_submit(false)} class="btn-secondary">Cancel</button>
-		<button on:click={() => handle_modal_submit(true)} class="btn-primary">Continue</button>
-	</div>
-</Modal>
