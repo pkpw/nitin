@@ -41,10 +41,6 @@
 		}
 	});
 
-	// When theme dropdown updates:
-	// 1. Update value in form
-	// 2. Update value in store
-	// Using the writable itself causes the form to become tainted even though it was unchanged
 	$: theme?.set($form.theme);
 
 	// Get previous page for back button
