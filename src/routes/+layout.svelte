@@ -5,7 +5,7 @@
 	import { invalidate } from '$app/navigation';
 	import { setModals } from '$lib/stores/modals';
 	import { setTheme, useTheme } from '$lib/stores/theme';
-	import Models from '$lib/components/Models.svelte';
+	import Modals from '$lib/components/Modals.svelte';
 
 	export let data;
 	$: ({ session, supabase } = data);
@@ -33,6 +33,6 @@
 	});
 </script>
 
-<Models />
+<Modals />
 
 <slot />
