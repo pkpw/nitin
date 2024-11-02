@@ -52,7 +52,7 @@
 >
 	<h1 class="pb-16 text-center font-serif text-5xl font-medium text-white">Let's Get Started.</h1>
 	<form
-		class="mx-auto max-w-80 rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 backdrop-blur dark:border-stone-700 dark:bg-stone-950"
+		class="mx-auto min-w-80 max-w-80 rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 backdrop-blur dark:border-stone-700 dark:bg-stone-950"
 		method="POST"
 		use:enhance
 	>

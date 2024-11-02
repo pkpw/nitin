@@ -26,7 +26,7 @@
 		{#if $message}
 			<div
 				in:fade
-				class="mx-auto max-w-sm rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 text-center backdrop-blur dark:border-stone-700 dark:bg-stone-950"
+				class="mx-auto min-w-80 max-w-sm rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 text-center backdrop-blur dark:border-stone-700 dark:bg-stone-950"
 			>
 				<div class="relative mx-auto mb-8 w-fit">
 					<div
@@ -46,7 +46,7 @@
 		{:else}
 			<h1 class="pb-10 text-center font-serif text-6xl text-white">Study smarter<br /> today.</h1>
 			<form
-				class="mx-auto max-w-sm rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 backdrop-blur dark:border-stone-700 dark:bg-stone-950"
+				class="mx-auto min-w-80 max-w-sm rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 backdrop-blur dark:border-stone-700 dark:bg-stone-950"
 				method="POST"
 				use:enhance
 			>
@@ -70,7 +70,7 @@
 				<button class="btn-primary w-full rounded-full">
 					{#if $delayed}
 						<div in:fade>
-							<Spinner />
+							<Spinner mode="light" />
 						</div>
 					{:else}
 						Continue with email
