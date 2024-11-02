@@ -4,6 +4,12 @@
 
 html {
 	@apply m-0 p-0;
+	scrollbar-color: #78716c #d6d3d1;
+	scrollbar-width: thin;
+}
+
+html.dark {
+	scrollbar-color: #78716c #44403c;
 }
 
 body {
