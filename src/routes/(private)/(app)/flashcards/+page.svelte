@@ -1,5 +1,4 @@
 <script>
-	import { onMount } from 'svelte';
 	import { useProfile } from '$lib/stores/profile.js';
 
 	import { Icons } from '$lib/components/icons.js';
@@ -15,13 +14,10 @@
 
 	export let data;
 	$: ({ supabase, navBar } = data);
+	$: navBar.title.set('Flashcards');
 
 	const profile = useProfile();
 	const modals = useModals();
-
-	onMount(() => {
-		navBar.title.set('Flashcards');
-	});
 </script>
 
 <svelte:head>

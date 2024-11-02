@@ -1,5 +1,4 @@
 <script>
-	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms';
@@ -18,6 +17,7 @@
 
 	export let data;
 	$: ({ supabase, navBar } = data);
+	$: navBar.title.set('Settings');
 
 	const profile = useProfile();
 	const theme = useTheme();
@@ -51,10 +51,6 @@
 	let previous_page;
 	afterNavigate(({ from }) => {
 		previous_page = from?.url.pathname;
-	});
-
-	onMount(() => {
-		navBar.title.set('Settings');
 	});
 </script>
 
