@@ -13,7 +13,7 @@
 		<AccountDropdown />
 	</svelte:fragment>
 	<svelte:fragment slot="menu">
-		<NavMenu on:linkClick={() => (navBar.visible = false)} />
+		<NavMenu on:linkClick={() => navBar.visible.set(false)} />
 	</svelte:fragment>
 </NavBar>
 

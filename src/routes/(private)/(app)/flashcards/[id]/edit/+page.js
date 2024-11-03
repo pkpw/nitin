@@ -1,11 +1,11 @@
 import { writable } from 'svelte/store';
 
-export const load = ({ data }) => {
+export async function load({ data }) {
 	return {
 		...data,
 		navBar: {
-			title: writable(''),
+			title: null,
 			visible: writable(false)
 		}
 	};
-};
+}

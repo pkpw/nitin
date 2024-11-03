@@ -4,10 +4,10 @@ export async function getFlashcard(supabase, id) {
 
 export async function saveFlashcard() {}
 
-export async function createFlashcard(supabase, deck_id, title = null) {
+export async function createFlashcard(supabase, deck_id) {
 	const { count, error } = await supabase
 		.from('flashcards')
-		.select('*', { count: 'exact' })
+		.select('*', { count: 'exact', head: true })
 		.eq('deck_id', deck_id);
 	if (error) {
 		return { error };
@@ -17,7 +17,7 @@ export async function createFlashcard(supabase, deck_id, title = null) {
 		.from('flashcards')
 		.insert({
 			deck_id,
-			title: title ?? `${count + 1}.`,
+			title: `${count + 1}. `,
 			front: {},
 			back: {},
 			order: count + 1

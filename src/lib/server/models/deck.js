@@ -43,14 +43,14 @@ export async function createDeck(supabase, owner_id, title) {
 		})
 		.select()
 		.single();
-	
+
 	if (deckError) {
 		return { error: 'An error occurred.' };
 	}
 
 	// Unique index constaint in database returns null if there is a duplicate for insertion
 	if (!deck) {
-		return { error: 'Flashcard deck already exists.' }
+		return { error: 'Flashcard deck already exists.' };
 	}
 
 	const { flashcardError } = await db.createFlashcard(supabase, deck.id);
@@ -72,12 +72,15 @@ export async function renameDeck(supabase, id, owner_id, title) {
 			title
 		})
 		.eq('id', id)
-		.eq('owner_id', owner_id)
-		.single();
+		.eq('owner_id', owner_id);
 
 	if (error) {
-		return { error: error.code === '23505' ? 'Flashcard deck already exists.' : 'An error occurred.' }
+		return {
+			error: error.code === '23505' ? 'Flashcard deck already exists.' : 'An error occurred.'
+		};
 	}
+
+	return {};
 }
 
 export async function getFlashcards(supabase, id, owner_id) {
@@ -86,7 +89,7 @@ export async function getFlashcards(supabase, id, owner_id) {
 		.select(
 			`
 			*,
-			flashcards (*)`
+			flashcards (id, title)`
 		)
 		.eq('id', id)
 		.eq('owner_id', owner_id)

@@ -1,7 +1,7 @@
 <script>
 	import { writable } from 'svelte/store';
 
-	import { Icons } from '$lib/components/icons';
+	import { Icons } from '$lib/components/icons/icons';
 	import Icon from '../Icon.svelte';
 
 	import { useModals } from '$lib/stores/modals';
@@ -25,7 +25,7 @@
 				: ''} transition-colors duration-150 ease-in-out hover:bg-stone-50/50"
 		>
 			<div class="absolute left-[4px] top-[4px] h-8 w-8">
-				<Icon icon={Icons.MoreVert} alt="More" width="32" height="32" />
+				<Icon icon={Icons.MoreVert} width="32" height="32" />
 			</div>
 		</button>
 	</svelte:fragment>
@@ -42,7 +42,7 @@
 						response: async (confirmed) => {}
 					})}
 			>
-				<Icon icon={Icons.Edit} alt="Rename" width="24" height="24" />
+				<Icon icon={Icons.Edit} width="24" height="24" />
 				<span>Rename</span>
 			</button>
 			<button
@@ -54,7 +54,7 @@
 						response: async (confirmed) => {}
 					})}
 			>
-				<Icon icon={Icons.Delete} alt="Delete" width="24" height="24" />
+				<Icon icon={Icons.Delete} width="24" height="24" />
 				<span>Delete</span>
 			</button>
 		</div>

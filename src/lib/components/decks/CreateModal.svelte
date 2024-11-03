@@ -1,6 +1,6 @@
 <script>
 	import Icon from '$lib/components/Icon.svelte';
-	import { Icons } from '$lib/components/icons';
+	import { Icons } from '$lib/components/icons/icons';
 	import { fade } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms';
 	import { schemasafe } from 'sveltekit-superforms/adapters';
@@ -27,7 +27,7 @@
 </script>
 
 <div class="mb-4 flex flex-row items-center space-x-4">
-	<Icon icon={Icons.FlashcardDeck} alt="Flashcard deck" width="32" height="32" />
+	<Icon icon={Icons.FlashcardDeck} width="32" height="32" />
 	<h1 class="text-xl font-semibold">New Flashcard Deck</h1>
 </div>
 
@@ -45,7 +45,7 @@
 		/>
 		{#if $errors.title}
 			<div in:fade class="mt-1 flex items-center justify-start">
-				<Icon icon={Icons.Error} alt="Error" width="20" height="20" />
+				<Icon icon={Icons.Error} width="20" height="20" fill={'#ef4444'} />
 				<span class="ml-2 text-sm font-semibold text-red-500">
 					{#if $errors.title != '#/properties/title/pattern'}
 						{$errors.title}

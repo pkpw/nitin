@@ -7,7 +7,7 @@
 	import { schema } from './renameForm';
 
 	import Icon from '$lib/components/Icon.svelte';
-	import { Icons } from '$lib/components/icons';
+	import { Icons } from '$lib/components/icons/icons';
 	import Spinner from '../Spinner.svelte';
 
 	export let close, data, deck;
@@ -33,7 +33,7 @@
 </script>
 
 <div class="mb-4 flex w-screen flex-row items-center space-x-4">
-	<Icon icon={Icons.Edit} alt="Flashcard deck" width="32" height="32" />
+	<Icon icon={Icons.Edit} width="32" height="32" />
 	<h1 class="text-xl font-semibold">Rename</h1>
 </div>
 
@@ -52,7 +52,7 @@
 		/>
 		{#if $errors.title}
 			<div in:fade class="mt-1 flex items-center justify-start">
-				<Icon icon={Icons.Error} alt="Error" width="20" height="20" />
+				<Icon icon={Icons.Error} width="20" height="20" fill={'#ef4444'} />
 				<span class="ml-2 text-sm font-semibold text-red-500">
 					{#if $errors.title != '#/properties/title/pattern'}
 						{$errors.title}

@@ -36,7 +36,7 @@ export const actions = {
 
 		const { error } = await db.createDeck(supabase, session.user.id, form.data.title);
 		if (error) {
-			return setError(form, 'title', error)
+			return setError(form, 'title', error);
 		}
 
 		return message(form, 'Created!');

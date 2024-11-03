@@ -9,7 +9,7 @@ export async function load({ locals: { supabase, safeGetSession }, url }) {
 
 	const { data: profile, error: dbError } = await db.getProfile(supabase, session.user.id);
 	if (dbError) {
-		error(500, 'Unable to retrieve profile.');
+		error(500);
 	}
 
 	if (!profile.is_onboarded && !url.pathname.startsWith('/onboarding')) {

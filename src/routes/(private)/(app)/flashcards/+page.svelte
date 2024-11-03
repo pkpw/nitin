@@ -1,16 +1,16 @@
 <script>
 	import { useProfile } from '$lib/stores/profile.js';
 
-	import { Icons } from '$lib/components/icons.js';
+	import { Icons } from '$lib/components/icons/icons.js';
 	import Icon from '$lib/components/Icon.svelte';
 
 	import { useModals } from '$lib/stores/modals.js';
 	import CreateModal from '$lib/components/decks/CreateModal.svelte';
 
 	import FlashcardDropdown from '$lib/components/decks/FlashcardDropdown.svelte';
-	import Edit from '$lib/assets/icons/dark/edit_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
-	import Study from '$lib/assets/icons/dark/local_library_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 	import Spinner from '$lib/components/Spinner.svelte';
+	import Study from '$lib/components/icons/Study.svelte';
+	import Edit from '$lib/components/icons/Edit.svelte';
 
 	export let data;
 	$: ({ supabase, navBar } = data);
@@ -24,7 +24,7 @@
 	<title>Nitin | My Flashcards</title>
 </svelte:head>
 
-<div class="container pointer-events-none fixed left-auto top-0 z-30 h-screen">
+<div class="container pointer-events-none fixed left-auto top-0 z-10 h-screen">
 	<div class="pointer-events-auto sticky top-[82vh] float-right mr-12 md:mr-6">
 		<button
 			on:click={() =>
@@ -35,7 +35,7 @@
 				})}
 		>
 			<div class="btn-outline h-16 w-16 rounded-full shadow-md">
-				<Icon icon={Icons.Plus} alt="Create" width="32" height="32" />
+				<Icon icon={Icons.Plus} width="32" height="32" />
 			</div>
 		</button>
 	</div>
@@ -67,7 +67,11 @@
 							<FlashcardDropdown {data} {deck} />
 						</div>
 
-						<h1 class="text-2xl font-semibold">{deck.title}</h1>
+						<h1
+							class="max-w-96 overflow-hidden text-ellipsis whitespace-nowrap text-2xl font-semibold"
+						>
+							{deck.title}
+						</h1>
 					</div>
 					<div class="h-48 p-4">
 						<!-- <div>
@@ -79,13 +83,15 @@
 						<div class="flex w-full flex-row space-x-4 pt-24">
 							<a class="btn-secondary w-full rounded-md" href="/flashcards/{deck.id}/study">
 								<div class="mr-4">
-									<img src={Study} alt="" width="32" height="32" />
+									<!-- <img src={Study} alt="" width="32" height="32" /> -->
+									<Icon icon={Icons.Study} width="32" height="32" fill="#fafaf9" />
 								</div>
 								Study
 							</a>
 							<a class="btn-primary w-full rounded-md" href="/flashcards/{deck.id}/edit">
 								<div class="mr-4">
-									<img src={Edit} alt="" width="32" height="32" />
+									<!-- <img src={Edit} alt="" width="32" height="32" /> -->
+									<Icon icon={Icons.Edit} width="32" height="32" fill="#fafaf9" />
 								</div>
 								Edit
 							</a>

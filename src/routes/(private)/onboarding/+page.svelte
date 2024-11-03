@@ -11,7 +11,7 @@
 	import { useModals } from '$lib/stores/modals.js';
 	import TaintedModal from '$lib/components/TaintedModal.svelte';
 
-	import { Icons } from '$lib/components/icons.js';
+	import { Icons } from '$lib/components/icons/icons.js';
 	import Icon from '$lib/components/Icon.svelte';
 
 	import Background from '$lib/assets/Background.avif';
@@ -68,7 +68,7 @@
 			/>
 			{#if $errors.first_name}
 				<div in:fade class="mt-1 flex items-center justify-start">
-					<Icon icon={Icons.Error} alt="Error" width="20" height="20" />
+					<Icon icon={Icons.Error} width="20" height="20" fill={'#ef4444'} />
 					<span class="ml-2 text-sm font-semibold text-red-500">First name is not valid.</span>
 				</div>
 			{/if}
@@ -85,7 +85,7 @@
 			/>
 			{#if $errors.last_name}
 				<div in:fade class="mt-1 flex items-center justify-start">
-					<Icon icon={Icons.Error} alt="Error" width="20" height="20" />
+					<Icon icon={Icons.Error} width="20" height="20" fill={'#ef4444'} />
 					<span class="ml-2 text-sm font-semibold text-red-500">Last name is not valid.</span>
 				</div>
 			{/if}
@@ -93,7 +93,7 @@
 		<button class="btn-primary w-full rounded-full">
 			{#if $delayed}
 				<div in:fade>
-					<Spinner />
+					<Spinner fill={'#fafaf9'} />
 				</div>
 			{:else}
 				Continue
