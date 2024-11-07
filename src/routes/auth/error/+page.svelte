@@ -8,7 +8,7 @@
 		<div class="mb-24 rounded-md border border-stone-700 p-8 text-center">
 			<h1 class="text-xl font-semibold">Login Failed</h1>
 			<p class="text-lg">We were unable to sign in to your account.</p>
-			<a class="btn-primary mt-4 w-full" href="/auth">Try Again</a>
+			<a class="btn-primary mt-4 w-full rounded-full" href="/auth">Try Again</a>
 		</div>
 	</div>
 </div>

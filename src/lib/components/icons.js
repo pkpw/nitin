@@ -2,12 +2,27 @@ import BackArrowLight from '$lib/assets/icons/light/arrow_back_24dp_0C0A09_FILL1
 import BackArrowDark from '$lib/assets/icons/dark/arrow_back_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 import CloseLight from '$lib/assets/icons/light/close_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
 import CloseDark from '$lib/assets/icons/dark/close_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
+import DeleteLight from '$lib/assets/icons/light/delete_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
+import DeleteDark from '$lib/assets/icons/dark/delete_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
+import DeleteHover from '$lib/assets/icons/delete_24dp_EF4444_FILL1_wght400_GRAD0_opsz24.svg';
+import DragIndicatorLight from '$lib/assets/icons/light/drag_indicator_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
+import DragIndicatorDark from '$lib/assets/icons/dark/drag_indicator_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
+import EditLight from '$lib/assets/icons/light/edit_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
+import EditDark from '$lib/assets/icons/dark/edit_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
+import FlipToFrontLight from '$lib/assets/icons/light/flip_to_front_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
+import FlipToFrontDark from '$lib/assets/icons/dark/flip_to_front_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
+import FlipToBackLight from '$lib/assets/icons/light/flip_to_back_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
+import FlipToBackDark from '$lib/assets/icons/dark/flip_to_back_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 import MailLight from '$lib/assets/icons/light/mail_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
 import MailDark from '$lib/assets/icons/dark/mail_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 import MenuLight from '$lib/assets/icons/light/menu_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
 import MenuDark from '$lib/assets/icons/dark/menu_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
+import MoreVertLight from '$lib/assets/icons/light/more_vert_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
+import MoreVertDark from '$lib/assets/icons/dark/more_vert_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 import PaletteLight from '$lib/assets/icons/light/palette_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
 import PaletteDark from '$lib/assets/icons/dark/palette_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
+import PlusLight from '$lib/assets/icons/light/add_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
+import PlusDark from '$lib/assets/icons/dark/add_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 import ProfileLight from '$lib/assets/icons/light/account_circle_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
 import ProfileDark from '$lib/assets/icons/dark/account_circle_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 import LogoutLight from '$lib/assets/icons/light/logout_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
@@ -18,6 +33,8 @@ import DashboardLight from '$lib/assets/icons/light/dashboard_24dp_0C0A09_FILL1_
 import DashboardDark from '$lib/assets/icons/dark/dashboard_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 import FlashcardDeckLight from '$lib/assets/icons/light/note_stack_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
 import FlashcardDeckDark from '$lib/assets/icons/dark/note_stack_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
+import StudyLight from '$lib/assets/icons/light/local_library_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
+import StudyDark from '$lib/assets/icons/dark/local_library_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 import ClassroomsLight from '$lib/assets/icons/light/school_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
 import ClassroomsDark from '$lib/assets/icons/dark/school_24dp_FAFAF9_FILL1_wght400_GRAD0_opsz24.svg';
 import QuizLight from '$lib/assets/icons/light/quiz_24dp_0C0A09_FILL1_wght400_GRAD0_opsz24.svg';
@@ -45,9 +62,33 @@ export const Icons = {
 		light: CloseLight,
 		dark: CloseDark
 	},
+	Delete: {
+		light: DeleteLight,
+		dark: DeleteDark,
+		hover: {
+			light: DeleteHover,
+			dark: DeleteHover
+		}
+	},
+	DragIndicator: {
+		light: DragIndicatorLight,
+		dark: DragIndicatorDark
+	},
+	Edit: {
+		light: EditLight,
+		dark: EditDark
+	},
 	Error: {
 		light: ErrorIcon,
 		dark: ErrorIcon
+	},
+	FlipToFront: {
+		light: FlipToFrontLight,
+		dark: FlipToFrontDark
+	},
+	FlipToBack: {
+		light: FlipToBackLight,
+		dark: FlipToBackDark
 	},
 	Mail: {
 		light: MailLight,
@@ -57,6 +98,10 @@ export const Icons = {
 		light: MenuLight,
 		dark: MenuDark
 	},
+	MoreVert: {
+		light: MoreVertLight,
+		dark: MoreVertDark
+	},
 	Spinner: {
 		light: SpinnerIcon,
 		dark: SpinnerIcon
@@ -64,6 +109,10 @@ export const Icons = {
 	Palette: {
 		light: PaletteLight,
 		dark: PaletteDark
+	},
+	Plus: {
+		light: PlusLight,
+		dark: PlusDark
 	},
 	Profile: {
 		light: ProfileLight,
@@ -84,6 +133,10 @@ export const Icons = {
 	FlashcardDeck: {
 		light: FlashcardDeckLight,
 		dark: FlashcardDeckDark
+	},
+	Study: {
+		light: StudyLight,
+		dark: StudyDark
 	},
 	Classrooms: {
 		light: ClassroomsLight,
