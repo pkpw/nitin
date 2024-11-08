@@ -29,7 +29,7 @@
 		<button class="btn-danger rounded-full" type="submit" on:click={() => close(true)}>
 			{#if $delayed}
 				<div in:fade>
-					<Spinner />
+					<Spinner fill={'#fafaf9'} />
 				</div>
 			{:else}
 				Delete

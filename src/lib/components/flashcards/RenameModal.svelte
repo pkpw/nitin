@@ -70,7 +70,7 @@
 		<button class="btn-primary rounded-full" type="submit">
 			{#if $delayed}
 				<div in:fade>
-					<Spinner />
+					<Spinner fill={'#fafaf9'} />
 				</div>
 			{:else}
 				Save
