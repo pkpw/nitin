@@ -8,19 +8,6 @@ export async function getDeck(supabase, id, owner_id) {
 	return supabase.from('decks').select().eq('id', id).eq('owner_id', owner_id);
 }
 
-export async function doesDeckExist(supabase, owner_id, title) {
-	const { data, error } = await supabase
-		.from('decks')
-		.select()
-		.eq('owner_id', owner_id)
-		.eq('title', title);
-	if (error) {
-		return { error };
-	}
-
-	return { exists: data && data.length > 0 };
-}
-
 export async function createDeck(supabase, owner_id, title) {
 	const colors = [
 		'#ef4444', // red-500
@@ -91,6 +78,7 @@ export async function getFlashcards(supabase, id, owner_id) {
 			*,
 			flashcards (id, title)`
 		)
+		.order('order', { referencedTable: 'flashcards' })
 		.eq('id', id)
 		.eq('owner_id', owner_id)
 		.single();

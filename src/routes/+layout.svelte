@@ -6,11 +6,13 @@
 	import { setModals } from '$lib/stores/modals';
 	import { setTheme, useTheme } from '$lib/stores/theme';
 	import Modals from '$lib/components/Modals.svelte';
+	import { setNavBar } from '$lib/stores/navbar';
 
 	export let data;
 	$: ({ session, supabase } = data);
 
 	setTheme();
+	setNavBar();
 	setModals();
 
 	const theme = useTheme();

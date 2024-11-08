@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms';
-	import { schema } from './deleteForm';
 
 	import { Icons } from '$lib/components/icons/icons';
 	import Icon from '$lib/components/Icon.svelte';

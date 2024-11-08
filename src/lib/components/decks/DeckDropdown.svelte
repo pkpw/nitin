@@ -46,7 +46,7 @@
 				<span>Rename</span>
 			</button>
 			<button
-				class="flex w-full items-center space-x-2 p-4 hover:bg-stone-100 dark:hover:bg-stone-800"
+				class="icon-button-danger flex w-full items-center space-x-2 p-4 hover:bg-stone-100 hover:text-red-500 dark:hover:bg-stone-800"
 				on:click={() =>
 					modals.trigger({
 						modal: DeleteModal,

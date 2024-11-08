@@ -1,10 +1,12 @@
 <script>
+	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms';
 	import { goto, afterNavigate } from '$app/navigation';
 	import { useTheme } from '$lib/stores/theme.js';
 	import { useProfile } from '$lib/stores/profile.js';
+	import { useNavBar } from '$lib/stores/navbar.js';
 
 	import { Icons } from '$lib/components/icons/icons.js';
 	import Icon from '$lib/components/Icon.svelte';
@@ -16,12 +18,12 @@
 	import Spinner from '$lib/components/Spinner.svelte';
 
 	export let data;
-	$: ({ supabase, navBar } = data);
-	$: navBar.title.set('Settings');
+	$: ({ supabase } = data);
 
 	const profile = useProfile();
 	const theme = useTheme();
 	const modals = useModals();
+	const navBar = useNavBar();
 
 	const { form, errors, constraints, message, enhance, delayed } = superForm(data.form, {
 		resetForm: false,
@@ -41,12 +43,17 @@
 		}
 	});
 
+	// Update theme when changed in form
 	$: theme?.set($form.theme);
 
 	// Get previous page for back button
 	let previous_page;
 	afterNavigate(({ from }) => {
 		previous_page = from?.url.pathname;
+	});
+
+	onMount(() => {
+		navBar.setTitle('Settings');
 	});
 </script>
 

@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
+	import { useNavBar } from '$lib/stores/navbar';
 	import { useProfile } from '$lib/stores/profile';
 
 	import { Icons } from './icons/icons';
@@ -13,6 +14,7 @@
 	import Popup from './Popup.svelte';
 
 	const profile = useProfile();
+	const navBar = useNavBar();
 
 	let visible = writable(false);
 </script>
@@ -42,13 +44,15 @@
 			<a
 				class="flex w-full items-center space-x-2 border-b border-b-stone-700 p-4 hover:bg-stone-100 dark:border-b-stone-500 dark:hover:bg-stone-800"
 				href="/settings"
+				on:click={() => navBar.hide()}
 			>
 				<Icon icon={Icons.Settings} width="24" height="24" />
 				<span>Settings</span>
 			</a>
 			<a
-				class="flex w-full items-center space-x-2 p-4 hover:bg-stone-100 dark:hover:bg-stone-800"
+				class="icon-button-danger flex w-full items-center space-x-2 p-4 hover:bg-stone-100 hover:text-red-500 dark:hover:bg-stone-800"
 				href="/auth/logout"
+				on:click={() => navBar.hide()}
 			>
 				<Icon icon={Icons.Logout} width="24" height="24" />
 				<span>Logout</span>

@@ -1,14 +1,16 @@
 <script>
-	import Icon from '$lib/components/Icon.svelte';
-	import { Icons } from '$lib/components/icons/icons';
+	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms';
 	import { schemasafe } from 'sveltekit-superforms/adapters';
-	import { schema } from './createForm';
-	import { onMount } from 'svelte';
+	import { schema } from './renameForm';
+
+	import Icon from '$lib/components/Icon.svelte';
+	import { Icons } from '$lib/components/icons/icons';
 	import Spinner from '../Spinner.svelte';
 
-	export let close, data;
+	export let close, data, flashcard;
 	const { form, errors, constraints, enhance, delayed, submit } = superForm(data, {
 		validators: schemasafe(schema),
 		onUpdate: ({ form }) => {
@@ -16,6 +18,10 @@
 				close(true);
 			}
 		}
+	});
+
+	onMount(() => {
+		$form.title = flashcard.title;
 	});
 
 	function handleKeyDown(event) {
@@ -26,12 +32,13 @@
 	}
 </script>
 
-<div class="mb-4 flex flex-row items-center space-x-4">
-	<Icon icon={Icons.Decks} width="32" height="32" />
-	<h1 class="text-xl font-semibold">New Flashcard Deck</h1>
+<div class="mb-4 flex w-screen flex-row items-center space-x-4">
+	<Icon icon={Icons.Edit} width="32" height="32" />
+	<h1 class="text-xl font-semibold">Rename</h1>
 </div>
 
-<form method="POST" action="?/create" use:enhance novalidate>
+<form method="POST" action="?/rename" use:enhance novalidate>
+	<input class="hidden" name="id" type="text" bind:value={flashcard.id} />
 	<div class="mb-4">
 		<input
 			class="form-input"
@@ -66,7 +73,7 @@
 					<Spinner />
 				</div>
 			{:else}
-				Create
+				Save
 			{/if}
 		</button>
 	</div>

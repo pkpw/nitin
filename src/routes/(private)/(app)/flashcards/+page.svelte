@@ -7,17 +7,23 @@
 	import { useModals } from '$lib/stores/modals.js';
 	import CreateModal from '$lib/components/decks/CreateModal.svelte';
 
-	import FlashcardDropdown from '$lib/components/decks/FlashcardDropdown.svelte';
+	import DeckDropdown from '$lib/components/decks/DeckDropdown.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import Study from '$lib/components/icons/Study.svelte';
 	import Edit from '$lib/components/icons/Edit.svelte';
+	import { onMount } from 'svelte';
+	import { useNavBar } from '$lib/stores/navbar.js';
 
 	export let data;
-	$: ({ supabase, navBar } = data);
-	$: navBar.title.set('Flashcards');
+	$: ({ supabase } = data);
 
 	const profile = useProfile();
 	const modals = useModals();
+	const navBar = useNavBar();
+
+	onMount(() => {
+		navBar.setTitle('Flashcards');
+	});
 </script>
 
 <svelte:head>
@@ -55,7 +61,7 @@
 		<div class="grid place-items-center gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
 			{#each result.data as deck}
 				<div
-					class="h-[450px] w-full min-w-80 max-w-sm overflow-hidden rounded-lg border border-stone-400 bg-stone-50 dark:border-stone-700 dark:bg-stone-950"
+					class="h-96 w-full min-w-80 max-w-sm overflow-hidden rounded-lg border border-stone-400 bg-stone-50 dark:border-stone-700 dark:bg-stone-950"
 				>
 					<div
 						class="flex h-48 w-full flex-col justify-between border-b border-stone-400 bg-gradient-to-br to-stone-50 p-4 dark:border-stone-700 dark:to-stone-950"
@@ -64,7 +70,7 @@
 		--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);"
 					>
 						<div class="self-end">
-							<FlashcardDropdown {data} {deck} />
+							<DeckDropdown {data} {deck} />
 						</div>
 
 						<h1
@@ -73,24 +79,16 @@
 							{deck.title}
 						</h1>
 					</div>
-					<div class="h-48 p-4">
-						<!-- <div>
-			<h2 class="text-xl font-semibold text-stone-400 dark:text-stone-500">Mastery</h2>
-		</div>
-		<div>
-			<h2 class="text-xl font-semibold text-stone-400 dark:text-stone-500">Tags</h2>
-		</div> -->
-						<div class="flex w-full flex-row space-x-4 pt-24">
-							<a class="btn-secondary w-full rounded-md" href="/flashcards/{deck.id}/study">
+					<div class="p-4">
+						<div class="mt-28 flex w-full flex-row space-x-4">
+							<a class="btn-secondary w-full rounded-md" href="#">
 								<div class="mr-4">
-									<!-- <img src={Study} alt="" width="32" height="32" /> -->
 									<Icon icon={Icons.Study} width="32" height="32" fill="#fafaf9" />
 								</div>
 								Study
 							</a>
 							<a class="btn-primary w-full rounded-md" href="/flashcards/{deck.id}/edit">
 								<div class="mr-4">
-									<!-- <img src={Edit} alt="" width="32" height="32" /> -->
 									<Icon icon={Icons.Edit} width="32" height="32" fill="#fafaf9" />
 								</div>
 								Edit

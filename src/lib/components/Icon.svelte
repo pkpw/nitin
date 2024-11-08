@@ -12,8 +12,13 @@
 	let darkMode,
 		loaded = false;
 
+	$: darkMode = theme?.isDarkMode($theme);
+
 	onMount(() => {
-		theme.isDarkMode.subscribe((value) => (darkMode = value));
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+			darkMode = theme.isDarkMode($theme);
+		});
+
 		loaded = true;
 	});
 
