@@ -43,7 +43,6 @@
 					front: quill.getContents()
 				})
 			})
-			console.log(response)
 		}
 	})
 
@@ -59,7 +58,6 @@
 		
 		quill.on('text-change', (delta, oldDelta, source) => {
 			if (source === 'user') {
-				console.log('changed')
 				saved = false;
 			}
 		})
