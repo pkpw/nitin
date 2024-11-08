@@ -1,5 +1,3 @@
-import { getCreatedFlashcards } from "./deck";
-
 export async function getFlashcard(supabase, id) {
 	return supabase.from('flashcards').select().eq('id', id).single();
 }
