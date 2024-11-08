@@ -22,14 +22,30 @@
 	import 'quill/dist/quill.core.css';
 	// import 'quill/dist/quill.snow.css';
 	import './editor.css';
+	import { page } from '$app/stores';
+	import { beforeNavigate } from '$app/navigation';
 
 	export let data;
-	$: ({ supabase, deck, id } = data);
+	$: ({ supabase, deck, id, flashcard } = data);
 
 	const modals = useModals();
 	const navBar = useNavBar();
 
 	let quill, editor, toolbar;
+	let saved = true;
+
+	beforeNavigate(async () => {
+		if (!saved) {
+			let response = await fetch($page.url.pathname, {
+				method: 'POST',
+				body: JSON.stringify({
+					id,
+					front: quill.getContents()
+				})
+			})
+			console.log(response)
+		}
+	})
 
 	onMount(async () => {
 		navBar.setTitle(null);
@@ -40,7 +56,17 @@
 				toolbar: false
 			}
 		});
+		
+		quill.on('text-change', (delta, oldDelta, source) => {
+			if (source === 'user') {
+				console.log('changed')
+				saved = false;
+			}
+		})
 	});
+
+	$: quill?.setContents(flashcard?.front)
+	$: console.log(flashcard)
 </script>
 
 <svelte:head>

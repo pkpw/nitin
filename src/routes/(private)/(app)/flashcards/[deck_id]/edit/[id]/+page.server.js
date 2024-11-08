@@ -9,6 +9,10 @@ export async function load({ locals: { supabase }, params, parent }) {
 	// const { session } = await safeGetSession();
 	const { deck } = await parent();
 	// console.log(deck);
+	const { data: flashcard, error: dbError} = await db.getFlashcard(supabase, params.id)
+	if (dbError) {
+		error(500)
+	}
 
 	const deleteAdapter = schemasafe(deleteSchema);
 	const deleteForm = await superValidate(deleteAdapter);
@@ -19,19 +23,17 @@ export async function load({ locals: { supabase }, params, parent }) {
 	return {
 		deck,
 		id: params.id,
-		flashcard: db.getFlashcard(supabase, params.id),
+		flashcard,
 		deleteForm,
 		renameForm
 	};
 }
 
 export const actions = {
-	save: async ({ locals: { supabase, safeGetSession }, request }) => {},
 	create: async ({ locals: { supabase }, params }) => {
 		const { error: dbError } = await db.createFlashcard(supabase, params.deck_id);
 		if (dbError) {
 			// TODO: Replace with toast notification
-			console.log(dbError)
 			error(500, dbError);
 		}
 
@@ -50,9 +52,9 @@ export const actions = {
 		}
 
 		if (form.data.id === params.id) {
-			redirect(303, `/flashcards/${params.deck_id}/edit`)
+			redirect(303, `/flashcards/${params.deck_id}/edit`);
 		} else {
-			return message(form, 'Deleted!')
+			return message(form, 'Deleted!');
 		}
 	},
 	rename: async ({ locals: { supabase }, request }) => {
@@ -64,12 +66,10 @@ export const actions = {
 
 		const { error } = await db.renameFlashcard(supabase, form.data.id, form.data.title);
 		if (error) {
-			return setError(form, 'title', error)
+			return setError(form, 'title', error);
 		}
 
 		return message(form, 'Renamed!');
 	},
-	reorder: async ({ locals: { supabase, safeGetSession }, request }) => {
-		const { session } = await safeGetSession();
-	}
+	reorder: async ({ locals: { supabase }, request }) => {}
 };
