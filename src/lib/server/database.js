@@ -1,5 +1,12 @@
 import { getProfile, onboardProfile, saveProfile } from './models/profile';
-import { createDeck, deleteDeck, getDecks, renameDeck } from './models/deck';
+import {
+	createDeck,
+	deleteDeck,
+	getDeck,
+	getDecks,
+	getFlashcards,
+	renameDeck
+} from './models/deck';
 import {
 	createFlashcard,
 	deleteFlashcard,
@@ -14,7 +21,9 @@ export const db = {
 	saveProfile,
 	onboardProfile,
 	// Decks
+	getDeck,
 	getDecks,
+	getFlashcards,
 	createDeck,
 	deleteDeck,
 	renameDeck,

@@ -6,8 +6,9 @@
 	import { goto, afterNavigate } from '$app/navigation';
 	import { useTheme } from '$lib/stores/theme.js';
 	import { useProfile } from '$lib/stores/profile.js';
+	import { useNavBar } from '$lib/stores/navbar.js';
 
-	import { Icons } from '$lib/components/icons.js';
+	import { Icons } from '$lib/components/icons/icons.js';
 	import Icon from '$lib/components/Icon.svelte';
 
 	import { useModals } from '$lib/stores/modals.js';
@@ -17,11 +18,12 @@
 	import Spinner from '$lib/components/Spinner.svelte';
 
 	export let data;
-	$: ({ supabase, navBar } = data);
+	$: ({ supabase } = data);
 
 	const profile = useProfile();
 	const theme = useTheme();
 	const modals = useModals();
+	const navBar = useNavBar();
 
 	const { form, errors, constraints, message, enhance, delayed } = superForm(data.form, {
 		resetForm: false,
@@ -41,10 +43,7 @@
 		}
 	});
 
-	// When theme dropdown updates:
-	// 1. Update value in form
-	// 2. Update value in store
-	// Using the writable itself causes the form to become tainted even though it was unchanged
+	// Update theme when changed in form
 	$: theme?.set($form.theme);
 
 	// Get previous page for back button
@@ -54,7 +53,7 @@
 	});
 
 	onMount(() => {
-		navBar.title.set('Settings');
+		navBar.setTitle('Settings');
 	});
 </script>
 
@@ -65,14 +64,14 @@
 <div class="mb-8 flex flex-row items-center">
 	<a class="btn-outline mr-8 h-10 w-10 rounded-md" href={previous_page ?? '/dashboard'}>
 		<div class="absolute left-[3px] top-[3px] h-8 w-8">
-			<Icon icon={Icons.BackArrow} alt="Back" width="32" height="32" />
+			<Icon icon={Icons.BackArrow} width="32" height="32" />
 		</div>
 	</a>
 	Back
 </div>
 <form method="POST" class="mx-auto max-w-sm px-2" use:enhance>
 	<div class="flex flex-row items-center justify-start space-x-4 pb-4">
-		<Icon icon={Icons.Profile} alt="Profile" width="24" height="24" />
+		<Icon icon={Icons.Profile} width="24" height="24" />
 		<h1 class="text-lg font-semibold">Profile</h1>
 	</div>
 	<div class="mb-4">
@@ -89,7 +88,7 @@
 		/>
 		{#if $errors.first_name}
 			<div in:fade class="mt-1 flex items-center justify-start">
-				<Icon icon={Icons.Error} alt="Error" width="20" height="20" />
+				<Icon icon={Icons.Error} width="20" height="20" fill={'#ef4444'} />
 				<span class="ml-2 text-sm font-semibold text-red-500">First name is not valid.</span>
 			</div>
 		{/if}
@@ -106,13 +105,13 @@
 		/>
 		{#if $errors.last_name}
 			<div in:fade class="mt-1 flex items-center justify-start">
-				<Icon icon={Icons.Error} alt="Error" width="20" height="20" />
+				<Icon icon={Icons.Error} width="20" height="20" fill={'#ef4444'} />
 				<span class="ml-2 text-sm font-semibold text-red-500">Last name is not valid.</span>
 			</div>
 		{/if}
 	</div>
 	<div class="flex flex-row items-center justify-start space-x-4 py-4">
-		<Icon icon={Icons.Palette} alt="Appearance" width="24" height="24" />
+		<Icon icon={Icons.Palette} width="24" height="24" />
 		<h1 class="text-lg font-semibold">Appearance</h1>
 	</div>
 	<div class="mb-4 flex items-center justify-between">
@@ -147,7 +146,7 @@
 		<button class="btn-primary rounded-full" type="submit"
 			>{#if $delayed}
 				<div in:fade>
-					<Spinner />
+					<Spinner fill={'#fafaf9'} />
 				</div>
 			{:else}
 				Save

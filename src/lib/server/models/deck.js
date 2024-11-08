@@ -5,16 +5,7 @@ export async function getDecks(supabase, owner_id) {
 }
 
 export async function getDeck(supabase, id, owner_id) {
-	return supabase.from('decks').select().eq('id', id).eq('owner_id', owner_id)
-}
-
-export async function doesDeckExist(supabase, owner_id, title) {
-	const { data, error } = await supabase.from('decks').select().eq('owner_id', owner_id).eq('title', title)
-	if (error) {
-		return { error }
-	}
-
-	return { exists: data && data.length > 0 }
+	return supabase.from('decks').select().eq('id', id).eq('owner_id', owner_id);
 }
 
 export async function createDeck(supabase, owner_id, title) {
@@ -30,13 +21,6 @@ export async function createDeck(supabase, owner_id, title) {
 		'#ec4899' // pink-500
 	];
 
-	const { exists, error } = await doesDeckExist(supabase, owner_id, title)
-	if (error) {
-		return { error }
-	} else if (exists) {
-		return { error: 'Flashcard deck already exists!' };
-	}
-
 	const { data: deck, deckError } = await supabase
 		.from('decks')
 		.insert({
@@ -46,13 +30,19 @@ export async function createDeck(supabase, owner_id, title) {
 		})
 		.select()
 		.single();
+
 	if (deckError) {
-		return { error: deckError };
+		return { error: 'An error occurred.' };
+	}
+
+	// Unique index constaint in database returns null if there is a duplicate for insertion
+	if (!deck) {
+		return { error: 'Flashcard deck already exists.' };
 	}
 
 	const { flashcardError } = await db.createFlashcard(supabase, deck.id);
 	if (flashcardError) {
-		return { error: flashcardError };
+		return { error: 'An error occurred.' };
 	}
 
 	return deck;
@@ -63,20 +53,21 @@ export async function deleteDeck(supabase, id, owner_id) {
 }
 
 export async function renameDeck(supabase, id, owner_id, title) {
-	const { exists, error } = await doesDeckExist(supabase, owner_id, title)
-	if (error) {
-		return { error }
-	} else if (exists) {
-		return { error: 'Flashcard deck already exists!' };
-	}
-
-	return supabase
+	const { error } = await supabase
 		.from('decks')
 		.update({
 			title
 		})
 		.eq('id', id)
 		.eq('owner_id', owner_id);
+
+	if (error) {
+		return {
+			error: error.code === '23505' ? 'Flashcard deck already exists.' : 'An error occurred.'
+		};
+	}
+
+	return {};
 }
 
 export async function getFlashcards(supabase, id, owner_id) {
@@ -84,10 +75,11 @@ export async function getFlashcards(supabase, id, owner_id) {
 		.from('decks')
 		.select(
 			`
-        id,
-        owner_id
-        flashcards ( id, deck_id )`
+			*,
+			flashcards (id, title)`
 		)
+		.order('order', { referencedTable: 'flashcards' })
 		.eq('id', id)
-		.eq('owner_id', owner_id);
+		.eq('owner_id', owner_id)
+		.single();
 }

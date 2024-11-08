@@ -4,30 +4,37 @@
 	import { useTheme } from '$lib/stores/theme';
 
 	export let icon,
-		alt = '',
 		width = 32,
-		height = 32;
+		height = 32,
+		fill = null;
 
 	const theme = useTheme();
 	let darkMode,
 		loaded = false;
 
+	$: darkMode = theme?.isDarkMode($theme);
+
 	onMount(() => {
-		theme.isDarkMode.subscribe((value) => (darkMode = value));
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+			darkMode = theme.isDarkMode($theme);
+		});
+
 		loaded = true;
 	});
 
-	export let hover = writable(false);
+	// export let hover = writable(false);
 </script>
 
-<div role="img" on:mouseenter={() => hover.set(true)} on:mouseleave={() => hover.set(false)}>
-	<picture class="pointer-events-none object-cover">
-		{#if loaded}
-			{#if darkMode}
-				<img src={$hover && icon.hover ? icon.hover.dark : icon.dark} {alt} {width} {height} />
-			{:else}
-				<img src={$hover && icon.hover ? icon.hover.light : icon.light} {alt} {width} {height} />
-			{/if}
+<div class="pointer-events-none object-cover">
+	{#if fill}
+		<svelte:component this={icon} {width} {height} {fill} />
+	{:else if loaded}
+		{#if darkMode}
+			<svelte:component this={icon} {width} {height} fill={'#fafaf9'} />
+		{:else}
+			<svelte:component this={icon} {width} {height} fill={'#0c0a09'} />
 		{/if}
-	</picture>
+	{:else}
+		<svelte:component this={icon} {width} {height} fill={'#78716c'} />
+	{/if}
 </div>

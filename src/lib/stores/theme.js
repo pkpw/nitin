@@ -28,7 +28,7 @@ function createTheme() {
 			}
 			theme.set(t);
 		},
-		isDarkMode: derived(theme, ($theme) => isDarkMode($theme)),
+		isDarkMode,
 		switch: (t) => {
 			if (browser) {
 				if (isDarkMode(t)) {

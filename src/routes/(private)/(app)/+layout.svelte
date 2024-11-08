@@ -1,24 +1,25 @@
 <script>
+	import { useNavBar } from '$lib/stores/navbar.js';
+
 	import NavBar from '$lib/components/NavBar.svelte';
 	import NavMenu from '$lib/components/NavMenu.svelte';
 	import AccountDropdown from '$lib/components/AccountDropdown.svelte';
 
-	export let data;
-	$: ({ supabase, navBar } = data);
+	const navBar = useNavBar();
 </script>
 
-<NavBar {...navBar}>
+<NavBar>
 	<svelte:fragment slot="left"></svelte:fragment>
 	<svelte:fragment slot="right">
 		<AccountDropdown />
 	</svelte:fragment>
 	<svelte:fragment slot="menu">
-		<NavMenu on:linkClick={() => (navBar.visible = false)} />
+		<NavMenu />
 	</svelte:fragment>
 </NavBar>
 
-<div class="mb-8 mt-8 px-4">
-	<div class="container relative mx-auto">
+<div class="mb-8 mt-8">
+	<div class="container relative mx-auto px-4">
 		<slot />
 	</div>
 </div>

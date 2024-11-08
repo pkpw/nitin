@@ -1,14 +1,16 @@
 <script>
 	import { onMount } from 'svelte';
+	import { useNavBar } from '$lib/stores/navbar.js';
 	import { useProfile } from '$lib/stores/profile.js';
 
 	export let data;
-	$: ({ supabase, navBar } = data);
+	$: ({ supabase } = data);
 
 	const profile = useProfile();
+	const navBar = useNavBar();
 
 	onMount(() => {
-		navBar.title.set('Dashboard');
+		navBar.setTitle('Dashboard');
 	});
 </script>
 

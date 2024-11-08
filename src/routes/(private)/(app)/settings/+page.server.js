@@ -1,6 +1,6 @@
 import { fail, message, superValidate } from 'sveltekit-superforms';
 import { schemasafe } from 'sveltekit-superforms/adapters';
-import { schema } from './form.js';
+import { schema } from './settingsForm.js';
 import { db } from '$lib/server/database.js';
 
 export async function load({ parent }) {
