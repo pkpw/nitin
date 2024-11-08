@@ -7,6 +7,6 @@
 		fill = null;
 </script>
 
-<div class="h-6 w-6 mx-auto animate-spin">
+<div class="mx-auto h-6 w-6 animate-spin">
 	<Icon icon={Icons.Spinner} {width} {height} {fill} />
 </div>
