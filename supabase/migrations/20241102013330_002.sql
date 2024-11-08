@@ -6,7 +6,7 @@ CREATE INDEX decks_owner_id_idx ON public.decks USING hash (owner_id);
 
 CREATE INDEX flashcards_deck_id_idx ON public.flashcards USING hash (deck_id);
 
-CREATE UNIQUE INDEX unique_deck_title_per_user ON public.decks USING btree (owner_id, title);
+CREATE UNIQUE INDEX unique_deck_title ON public.decks USING btree (owner_id, title);
 
 create policy "Owners can modify their flashcard decks."
 on "public"."decks"
