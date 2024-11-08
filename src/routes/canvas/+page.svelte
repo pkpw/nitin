@@ -4,10 +4,11 @@
 
     import { onMount } from 'svelte';
     import { Canvas, Stroke } from '$lib/canvas';
+	//import { ContainerWithChildren } from 'postcss/lib/container';
 
     let width = 300;
     let height = 300;
-    let color = '#333'; // Default pen color
+    let currentColor = '#000000'; // Default color
     let background = '#fff';
 
     // Canvas Drawing Vars
@@ -15,6 +16,7 @@
     let context;
     let myCanvas;
     let isDrawing = false;
+    let isErasing = false;
     let start = { x: 0, y: 0 };
     let line_width = 3;
     let canvasOffsetTop = 0;
@@ -23,10 +25,13 @@
 	onMount(() => {
 		//console.log(canvasData) //DEBUG------------------------
 		context = canvas.getContext('2d');
+        context.globalAlpha = 1;
+        context.lineWidth = 3;
 		myCanvas = new Canvas(width, height);
-		// Draw canvas if canvasData is defined and is of the expected type
+		// Draw canvas if canvasData is defined and is the expected type
 		if (typeof canvasData === 'string') {
-			drawSavedCanvas(canvasData);
+			myCanvas.strokes = JSON.parse(canvasData);
+            drawSavedCanvas(canvasData);
 		} else {
 			console.warn('canvasData is undefined or invalid, initializing empty canvas.');
 		}
@@ -39,13 +44,36 @@
 
     function handleMove({ offsetX, offsetY }) {
         if (!isDrawing) return;
+
         const { x, y } = start;
+        const dx = offsetX - x;
+        const dy = offsetY - y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const steps = Math.ceil(distance / 1);
 
-        const stroke = new Stroke([{ x, y }, { x: offsetX, y: offsetY }], color, context.globalAlpha);
+        const stroke = new Stroke([{ x, y }], currentColor, context.globalAlpha, line_width, isErasing);
+
+        context.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over';
+
+        for (let i = 0; i <= steps; i++) {
+            const intermediateX = x + (dx / steps) * i;
+            const intermediateY = y + (dy / steps) * i;
+
+            // Draw on the canvas
+            context.beginPath();
+            context.moveTo(intermediateX, intermediateY);
+            context.lineTo(intermediateX + 0.5, intermediateY + 0.5);
+            context.lineJoin = "round";
+            context.lineCap = "round";
+            context.stroke();
+
+            stroke.points.push({ x: intermediateX, y: intermediateY });
+        }
+
         myCanvas.addStroke(stroke);
+        //myCanvas.render(context); //Causes extreme lag when drawing too much
 
-        myCanvas.render(context);
-
+        // Update start position for the next move
         start = { x: offsetX, y: offsetY };
     }
 
@@ -58,24 +86,28 @@
         canvasOffsetTop = top;
         canvasOffsetLeft = left;
     }
-
-    const pen = () => context.globalCompositeOperation = 'source-over';
-    const erase = () => context.globalCompositeOperation = 'destination-out';
+    function pen() {
+        context.globalCompositeOperation = 'source-over';
+        isErasing = false;
+    }
+    function erase() {
+        context.globalCompositeOperation = 'destination-out';
+        isErasing = true;
+    }
 
     function handleColorChange(event) {
-        color = event.target.value;
+        currentColor = event.target.value;
+        context.strokeStyle = currentColor;
+        console.log("Selected color:", currentColor);  // Check if color changes
     }
 
     function changeLineWidth(event) {
         line_width = document.getElementById("widthslider").value;
-        if(context.lineWidth != line_width){
-            context.lineWidth = line_width;
-        }
-
+        context.lineWidth = line_width;
     }
 
     function changeLineOpacity(event) {
-        const line_opacity = document.getElementById("opacityslider").value;
+        var line_opacity = document.getElementById("opacityslider").value;
         context.globalAlpha = line_opacity;
     }
 
@@ -85,48 +117,63 @@
     }
 
     function drawSavedCanvas(data) {
-		let parsedData;
+        let parsedData;
 
-		if (typeof data === 'string') {
-			try {
-				parsedData = JSON.parse(data);
-			} catch (error) {
-				console.error("Error parsing canvas data:", error);
-				return;
-			}
-		} else if (typeof data === 'object') {
-			parsedData = data;
-		} else {
-			console.warn('Invalid canvas data format:', data);
-			return;
-		}
+        if (typeof data === 'string') {
+            try {
+                parsedData = JSON.parse(data);
+            } catch (error) {
+                console.error("Error parsing canvas data:", error);
+                return;
+            }
+        } else if (typeof data === 'object') {
+            parsedData = data;
+        } else {
+            console.warn('Invalid canvas data format:', data);
+            return;
+        }
 
-		// Verify parsedData is an array
-		if (!Array.isArray(parsedData)) {
-			console.warn('Canvas data format invalid, expected an array of strokes:', parsedData);
-			return;
-		}
+        if (!Array.isArray(parsedData)) {
+            console.warn('Canvas data format invalid, expected an array of strokes:', parsedData);
+            return;
+        }
+        
+        // Clear the canvas before rendering
+        context.clearRect(0, 0, width, height);
 
-		// Clear canvas
-		context.clearRect(0, 0, width, height);
+        // Draw each stroke
+        parsedData.forEach(stroke => {
+            stroke.points = stroke.points.filter(point => point.x !== 0 || point.y !== 0);
+            
+            if (stroke.mode) {
+                context.globalCompositeOperation = 'destination-out';  // Set erase mode
+            } else {
+                context.globalCompositeOperation = 'source-over';  // Set draw mode
+            }
+            
+            context.beginPath();
+            context.strokeStyle = stroke.color;
+            context.globalAlpha = stroke.opacity || 1;
+            context.lineWidth = stroke.size;
+            context.lineJoin = "round";
+            context.lineCap = "round";
 
-		// Draw each stroke
-		parsedData.forEach(stroke => {
-			context.beginPath();
-			context.strokeStyle = stroke.color;
-			context.lineWidth = stroke.lineWidth || line_width;
+            // Start drawing
+            context.moveTo(stroke.points[0].x, stroke.points[0].y);
 
-			stroke.points.forEach((point, index) => {
-				if (index === 0) {
-					context.moveTo(point.x, point.y);
-				} else {
-					context.lineTo(point.x, point.y);
-				}
-			});
+            for (let i = 1; i < stroke.points.length - 1; i++) {
+                const midX = (stroke.points[i].x + stroke.points[i + 1].x) / 2;
+                const midY = (stroke.points[i].y + stroke.points[i + 1].y) / 2;
+                context.quadraticCurveTo(stroke.points[i].x, stroke.points[i].y, midX, midY);
+            }
 
-			context.stroke();
-		});
-	}
+            
+            context.lineTo(stroke.points[stroke.points.length - 1].x, stroke.points[stroke.points.length - 1].y);
+            context.stroke();
+            context.globalCompositeOperation = 'source-over';  // Set draw mode
+        });
+    }
+
 
 
 	async function saveCanvasToDatabase() {
@@ -170,8 +217,8 @@
 <input
     id="color-picker"
     type="color"
-    value={color}
-    on:input={handleColorChange}
+    value={currentColor}
+    on:input ={handleColorChange}
 />
 <button class="bg-sky-500 text-white text-lg font-semibold hover:underline p-2 rounded" on:click={clearDrawing}>Clear</button>
 <form on:submit|preventDefault={saveCanvasToDatabase}>
@@ -186,12 +233,5 @@
 </div>
 <h1 style="color:white;">Opacity:</h1>
 <div class="slidecontainer">
-    <input type="range" min="0" max="1" value="1" step="0.1" class="slider" id="opacityslider" on:click={changeLineOpacity}>
-</div>
-<div>
-    {#if canvasData}
-        <p>Canvas Data: {canvasData}</p>
-    {:else}
-        <p>No canvas data available.</p>
-    {/if}
+    <input type="range" min="0.01" max="1" value="1" step="0.005" class="slider" id="opacityslider" on:click={changeLineOpacity}>
 </div>
