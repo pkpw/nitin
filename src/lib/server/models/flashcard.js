@@ -2,10 +2,17 @@ export async function getFlashcard(supabase, id) {
 	return supabase.from('flashcards').select().eq('id', id).single();
 }
 
-export async function saveFlashcard() {}
+export async function saveFlashcard(supabase, id, front, back) {
+	return supabase.from('flashcards').update({
+		front,
+		back,
+		updated_at: new Date().toISOString()
+	})
+	.eq('id', id)
+}
 
 export async function createFlashcard(supabase, deck_id) {
-	const {data: count, error} = await supabase.rpc('increment_created_flashcards', { deck_id })
+	const { data: count, error } = await supabase.rpc('increment_created_flashcards', { deck_id });
 	if (error) {
 		return { error };
 	}
