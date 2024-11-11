@@ -1,10 +1,21 @@
-import { writable } from 'svelte/store';
+import { redirect } from '@sveltejs/kit';
 
-export function load({ data }) {
+export async function load({ data, fetch, url }) {
+	const res = await fetch('/profile', {
+		method: 'GET'
+	});
+
+	const { data: profile, error } = await res.json();
+	if (error) {
+		error(500, { message: 'Unable to fetch profile' });
+	}
+
+	if (!profile.is_onboarded && !url.pathname.startsWith('/onboarding')) {
+		redirect(303, `/onboarding?next=${url.pathname}`);
+	}
+
 	return {
 		...data,
-		navigationBar: {
-			pageTitle: writable('')
-		}
+		profile
 	};
 }
