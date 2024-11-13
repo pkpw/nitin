@@ -6,8 +6,8 @@ export const GET = async ({ locals: { supabase, safeGetSession } }) => {
 		redirect(303, '/auth');
 	}
 
-	const { error } = await supabase.auth.signOut();
-	if (error) {
+	const { error: dbError } = await supabase.auth.signOut();
+	if (dbError) {
 		error(500, 'Unable to sign out of profile.');
 	}
 
