@@ -9,7 +9,9 @@
 	let current;
 
 	async function close(confirmed) {
-		await current?.response(confirmed);
+		if (current.response) {
+			await current.response(confirmed);
+		}
 
 		if (confirmed) {
 			dispatch('confirmed');
