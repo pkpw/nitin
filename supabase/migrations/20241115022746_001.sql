@@ -96,22 +96,6 @@ $$;
 
 ALTER FUNCTION "public"."handle_new_user"() OWNER TO "postgres";
 
-
-CREATE OR REPLACE FUNCTION "public"."increment_created_flashcards"("deck_id" "uuid") RETURNS integer
-    LANGUAGE "plpgsql"
-    AS $$DECLARE
-    new_value INTEGER;
-BEGIN
-    UPDATE decks
-    SET created_flashcards = created_flashcards + 1
-    WHERE id = deck_id
-    RETURNING created_flashcards INTO new_value;
-    RETURN new_value;
-END;$$;
-
-
-ALTER FUNCTION "public"."increment_created_flashcards"("deck_id" "uuid") OWNER TO "postgres";
-
 SET default_tablespace = '';
 
 SET default_table_access_method = "heap";
@@ -123,8 +107,7 @@ CREATE TABLE IF NOT EXISTS "public"."decks" (
     "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "owner_id" "uuid" NOT NULL,
     "title" "text",
-    "color" "text",
-    "created_flashcards" bigint DEFAULT '0'::bigint NOT NULL
+    "color" "text"
 );
 
 
@@ -136,8 +119,8 @@ CREATE TABLE IF NOT EXISTS "public"."flashcards" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "title" "text" NOT NULL,
-    "front" "json",
-    "back" "json",
+    "front" "json" DEFAULT '[{"insert":""}]'::"json",
+    "back" "json" DEFAULT '[{"insert":""}]'::"json",
     "deck_id" "uuid" NOT NULL,
     "order" bigint NOT NULL
 );
@@ -455,12 +438,6 @@ GRANT USAGE ON SCHEMA "public" TO "service_role";
 GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "anon";
 GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."increment_created_flashcards"("deck_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."increment_created_flashcards"("deck_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."increment_created_flashcards"("deck_id" "uuid") TO "service_role";
 
 
 
