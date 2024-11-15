@@ -10,17 +10,13 @@
 	import FormatDropdown from './FormatDropdown.svelte';
 	import TextSizeDropdown from './TextSizeDropdown.svelte';
 
+	import { formatStore } from './format';
+
 	export let quill;
 
 	const activeColor = '#3b82f6';
 
-	let textSize = writable(undefined),
-		isBold = writable(false),
-		isItalic = writable(false),
-		isUnderline = writable(false),
-		isStrikethrough = writable(false),
-		isNumberedList = writable(false),
-		isBulletedList = writable(false);
+	let textSize = writable(undefined);
 
 	onMount(() => {
 		quill.on('selection-change', (range, oldRange, source) => {
@@ -41,12 +37,14 @@
 	function update(range) {
 		const format = quill.getFormat(range);
 		$textSize = format.size;
-		$isBold = format.bold;
-		$isItalic = format.italic;
-		$isUnderline = format.underline;
-		$isStrikethrough = format.strike;
-		$isNumberedList = format.list === 'ordered';
-		$isBulletedList = format.list === 'bullet';
+		formatStore.set({
+			isBold: format.bold,
+  		isItalic: format.italic,
+			isUnderline: format.underline,
+			isStrikethrough: format.strike,
+			isNumberedList: format.list === 'ordered',
+			isBulletedList: format.list === 'bullet'
+		});
 	}
 
 	function bold() {
@@ -54,7 +52,7 @@
 		const selection = quill.getSelection();
 		if (selection) {
 			quill.format('bold', !quill.getFormat(selection).bold);
-			$isBold = quill.getFormat(selection).bold;
+			formatStore.update(state => ({ ...state, isBold: quill.getFormat(selection).bold}))
 		}
 		/* End generated code */
 	}
@@ -63,7 +61,7 @@
 		const selection = quill.getSelection();
 		if (selection) {
 			quill.format('italic', !quill.getFormat(selection).italic);
-			$isItalic = quill.getFormat(selection).italic;
+			formatStore.update(state => ({ ...state, isItalic: quill.getFormat(selection).italic}))
 		}
 	}
 
@@ -71,7 +69,7 @@
 		const selection = quill.getSelection();
 		if (selection) {
 			quill.format('underline', !quill.getFormat(selection).underline);
-			$isUnderline = quill.getFormat(selection).underline;
+			formatStore.update(state => ({ ...state, isUnderline: quill.getFormat(selection).underline}))
 		}
 	}
 
@@ -79,23 +77,23 @@
 		const selection = quill.getSelection();
 		if (selection) {
 			quill.format('strike', !quill.getFormat(selection).strike);
-			$isStrikethrough = quill.getFormat(selection).strike;
+			formatStore.update(state => ({ ...state, isStrikethrough: quill.getFormat(selection).strike}))
 		}
 	}
 
 	function numberedList() {
 		const selection = quill.getSelection();
 		if (selection) {
-			quill.format('list', $isNumberedList ? false : 'ordered');
-			$isNumberedList = quill.getFormat(selection).list === 'ordered';
+			quill.format('list', $formatStore.isNumberedList ? false : 'ordered');
+			formatStore.update(state => ({ ...state, isNumberedList: quill.getFormat(selection).list === 'ordered'}))
 		}
 	}
 
 	function bulletedList() {
 		const selection = quill.getSelection();
 		if (selection) {
-			quill.format('list', $isBulletedList ? false : 'bullet');
-			$isBulletedList = quill.getFormat(selection).list === 'bullet';
+			quill.format('list', $formatStore.isBulletedList ? false : 'bullet');
+			formatStore.update(state => ({ ...state, isItalic: quill.getFormat(selection).list === 'bullet'}))
 		}
 	}
 </script>
@@ -104,12 +102,6 @@
 	<FileDropdown />
 	<EditDropdown />
 	<FormatDropdown
-		{isBold}
-		{isItalic}
-		{isUnderline}
-		{isStrikethrough}
-		{isNumberedList}
-		{isBulletedList}
 		on:bold={() => bold()}
 		on:italic={() => italic()}
 		on:underline={() => underline()}
@@ -129,31 +121,31 @@
 		}}
 	/>
 	<button
-		class="rounded-lg p-1 {$isBold
+		class="rounded-lg p-1 {$formatStore.isBold
 			? 'bg-stone-200 dark:bg-stone-800'
 			: 'bg-stone-50 dark:bg-stone-950'} hover:cursor-pointer hover:bg-stone-200 hover:dark:bg-stone-800"
 		on:click={() => bold()}
 	>
-		<Icon icon={Icons.Bold} width="32" height="32" fill={$isBold ? activeColor : null} />
+		<Icon icon={Icons.Bold} width="32" height="32" fill={$formatStore.isBold ? activeColor : null} />
 	</button>
 	<button
-		class="rounded-lg p-1 {$isItalic
+		class="rounded-lg p-1 {$formatStore.isItalic
 			? 'bg-stone-200 dark:bg-stone-800'
 			: 'bg-stone-50 dark:bg-stone-950'} hover:cursor-pointer hover:bg-stone-200 hover:dark:bg-stone-800"
 		on:click={() => italic()}
 	>
-		<Icon icon={Icons.Italic} width="32" height="32" fill={$isItalic ? activeColor : null} />
+		<Icon icon={Icons.Italic} width="32" height="32" fill={$formatStore.isItalic ? activeColor : null} />
 	</button>
 	<button
-		class="self-end rounded-lg p-1 {$isUnderline
+		class="self-end rounded-lg p-1 {$formatStore.isUnderline
 			? 'bg-stone-200 dark:bg-stone-800'
 			: 'bg-stone-50 dark:bg-stone-950'} hover:cursor-pointer hover:bg-stone-200 hover:dark:bg-stone-800"
 		on:click={() => underline()}
 	>
-		<Icon icon={Icons.Underline} width="32" height="32" fill={$isUnderline ? activeColor : null} />
+		<Icon icon={Icons.Underline} width="32" height="32" fill={$formatStore.isUnderline ? activeColor : null} />
 	</button>
 	<button
-		class="rounded-lg p-1 {$isStrikethrough
+		class="rounded-lg p-1 {$formatStore.isStrikethrough
 			? 'bg-stone-200 dark:bg-stone-800'
 			: 'bg-stone-50 dark:bg-stone-950'} hover:cursor-pointer hover:bg-stone-200 hover:dark:bg-stone-800"
 		on:click={() => strikethrough()}
@@ -162,11 +154,11 @@
 			icon={Icons.Strikethrough}
 			width="32"
 			height="32"
-			fill={$isStrikethrough ? activeColor : null}
+			fill={$formatStore.isStrikethrough ? activeColor : null}
 		/>
 	</button>
 	<button
-		class="rounded-lg p-1 {$isNumberedList
+		class="rounded-lg p-1 {$formatStore.isNumberedList
 			? 'bg-stone-200 dark:bg-stone-800'
 			: 'bg-stone-50 dark:bg-stone-950'}
 			hover:cursor-pointer hover:bg-stone-200 hover:dark:bg-stone-800"
@@ -176,11 +168,11 @@
 			icon={Icons.NumberedList}
 			width="32"
 			height="32"
-			fill={$isNumberedList ? activeColor : null}
+			fill={$formatStore.isNumberedList ? activeColor : null}
 		/>
 	</button>
 	<button
-		class="rounded-lg p-1 {$isBulletedList
+		class="rounded-lg p-1 {$formatStore.isBulletedList
 			? 'bg-stone-200 dark:bg-stone-800'
 			: 'bg-stone-50 dark:bg-stone-950'} hover:cursor-pointer hover:bg-stone-200 hover:dark:bg-stone-800"
 		on:click={() => bulletedList()}
@@ -189,7 +181,7 @@
 			icon={Icons.BulletedList}
 			width="32"
 			height="32"
-			fill={$isBulletedList ? activeColor : null}
+			fill={$formatStore.isBulletedList ? activeColor : null}
 		/>
 	</button>
 	<div class="rounded-lg p-1 hover:cursor-pointer hover:bg-stone-200 hover:dark:bg-stone-800">
