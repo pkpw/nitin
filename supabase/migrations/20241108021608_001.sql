@@ -96,6 +96,22 @@ $$;
 
 ALTER FUNCTION "public"."handle_new_user"() OWNER TO "postgres";
 
+
+CREATE OR REPLACE FUNCTION "public"."increment_created_flashcards"("deck_id" "uuid") RETURNS integer
+    LANGUAGE "plpgsql"
+    AS $$DECLARE
+    new_value INTEGER;
+BEGIN
+    UPDATE decks
+    SET created_flashcards = created_flashcards + 1
+    WHERE id = deck_id
+    RETURNING created_flashcards INTO new_value;
+    RETURN new_value;
+END;$$;
+
+
+ALTER FUNCTION "public"."increment_created_flashcards"("deck_id" "uuid") OWNER TO "postgres";
+
 SET default_tablespace = '';
 
 SET default_table_access_method = "heap";
@@ -107,7 +123,8 @@ CREATE TABLE IF NOT EXISTS "public"."decks" (
     "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "owner_id" "uuid" NOT NULL,
     "title" "text",
-    "color" "text"
+    "color" "text",
+    "created_flashcards" bigint DEFAULT '0'::bigint NOT NULL
 );
 
 
@@ -118,7 +135,7 @@ CREATE TABLE IF NOT EXISTS "public"."flashcards" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "title" "text",
+    "title" "text" NOT NULL,
     "front" "json",
     "back" "json",
     "deck_id" "uuid" NOT NULL,
@@ -171,6 +188,22 @@ ALTER TABLE ONLY "public"."profiles"
 
 
 
+CREATE INDEX "decks_owner_id_idx" ON "public"."decks" USING "hash" ("owner_id");
+
+
+
+CREATE INDEX "flashcards_deck_id_idx" ON "public"."flashcards" USING "hash" ("deck_id");
+
+
+
+CREATE UNIQUE INDEX "unique_deck_title" ON "public"."decks" USING "btree" ("owner_id", "title");
+
+
+
+CREATE UNIQUE INDEX "unique_flashcard_title" ON "public"."flashcards" USING "btree" ("deck_id", "title");
+
+
+
 ALTER TABLE ONLY "public"."decks"
     ADD CONSTRAINT "decks_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "public"."profiles"("id") ON DELETE CASCADE;
 
@@ -186,13 +219,13 @@ ALTER TABLE ONLY "public"."profiles"
 
 
 
-CREATE POLICY "Owners can modify their flashcard decks." ON "public"."decks" USING (("auth"."uid"() = "owner_id"));
+CREATE POLICY "Owners can modify their flashcard decks." ON "public"."decks" USING ((( SELECT "auth"."uid"() AS "uid") = "owner_id"));
 
 
 
 CREATE POLICY "Owners of a flashcard deck can modify the flashcards in it." ON "public"."flashcards" USING (("deck_id" IN ( SELECT "decks"."id"
    FROM "public"."decks"
-  WHERE ("decks"."owner_id" = "auth"."uid"()))));
+  WHERE ("decks"."owner_id" = ( SELECT "auth"."uid"() AS "uid")))));
 
 
 
@@ -422,6 +455,12 @@ GRANT USAGE ON SCHEMA "public" TO "service_role";
 GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "anon";
 GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."increment_created_flashcards"("deck_id" "uuid") TO "anon";
+GRANT ALL ON FUNCTION "public"."increment_created_flashcards"("deck_id" "uuid") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."increment_created_flashcards"("deck_id" "uuid") TO "service_role";
 
 
 
