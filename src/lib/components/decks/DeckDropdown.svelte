@@ -38,8 +38,7 @@
 				on:click={() =>
 					modals.trigger({
 						modal: RenameModal,
-						props: { data: data.renameForm, deck },
-						response: async (confirmed) => {}
+						props: { data: data.renameForm, deck }
 					})}
 			>
 				<Icon icon={Icons.Edit} width="24" height="24" />
@@ -50,8 +49,7 @@
 				on:click={() =>
 					modals.trigger({
 						modal: DeleteModal,
-						props: { data: data.deleteForm, deck },
-						response: async (confirmed) => {}
+						props: { data: data.deleteForm, deck }
 					})}
 			>
 				<Icon icon={Icons.Delete} width="24" height="24" />

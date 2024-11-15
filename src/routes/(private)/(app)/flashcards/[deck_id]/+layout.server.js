@@ -10,6 +10,7 @@ export async function load({ locals: { supabase, safeGetSession }, params }) {
 		session.user.id
 	);
 	if (dbError) {
+		// User does not own flashcard deck
 		if (dbError.code === 'PGRST116') {
 			redirect(303, '/flashcards');
 		} else {

@@ -36,8 +36,7 @@
 			on:click={() =>
 				modals.trigger({
 					modal: CreateModal,
-					props: { data: data.createForm },
-					response: async (confirmed) => {}
+					props: { data: data.createForm }
 				})}
 		>
 			<div class="btn-outline h-16 w-16 rounded-full shadow-md">

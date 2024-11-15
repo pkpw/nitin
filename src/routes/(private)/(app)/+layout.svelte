@@ -18,7 +18,13 @@
 	</svelte:fragment>
 </NavBar>
 
-<div class="mb-8 mt-8">
+<div
+	class="min-h-[calc(100vh-68px)] cursor-default py-8"
+	on:click={() => navBar.hide()}
+	on:keydown={() => {}}
+	role="button"
+	tabindex="-1"
+>
 	<div class="container relative mx-auto px-4">
 		<slot />
 	</div>

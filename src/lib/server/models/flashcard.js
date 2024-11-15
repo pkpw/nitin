@@ -3,28 +3,35 @@ export async function getFlashcard(supabase, id) {
 }
 
 export async function saveFlashcard(supabase, id, front, back) {
-	return supabase.from('flashcards').update({
-		front,
-		back,
-		updated_at: new Date().toISOString()
-	})
-	.eq('id', id)
+	return supabase
+		.from('flashcards')
+		.update({
+			front,
+			back,
+			updated_at: new Date().toISOString()
+		})
+		.eq('id', id);
 }
 
-export async function createFlashcard(supabase, deck_id) {
-	const { data: count, error } = await supabase.rpc('increment_created_flashcards', { deck_id });
-	if (error) {
-		return { error };
-	}
-
-	return supabase
+// TODO: Add order
+export async function createFlashcard(supabase, deck_id, title) {
+	const { data, error } = await supabase
 		.from('flashcards')
 		.insert({
 			deck_id,
-			title: `${count}.`,
-			order: count * 1000
+			title,
+			order: 0
 		})
-		.select();
+		.select()
+		.single();
+
+	if (error) {
+		return {
+			error: error.code === '23505' ? 'Flashcard already exists.' : 'An error occurred.'
+		};
+	}
+
+	return { data };
 }
 
 export async function deleteFlashcard(supabase, id) {
@@ -32,7 +39,7 @@ export async function deleteFlashcard(supabase, id) {
 }
 
 export async function renameFlashcard(supabase, id, title) {
-	const { error } = await supabase
+	const { data, error } = await supabase
 		.from('flashcards')
 		.update({
 			title
@@ -45,5 +52,5 @@ export async function renameFlashcard(supabase, id, title) {
 		};
 	}
 
-	return {};
+	return { data };
 }

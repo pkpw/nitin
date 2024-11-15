@@ -3,6 +3,7 @@ import AddPhoto from './AddPhoto.svelte';
 import ArrowDropdown from './ArrowDropdown.svelte';
 import ArrowDropup from './ArrowDropup.svelte';
 import BackArrow from './BackArrow.svelte';
+import ForwardArrow from './ForwardArrow.svelte';
 import Bold from './Bold.svelte';
 import BulletedList from './BulletedList.svelte';
 import Classrooms from './Classrooms.svelte';
@@ -43,6 +44,7 @@ export const Icons = {
 	ArrowDropdown,
 	ArrowDropup,
 	BackArrow,
+	ForwardArrow,
 	Bold,
 	BulletedList,
 	Classrooms,

@@ -18,32 +18,15 @@
 		navBar.toggle();
 	};
 
-	// $: hide = (event) => {
-	// 	if (
-	// 		$navBar.visible &&
-	// 		navMenu &&
-	// 		menuButton &&
-	// 		!navMenu.contains(event.target) &&
-	// 		!menuButton.contains(event.target)
-	// 	) {
-	// 		navBar.hide();
-	// 	}
-	// };
-	// $: if ($page) {
-	// 	navBar.hide();
-	// }
-
 	const [send, receive] = crossfade({
 		duration: 500,
 		easing: quadOut
 	});
 </script>
 
-<!-- <svelte:window on:click={hide} /> -->
-
 <div class="sticky left-0 top-0 z-30">
 	<nav
-		class="bg-stone-50/90 px-4 py-3 backdrop-blur transition-colors duration-300 ease-in-out dark:bg-stone-950/90"
+		class="bg-stone-50/90 py-3 backdrop-blur transition-colors duration-300 ease-in-out dark:bg-stone-950/90"
 	>
 		<div class="container mx-auto px-4">
 			<div class="flex items-center justify-between">

@@ -1,22 +1,18 @@
 <script>
 	import { useModals } from '$lib/stores/modals';
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
 	const modals = useModals();
-	const dispatch = createEventDispatcher();
 
 	let current;
 
 	async function close(confirmed) {
-		await current?.response(confirmed);
-
-		if (confirmed) {
-			dispatch('confirmed');
+		if (current.response) {
+			await current.response(confirmed);
 		}
 
 		modals.close();
-		dispatch('close');
 	}
 
 	onMount(() => {
