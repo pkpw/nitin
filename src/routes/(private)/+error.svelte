@@ -13,8 +13,8 @@
 	<div
 		class="mx-auto min-w-80 max-w-sm bg-stone-50 bg-opacity-90 p-8 text-center backdrop-blur dark:bg-stone-950"
 	>
-		<p class="text-lg pb-12">Please try again.</p>
-    <a class="btn-primary rounded-full" href="/dashboard">Dashboard</a>
+		<p class="pb-12 text-lg">Please try again.</p>
+		<a class="btn-primary rounded-full" href="/dashboard">Back to Dashboard</a>
 		<!-- <p class="mt-8 text-xs text-stone-400">{$page.status} {$page.error.message}</p> -->
 	</div>
 </div>
