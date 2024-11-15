@@ -4,13 +4,9 @@
 	import { Icons } from '$lib/components/icons/icons';
 	import Icon from '../Icon.svelte';
 
-	import { useModals } from '$lib/stores/modals';
-
 	import Popup from '../Popup.svelte';
 
 	// export let deck, data;
-
-	const modals = useModals();
 
 	let visible = writable(false);
 </script>
@@ -22,7 +18,7 @@
 				? 'bg-stone-300 dark:bg-stone-700'
 				: ''} select-none hover:cursor-pointer hover:bg-stone-300 hover:dark:bg-stone-700"
 		>
-			Format
+			Edit
 		</div>
 	</svelte:fragment>
 	<svelte:fragment slot="popup">
@@ -33,36 +29,22 @@
 				class="flex w-full items-center space-x-2 p-4 hover:bg-stone-100 dark:hover:bg-stone-800"
 				on:click={() => {}}
 			>
-				<Icon icon={Icons.Bold} width="24" height="24" />
-				<span>Bold</span>
+				<Icon icon={Icons.Copy} width="24" height="24" />
+				<span>Copy</span>
 			</button>
 			<button
 				class="flex w-full items-center space-x-2 p-4 hover:bg-stone-100 dark:hover:bg-stone-800"
 				on:click={() => {}}
 			>
-				<Icon icon={Icons.Italic} width="24" height="24" />
-				<span>Italic</span>
+				<Icon icon={Icons.Cut} width="24" height="24" />
+				<span>Cut</span>
 			</button>
 			<button
 				class="flex w-full items-center space-x-2 p-4 hover:bg-stone-100 dark:hover:bg-stone-800"
 				on:click={() => {}}
 			>
-				<Icon icon={Icons.Underline} width="24" height="24" />
-				<span>Underline</span>
-			</button>
-			<button
-				class="flex w-full items-center space-x-2 p-4 hover:bg-stone-100 dark:hover:bg-stone-800"
-				on:click={() => {}}
-			>
-				<Icon icon={Icons.NumberedList} width="24" height="24" />
-				<span>Numbered List</span>
-			</button>
-			<button
-				class="flex w-full items-center space-x-2 p-4 hover:bg-stone-100 dark:hover:bg-stone-800"
-				on:click={() => {}}
-			>
-				<Icon icon={Icons.BulletedList} width="24" height="24" />
-				<span>Bulleted List</span>
+				<Icon icon={Icons.Paste} width="24" height="24" />
+				<span>Paste</span>
 			</button>
 		</div>
 	</svelte:fragment>

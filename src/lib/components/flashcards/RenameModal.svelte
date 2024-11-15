@@ -10,18 +10,25 @@
 	import { Icons } from '$lib/components/icons/icons';
 	import Spinner from '../Spinner.svelte';
 
-	export let close, data, flashcard;
-	const { form, errors, constraints, enhance, delayed, submit } = superForm(data, {
-		validators: schemasafe(schema),
-		onUpdate: ({ form }) => {
+	export let close, data;
+	const { form, errors, constraints, enhance, submit, delayed } = superForm(data.renameForm, {
+		invalidateAll: false,
+		onUpdated({ form }) {
 			if (form.valid) {
+				// Rename flashcard in UI
+				const index = get(data.flashcards).indexOf(data.flashcard);
+				data.flashcards.update((f) => {
+					f[index].title = form.data.title;
+					return f;
+				});
+
 				close(true);
 			}
 		}
 	});
 
 	onMount(() => {
-		$form.title = flashcard.title;
+		$form.title = data.flashcard.title;
 	});
 
 	function handleKeyDown(event) {
@@ -38,7 +45,7 @@
 </div>
 
 <form method="POST" action="?/rename" use:enhance novalidate>
-	<input class="hidden" name="id" type="text" bind:value={flashcard.id} />
+	<input class="hidden" name="id" type="text" bind:value={data.flashcard.id} />
 	<div class="mb-4">
 		<input
 			class="form-input"

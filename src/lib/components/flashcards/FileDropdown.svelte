@@ -27,7 +27,7 @@
 	</svelte:fragment>
 	<svelte:fragment slot="popup">
 		<div
-			class="absolute left-0 top-[calc(100%+0.25rem)] min-w-44 overflow-hidden rounded-md border border-stone-700 bg-stone-50 dark:border-stone-500 dark:bg-stone-950"
+			class="absolute left-0 top-[calc(100%+0.25rem)] z-30 min-w-44 overflow-hidden rounded-md border border-stone-700 bg-stone-50 dark:border-stone-500 dark:bg-stone-950"
 		>
 			<button
 				class="flex w-full items-center space-x-2 p-4 hover:bg-stone-100 dark:hover:bg-stone-800"
