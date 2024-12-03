@@ -2,7 +2,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { fade } from 'svelte/transition';
 
-	import { Icons } from '$lib/components/icons.js';
+	import { Icons } from '$lib/components/icons/icons.js';
 	import Icon from '$lib/components/Icon.svelte';
 
 	import Spinner from '$lib/components/Spinner.svelte';
@@ -26,13 +26,13 @@
 		{#if $message}
 			<div
 				in:fade
-				class="mx-auto max-w-sm rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 text-center backdrop-blur dark:border-stone-700 dark:bg-stone-950"
+				class="mx-auto min-w-80 max-w-sm rounded-xl border border-stone-400 bg-stone-50/90 p-8 text-center backdrop-blur dark:border-stone-700 dark:bg-stone-950/90"
 			>
 				<div class="relative mx-auto mb-8 w-fit">
 					<div
 						class="rounded-full border border-stone-400 bg-stone-100 p-8 dark:border-stone-700 dark:bg-stone-950"
 					>
-						<Icon icon={Icons.Mail} alt="Email" width="72" height="72" />
+						<Icon icon={Icons.Mail} width="72" height="72" />
 						<div class="absolute right-7 top-8 flex items-center justify-center">
 							<div class="flex h-6 w-6 items-center justify-center rounded-full bg-red-500">
 								<span class="text-sm text-white">1</span>
@@ -46,7 +46,7 @@
 		{:else}
 			<h1 class="pb-10 text-center font-serif text-6xl text-white">Study smarter<br /> today.</h1>
 			<form
-				class="mx-auto max-w-sm rounded-xl border border-stone-400 bg-stone-50 bg-opacity-90 p-8 backdrop-blur dark:border-stone-700 dark:bg-stone-950"
+				class="mx-auto min-w-80 max-w-sm rounded-xl border border-stone-400 bg-stone-50/90 p-8 backdrop-blur dark:border-stone-700 dark:bg-stone-950/90"
 				method="POST"
 				use:enhance
 			>
@@ -62,7 +62,7 @@
 					/>
 					{#if $errors.email}
 						<div in:fade class="mt-1 flex items-center justify-start">
-							<Icon icon={Icons.Error} alt="Error" width="20" height="20" />
+							<Icon icon={Icons.Error} width="20" height="20" fill={'#ef4444'} />
 							<span class="ml-2 text-sm font-semibold text-red-500">Email is not valid.</span>
 						</div>
 					{/if}
@@ -70,7 +70,7 @@
 				<button class="btn-primary w-full rounded-full">
 					{#if $delayed}
 						<div in:fade>
-							<Spinner />
+							<Spinner fill={'#fafaf9'} />
 						</div>
 					{:else}
 						Continue with email

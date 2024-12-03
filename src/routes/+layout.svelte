@@ -5,12 +5,14 @@
 	import { invalidate } from '$app/navigation';
 	import { setModals } from '$lib/stores/modals';
 	import { setTheme, useTheme } from '$lib/stores/theme';
-	import Models from '$lib/components/Models.svelte';
+	import Modals from '$lib/components/Modals.svelte';
+	import { setNavBar } from '$lib/stores/navbar';
 
 	export let data;
 	$: ({ session, supabase } = data);
 
 	setTheme();
+	setNavBar();
 	setModals();
 
 	const theme = useTheme();
@@ -33,6 +35,6 @@
 	});
 </script>
 
-<Models />
+<Modals />
 
 <slot />

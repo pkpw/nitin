@@ -1,5 +1,12 @@
 <script>
-	import { Icons } from '$lib/components/icons';
+	import { Icons } from '$lib/components/icons/icons';
+	import Icon from './Icon.svelte';
+
+	export let height = '24',
+		width = '24',
+		fill = null;
 </script>
 
-<img class="animate-spin" src={Icons.Spinner} alt="Loading" width="24" height="24" />
+<div class="mx-auto h-6 w-6 animate-spin">
+	<Icon icon={Icons.Spinner} {width} {height} {fill} />
+</div>

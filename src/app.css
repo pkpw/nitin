@@ -4,6 +4,12 @@
 
 html {
 	@apply m-0 p-0;
+	scrollbar-color: #78716c #fafaf9;
+	scrollbar-width: thin;
+}
+
+html.dark {
+	scrollbar-color: #78716c #0c0a09;
 }
 
 body {
@@ -28,6 +34,10 @@ body {
 
 .btn-outline {
 	@apply btn border border-stone-400 bg-stone-50 hover:cursor-pointer hover:border-stone-700 hover:bg-stone-100 dark:border-stone-700 dark:bg-stone-950 dark:hover:border-stone-500 hover:dark:bg-stone-800;
+}
+
+.icon-button-danger:hover svg {
+	@apply fill-red-500;
 }
 
 .form-label {

@@ -8,12 +8,6 @@ import { db } from '$lib/server/database.js';
 export async function load({ locals: { supabase, safeGetSession } }) {
 	const { session } = await safeGetSession();
 
-	const { data: decks, error } = await db.getDecks(supabase, session.user.id);
-	if (error) {
-		// TODO: Trigger toast notification with error message
-		return {};
-	}
-
 	const createAdapter = schemasafe(createSchema);
 	const createForm = await superValidate(createAdapter);
 
@@ -24,7 +18,7 @@ export async function load({ locals: { supabase, safeGetSession } }) {
 	const renameForm = await superValidate(renameAdapter);
 
 	return {
-		decks,
+		decks: db.getDecks(supabase, session.user.id),
 		createForm,
 		deleteForm,
 		renameForm
@@ -42,11 +36,7 @@ export const actions = {
 
 		const { error } = await db.createDeck(supabase, session.user.id, form.data.title);
 		if (error) {
-			if (error == 'Flashcard deck already exists!') {
-				return setError(form, 'title', error);
-			} else {
-				return fail(400, { form });
-			}
+			return setError(form, 'title', error);
 		}
 
 		return message(form, 'Created!');
@@ -76,11 +66,7 @@ export const actions = {
 
 		const { error } = await db.renameDeck(supabase, form.data.id, session.user.id, form.data.title);
 		if (error) {
-			if (error == 'Flashcard deck already exists!') {
-				return setError(form, 'title', error);
-			} else {
-				return fail(400, { form });
-			}
+			return setError(form, 'title', error);
 		}
 
 		return message(form, 'Renamed!');
