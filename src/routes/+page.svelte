@@ -18,3 +18,14 @@
 	<h1 class="my-12 text-8xl font-bold">Nitin</h1>
 	<p class="text-xl">Under construction.</p>
 </div>
+<style>
+    /* Style the dropdown to make numbers black */
+    .dropdown {
+        color: black; /* Sets the font color inside the dropdown to black */
+        background-color: white; /* Optional: Set background to white */
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+</style>

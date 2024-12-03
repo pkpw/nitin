@@ -1,6 +1,7 @@
 import { fail } from '@sveltejs/kit';
 import { json } from '@sveltejs/kit';
 
+
 export async function load({ locals: { supabase, safeGetSession }}) {
     const { session } = await safeGetSession();
 	if (!session) {
@@ -18,7 +19,7 @@ export async function load({ locals: { supabase, safeGetSession }}) {
     const { data: canvasData, error: canvasError } = await supabase
         .from('canvas')
         .select('canvas_data')
-        .eq('id', 1) // Testing ID with one table entry
+        .eq('id', selID) // Testing ID with one table entry
         .single();
 
     // Debug
@@ -60,7 +61,7 @@ export const actions = {
         const { error } = await supabase
             .from('canvas')
             .update({ canvas_data: parsedData })
-            .eq('id', 1);
+            .eq('id', selID);
 
         if (error) {
             console.error('Error saving canvas to database:', error);
