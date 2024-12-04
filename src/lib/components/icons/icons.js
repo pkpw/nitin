@@ -7,6 +7,7 @@ import ForwardArrow from './ForwardArrow.svelte';
 import Bold from './Bold.svelte';
 import BulletedList from './BulletedList.svelte';
 import Classrooms from './Classrooms.svelte';
+import Clear from './Clear.svelte';
 import Close from './Close.svelte';
 import Copy from './Copy.svelte';
 import CopyAll from './CopyAll.svelte';
@@ -48,6 +49,7 @@ export const Icons = {
 	Bold,
 	BulletedList,
 	Classrooms,
+	Clear,
 	Close,
 	Copy,
 	CopyAll,

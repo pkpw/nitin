@@ -10,13 +10,21 @@
 	import FormatDropdown from './FormatDropdown.svelte';
 	import TextSizeDropdown from './TextSizeDropdown.svelte';
 
+	import { debounce } from 'throttle-debounce';
+
 	import { formatStore } from './format';
 
 	export let quill;
 
 	const activeColor = '#3b82f6';
+	const flashcardId = new URLSearchParams(window.location.search).get('id');
 
 	let textSize = writable(undefined);
+	let drawing = false;
+	let isDrawing = false;
+	let canvas, ctx;
+	let strokes = [];
+	let saved = true;
 
 	onMount(() => {
 		quill.on('selection-change', (range, oldRange, source) => {
@@ -32,6 +40,18 @@
 				update(selection);
 			}
 		});
+
+		if (canvas) {
+			ctx = canvas.getContext('2d');
+			canvas.width = quill.root.clientWidth;
+			canvas.height = quill.root.clientHeight;
+			
+			
+			canvas.addEventListener('mousedown', startDrawing);
+			canvas.addEventListener('mousemove', draw);
+			canvas.addEventListener('mouseup', stopDrawing);
+			canvas.addEventListener('mouseout', stopDrawing);
+		}
 	});
 
 	function update(range) {
@@ -45,6 +65,129 @@
 			isNumberedList: format.list === 'ordered',
 			isBulletedList: format.list === 'bullet'
 		});
+	}
+
+	function toggleDrawing() {
+		drawing = !drawing;
+		if (drawing) {
+			canvas.style.pointerEvents = 'auto';  // Allow pointer events when drawing
+			saved = false;
+		} else {
+			canvas.style.pointerEvents = 'none'; // Disable pointer events when not drawing
+		}
+	}
+
+	function startDrawing(event) {
+		if (drawing){
+			isDrawing = true;
+			ctx.beginPath();
+			ctx.moveTo(event.offsetX, event.offsetY);
+
+			ctx.strokeStyle = 'white';
+			ctx.lineWidth = 2;         
+			ctx.lineCap = 'round';     
+
+			strokes.push({
+				startX: event.offsetX,
+				startY: event.offsetY,
+				color: 'white',
+				width: '2',
+				lineCap: 'round',
+				path: [{ x: event.offsetX, y: event.offsetY }]
+			});
+			console.log(strokes);
+		}
+	}
+
+	function draw(event) {
+		if (drawing && isDrawing){
+			ctx.lineTo(event.offsetX, event.offsetY);
+			ctx.stroke();
+
+			const currentStroke = strokes[strokes.length - 1];
+    		currentStroke.path.push({ x: event.offsetX, y: event.offsetY });
+			if(!saved){
+				save();
+			}
+		}
+	}
+
+	function stopDrawing() {
+		if (drawing){
+			isDrawing = false;
+			ctx.closePath();
+		}
+	}
+	
+	const save = debounce(2500, saveCanvas);
+
+	function clearCanvas() {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		strokes = [];
+	}
+
+	function getCanvasData() {
+		//console.log("Getting canvas data");
+		// const ctx = canvas.getContext('2d');
+		// const data = [];
+
+		// const lines = getLinesFromCanvas(ctx);
+		// lines.forEach(line => {
+		// 	data.push({
+		// 	startX: line.startX,
+		// 	startY: line.startY,
+		// 	endX: line.endX,
+		// 	endY: line.endY,
+		// 	color: line.color,
+		// 	width: line.width
+		// 	});
+		// });
+
+		return JSON.stringify(strokes);
+	}
+
+	async function saveCanvas() {
+		const id = flashcardId;
+		const canvasData = getCanvasData();
+		console.log("Saving canvas Data...");
+		//console.log(canvasData);
+		const { data, error } = await supabase
+			.from('flashcards')
+			.upsert({
+				canvas_f: canvasData
+			})
+			.eq('id', flashcardId);
+
+		if (error) {
+			console.error('Error saving canvas data:', error);
+		} else {
+			console.log('Canvas data saved successfully:', data);
+		}
+	}
+
+	async function loadCanvas(flashcardId) {
+		const { data, error } = await supabase
+			.from('flashcards')
+			.select('canvas_f')
+			.eq('id', flashcardId)
+			.single();
+
+		if (error) {
+			console.error('Error loading canvas:', error);
+		} else {
+			const canvasData = JSON.parse(data.canvas_f);
+
+			canvasData.forEach(stroke => {
+				ctx.beginPath();
+				ctx.moveTo(stroke.startX, stroke.startY);
+				stroke.path.forEach(point => {
+					ctx.lineTo(point.x, point.y);
+				});
+				ctx.strokeStyle = stroke.color;
+				ctx.lineWidth = stroke.width;
+				ctx.stroke();
+			});
+		}
 	}
 
 	function bold() {
@@ -98,6 +241,20 @@
 	}
 </script>
 
+<div class="relative">
+
+	<div class="editor"></div>
+  
+	
+	<canvas
+	  bind:this={canvas}
+	  on:mousedown={startDrawing}
+	  on:mousemove={draw}
+	  on:mouseup={stopDrawing}
+	  class="absolute top-[173px] left-[1px] pointer-events-none"
+	  style="z-index: 10; background: transparent;"
+	></canvas>
+  </div>
 <div class="flex flex-row items-center justify-start space-x-1 pt-1.5">
 	<FileDropdown />
 	<EditDropdown />
@@ -191,7 +348,30 @@
 	<div class="rounded-lg p-1 hover:cursor-pointer hover:bg-stone-200 hover:dark:bg-stone-800">
 		<Icon icon={Icons.AddPhoto} width="32" height="32" />
 	</div>
-	<div class="rounded-lg p-1 hover:cursor-pointer hover:bg-stone-200 hover:dark:bg-stone-800">
-		<Icon icon={Icons.Draw} width="32" height="32" />
-	</div>
+	<button
+		class="rounded-lg p-1 {$formatStore.isDrawing
+			? 'bg-stone-200 dark:bg-stone-800'
+			: 'bg-stone-50 dark:bg-stone-950'} hover:cursor-pointer hover:bg-stone-200 hover:dark:bg-stone-800"
+		on:click={() => toggleDrawing()}
+	>
+		<Icon
+			icon={Icons.Draw}
+			width="32"
+			height="32"
+			fill={$formatStore.isDrawing ? activeColor : null}
+		/>
+	</button>
+	<button
+		class="rounded-lg p-1
+			? 'bg-stone-200 dark:bg-stone-800'
+			: 'bg-stone-50 dark:bg-stone-950'} hover:cursor-pointer hover:bg-stone-200 hover:dark:bg-stone-800"
+		on:click={() => clearCanvas()}
+	>
+		<Icon
+			icon={Icons.Clear}
+			width="32"
+			height="32"
+		/>
+	</button>
 </div>
+
