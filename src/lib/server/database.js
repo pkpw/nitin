@@ -14,6 +14,14 @@ import {
 	renameFlashcard,
 	saveFlashcard
 } from './models/flashcard';
+import {
+	getClassroomById,
+	getAllClassrooms,
+	createClassroom,
+	deleteClassroom,
+	renameClassroom,
+} from './models/classroom';
+
 
 export const db = {
 	// Profile
@@ -32,5 +40,11 @@ export const db = {
 	saveFlashcard,
 	createFlashcard,
 	deleteFlashcard,
-	renameFlashcard
+	renameFlashcard,
+	// Classrooms
+	getClassroomById, 
+	getAllClassrooms,
+	createClassroom,
+	deleteClassroom,
+	renameClassroom
 };

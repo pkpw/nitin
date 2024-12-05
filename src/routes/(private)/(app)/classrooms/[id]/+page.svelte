@@ -1,81 +1,72 @@
 <script>
-	export let data;
-	let classroom = data.classroom;
+    import { superForm } from 'sveltekit-superforms';
+    export let data;
+    let classroom = data.classroom;
+    const { form, message, enhance } = superForm(data.renameForm);
 
-	let isEditing = false;
-	let newClassroomName = classroom.name;
+    let renameError = '';
+    let deleteError = '';
 
-	async function updateClassroomName() {
-		try {
-			const response = await fetch(`/classrooms/${classroom.id}`, {
-				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ name: newClassroomName })
-			});
+    async function reloadClassroom() {
+    classroom=data.classroom;
+  }
+  $: if ($message) {
+    reloadClassroom(); 
+  }
+   
+// Watch for changes to the rename message and clear it after 5 seconds
+    $: if ($message) {
+        clearRenameMessageAfterTimeout();
+        }
 
-			if (!response.ok) {
-				console.error('Error updating classroom name:', response.statusText);
-				return;
-			}
-
-			classroom.name = newClassroomName;
-			isEditing = false;
-		} catch (err) {
-			console.error('Error while updating classroom name:', err);
-		}
-	}
+        function clearRenameMessageAfterTimeout() {
+        setTimeout(() => {
+            message.set(null); // Clear the message after 5 seconds
+        }, 5000);
+    }
 </script>
 
 <svelte:head>
-	<title>{classroom.name}</title>
-	<link
-		rel="stylesheet"
-		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-	/>
+    <title>{classroom?.name || 'Classroom Details'}</title>
 </svelte:head>
 
-<div class="flex min-h-screen flex-col items-center bg-black p-8 text-white">
-	<div class="mb-8 flex w-full max-w-4xl items-center justify-center">
-		{#if isEditing}
-			<input
-				type="text"
-				bind:value={newClassroomName}
-				class="w-1/2 rounded-md border border-blue-500 bg-black p-2 text-white"
-			/>
-			<button
-				class="ml-4 rounded-md bg-blue-500 px-4 py-2 text-white"
-				on:click={updateClassroomName}
-			>
-				Save
-			</button>
-			<button
-				class="ml-2 rounded-md bg-gray-500 px-4 py-2 text-white"
-				on:click={() => (isEditing = false)}
-			>
-				Cancel
-			</button>
-		{:else}
-			<h1 class="text-center text-5xl font-bold">{classroom.name}</h1>
-			<button class="ml-2" on:click={() => (isEditing = true)}>
-				<span class="material-symbols-rounded"> edit </span>
-			</button>
-		{/if}
-	</div>
+<h1 class="text-4xl font-bold">Classroom: {classroom?.name}</h1>
+<p>Created at: {classroom?.created_at ? new Date(classroom.created_at).toLocaleDateString() : 'Invalid Date'}</p>
+<p>Description: {classroom?.description || 'No description available'}</p>
 
-	<div class="w-full max-w-4xl">
-		<h3 class="mb-4 block text-left text-lg">Members:</h3>
-		<h3 class="mb-4 block text-left text-lg">Flashcard Sets:</h3>
-	</div>
-</div>
+<!-- Rename Classroom Form -->
+<form method="POST" action="?/rename" use:enhance={(submit) => {
+        submit.result.then((response) => {
+        });
+    }} class="bg-gray-800 p-4 rounded-lg mt-4">
+    <input type="hidden" name="id" value={classroom?.id} />
+    <label class="block mb-4">
+        <span class="text-white">New Classroom Name</span>
+        <input
+            type="text"
+            name="name"
+            placeholder="Enter new name"
+            bind:value={$form.name}
+            class="mt-2 w-full rounded-lg border border-gray-700 bg-gray-900 p-3 text-white"
+            required
+        />
+    </label>
+    {#if renameError}
+        <p>{renameError}</p>
+    {/if}
+    <button type="submit" class="btn-primary">Rename Classroom</button>
+    {#if $message}
+        <p class="text-green-500 mt-4">{$message}</p>
+    {/if}
+</form>
 
-<style>
-	.material-symbols-rounded {
-		font-size: 32px;
-		vertical-align: middle;
-		color: #ffffff;
-	}
+<!-- Delete Classroom Form -->
+<form method="POST" action="?/delete" >
+    <input type="hidden" name="id" value={classroom?.id} />
+    {#if deleteError}
+        <p>{deleteError}</p>
+    {/if}
+    <button type="submit" class="btn-primary w-full rounded-md">Delete Classroom</button>
+</form>
 
-	h1 {
-		display: inline;
-	}
-</style>
+<a href="/classrooms" class="btn-secondary mt-8">Back to Classrooms</a>

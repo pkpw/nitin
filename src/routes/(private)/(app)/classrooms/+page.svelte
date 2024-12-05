@@ -1,73 +1,77 @@
 <script>
 	import { superForm } from 'sveltekit-superforms';
 	export let data;
-	const { form, errors, constraints, message, enhance } = superForm(data.form);
+	$: ({ supabase } = data);
+	const { form, errors, constraints, message, enhance } = superForm(data.createForm);
 	let classrooms = data.classrooms;
+	  
+	async function reloadClassrooms() {
+    classrooms=data.classrooms;
+  }
+  $: if ($message) {
+    reloadClassrooms(); 
+  }
+ // Watch for changes to the message and set a timer to clear it
+ $: if ($message) {
+        clearMessageAfterTimeout();
+    }
 
-	async function deleteClassroom(classroomId) {
-		try {
-			const response = await fetch(`/classrooms/${classroomId}`, {
-				method: 'DELETE'
-			});
-
-			if (!response.ok) {
-				console.error('Error deleting classroom:', response.statusText);
-				return;
-			}
-
-			classrooms = classrooms.filter((classroom) => classroom.id !== classroomId);
-		} catch (err) {
-			console.error('Error while deleting classroom:', err);
-		}
-	}
+    function clearMessageAfterTimeout() {
+        setTimeout(() => {
+            message.set(null); // Clear the message after 5 seconds
+        }, 5000);
+    }
 </script>
 
 <svelte:head>
-	<title>Classrooms</title>
+	<title>My Classrooms</title>
 </svelte:head>
 
-<div class="min-h-screen bg-black p-8 text-white">
-	<a href="/" class="text-blue-500">Back</a>
+<div class="container mx-auto px-8 py-12">
+	<h1 class="text-4xl font-bold mb-8">My Classrooms</h1>
 
-	<h1 class="text-3xl font-bold text-white">Create a New Classroom</h1>
-	<form method="POST" use:enhance class="mt-6">
-		<label class="block text-lg">
-			Classroom Name
+	<!-- Form to Create Classroom -->
+	<form method="POST" use:enhance class="bg-gray-800 p-6 rounded-lg shadow-md mb-8">
+		<h2 class="text-2xl font-semibold mb-4">Create a New Classroom</h2>
+
+		<!-- Input for Classroom Name -->
+		<label class="block mb-4">
+			<span class="text-white">Classroom Name</span>
 			<input
-				name="name"
 				type="text"
-				aria-invalid={$errors.name ? 'true' : undefined}
+				name="name"
 				bind:value={$form.name}
+				aria-invalid={$errors.name ? 'true' : undefined}
 				{...$constraints.name}
-				class="mt-2 w-full rounded-md border border-blue-500 bg-black p-2 text-white"
+				class="mt-2 w-full rounded-lg border border-gray-700 bg-gray-900 p-3 text-white"
 				placeholder="Enter classroom name"
+				required
 			/>
+			{#if $errors.name}
+				<p class="text-red-500 mt-2">{$errors.name}</p>
+			{/if}
 		</label>
-		{#if $errors.name}
-			<span class="text-red-500">Classroom name must be between 3 and 32 characters.</span>
-		{/if}
-		<button class="mt-4 rounded-md bg-blue-500 px-4 py-2 text-white">Create Classroom</button>
+
+		<button type="submit" class="btn-primary mt-4">
+			Create Classroom
+		</button>
+		<!-- Display Success Message -->
+		{#if $message}
+        <p class="text-green-500 mt-4">{$message}</p>
+    	{/if}
 	</form>
 
-	<h2 class="mt-8 text-2xl font-semibold text-white">Existing Classrooms</h2>
-	<ul class="mt-4 space-y-4">
-		{#each classrooms as classroom}
-			<li class="rounded-md border border-white bg-black p-4 text-white">
-				<a href={`/classrooms/${classroom.id}`} class="text-blue-500 underline">{classroom.name}</a>
-				<span class="text-sm">(Created at: {new Date(classroom.created_at).toLocaleString()})</span>
-				<button
-					class="ml-4 rounded-md bg-red-500 px-2 py-1 text-white"
-					on:click={() => deleteClassroom(classroom.id)}
-				>
-					Delete
-				</button>
-			</li>
-		{/each}
-	</ul>
+	<!-- Display Existing Classrooms -->
+	<h2 class="text-3xl font-semibold mb-6">My Classrooms</h2>
+	{#if classrooms.length > 0}
+		<div class="grid gap-4">
+			{#each classrooms as classroom}
+				<a href={`/classrooms/${classroom.id}`} class="block p-4 mb-2 rounded-lg bg-stone-800">
+					{classroom.name} - Created at: {new Date(classroom.created_at).toLocaleDateString()}
+			 	</a>
+			{/each}
+		</div>
+	{:else}
+		<p class="text-gray-500">No classrooms found. Create one to get started!</p>
+	{/if}
 </div>
-
-<style>
-	.invalid {
-		color: red;
-	}
-</style>
