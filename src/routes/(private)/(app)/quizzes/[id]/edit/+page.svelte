@@ -3,6 +3,9 @@
     import { onMount } from 'svelte';
     import { useModals } from '$lib/stores/modals.js';
     import DeleteQuestionModal from '$lib/components/quizzes/DeleteQuestionModal.svelte';  
+	import Icon from '$lib/components/Icon.svelte';
+	import Delete from '$lib/components/icons/Delete.svelte';
+	import { Icons } from '$lib/components/icons/icons';
 
     $: ({ supabase } = data);
     export let data;
@@ -215,10 +218,10 @@
                 {#if questions.length > 1}
                     <button
                         type="button"
-                        class="text-red-500 hover:text-red-700 font-medium"
+                        class="icon-button-danger text-red-500 hover:text-red-700 font-medium"
                         on:click={() => deleteQuestion(questionIndex)}
                     >
-                        Delete Question
+                        <Icon icon={Icons.Delete} width="32" height="32" />
                     </button>
                 {/if}
             </div>
@@ -257,19 +260,19 @@
     <div class="flex gap-4">
         <button
             on:click={addQuestion}
-            class="btn-primary"
+            class="btn-primary rounded-full"
         >
             Add Question
         </button>
         <button
             on:click={saveQuiz}
-            class="btn-primary"
+            class="btn-primary rounded-full"
         >
             Save Quiz
         </button>
         <button
             on:click={() => goto('/quizzes')}
-            class="btn-secondary"
+            class="btn-secondary rounded-full"
         >
             Cancel
         </button>
