@@ -52,7 +52,7 @@
 			</button>
 			<a
 				class="flex w-full items-center space-x-2 p-4 hover:bg-stone-100 dark:hover:bg-stone-800"
-				href="/flashcards"
+				href="/quizzes"
 			>
 				<Icon icon={Icons.BackArrow} width="24" height="24" />
 				<span>All Flashcards</span>

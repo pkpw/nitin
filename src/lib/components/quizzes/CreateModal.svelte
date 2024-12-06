@@ -1,34 +1,21 @@
 <script>
-	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
+	import Icon from '$lib/components/Icon.svelte';
+	import { Icons } from '$lib/components/icons/icons';
 	import { fade } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms';
 	import { schemasafe } from 'sveltekit-superforms/adapters';
-	import { schema } from './renameForm';
-
-	import Icon from '$lib/components/Icon.svelte';
-	import { Icons } from '$lib/components/icons/icons';
+	import { schema } from './createForm';
+	import { onMount } from 'svelte';
 	import Spinner from '../Spinner.svelte';
 
 	export let close, data;
-	const { form, errors, constraints, enhance, submit, delayed } = superForm(data.renameForm, {
-		invalidateAll: false,
-		onUpdated({ form }) {
+	const { form, errors, constraints, enhance, delayed, submit } = superForm(data, {
+		validators: schemasafe(schema),
+		onUpdate: ({ form }) => {
 			if (form.valid) {
-				// Rename flashcard in UI
-				const index = get(data.foldersquizzes).indexOf(data.quiz);
-				data.foldersquizzes.update((f) => {
-					f[index].title = form.data.title;
-					return f;
-				});
-
 				close(true);
 			}
 		}
-	});
-
-	onMount(() => {
-		$form.title = data.quiz.title;
 	});
 
 	function handleKeyDown(event) {
@@ -39,19 +26,18 @@
 	}
 </script>
 
-<div class="mb-4 flex w-screen flex-row items-center space-x-4">
-	<Icon icon={Icons.Edit} width="32" height="32" />
-	<h1 class="text-xl font-semibold">Rename</h1>
+<div class="mb-4 flex flex-row items-center space-x-4">
+	<Icon icon={Icons.Decks} width="32" height="32" />
+	<h1 class="text-xl font-semibold">New quiz</h1>
 </div>
 
-<form method="POST" action="?/rename" use:enhance novalidate>
-	<input class="hidden" name="id" type="text" bind:value={data.quiz.id} />
+<form method="POST" action="?/create" use:enhance novalidate>
 	<div class="mb-4">
 		<input
 			class="form-input"
 			name="title"
 			type="text"
-			placeholder="My Flashcard Deck"
+			placeholder="My Quiz"
 			aria-invalid={$errors.title ? 'true' : undefined}
 			bind:value={$form.title}
 			on:keydown={handleKeyDown}
@@ -80,7 +66,7 @@
 					<Spinner fill={'#fafaf9'} />
 				</div>
 			{:else}
-				Save
+				Create
 			{/if}
 		</button>
 	</div>

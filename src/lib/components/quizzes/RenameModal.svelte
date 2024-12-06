@@ -10,25 +10,18 @@
 	import { Icons } from '$lib/components/icons/icons';
 	import Spinner from '../Spinner.svelte';
 
-	export let close, data;
-	const { form, errors, constraints, enhance, submit, delayed } = superForm(data.renameForm, {
-		invalidateAll: false,
-		onUpdated({ form }) {
+	export let close, data, quiz;
+	const { form, errors, constraints, enhance, delayed, submit } = superForm(data, {
+		validators: schemasafe(schema),
+		onUpdate: ({ form }) => {
 			if (form.valid) {
-				// Rename flashcard in UI
-				const index = get(data.foldersquizzes).indexOf(data.quiz);
-				data.foldersquizzes.update((f) => {
-					f[index].title = form.data.title;
-					return f;
-				});
-
 				close(true);
 			}
 		}
 	});
 
 	onMount(() => {
-		$form.title = data.quiz.title;
+		$form.title = quiz.title;
 	});
 
 	function handleKeyDown(event) {
@@ -45,13 +38,13 @@
 </div>
 
 <form method="POST" action="?/rename" use:enhance novalidate>
-	<input class="hidden" name="id" type="text" bind:value={data.quiz.id} />
+	<input class="hidden" name="id" type="text" bind:value={quiz.id} />
 	<div class="mb-4">
 		<input
 			class="form-input"
 			name="title"
 			type="text"
-			placeholder="My Flashcard Deck"
+			placeholder="My Quiz"
 			aria-invalid={$errors.title ? 'true' : undefined}
 			bind:value={$form.title}
 			on:keydown={handleKeyDown}
