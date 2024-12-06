@@ -75,7 +75,11 @@
 				cursorIndex = quill.getSelection()?.index ?? 0;
 				/* End generated code */
 
-				$flashcard.front = quill.getContents().ops;
+				if (isFront) {
+					$flashcard.front = quill.getContents().ops;
+				} else {
+					$flashcard.back = quill.getContents().ops
+				}
 
 				jsonData({
 					id: $flashcard.id,
@@ -106,6 +110,7 @@
 	let saved = true;
 	let isCreating = false;
 	let cursorIndex = 0;
+	let isFront = true
 
 	beforeNavigate((navigation) => {
 		if (!saved) {
@@ -162,11 +167,23 @@
 		});
 
 		quill.focus();
+
+		quill.setContents($flashcard.front)
 	});
+
+	function flip() {
+		if (isFront) {
+			$flashcard.front = quill.getContents().ops
+		} else {
+			$flashcard.back = quill.getContents().ops
+		}
+
+		quill.setContents(isFront ? $flashcard.back : $flashcard.front)
+		isFront = !isFront
+	}
 
 	$: $flashcards = deck.flashcards;
 	$: $flashcard = data.flashcard;
-	$: quill?.setContents($flashcard.front);
 </script>
 
 <svelte:head>
@@ -335,20 +352,30 @@
 	<div
 		class="bg-stone-20 sticky float-right mt-4 flex w-[80px] flex-row items-center justify-center rounded-md border border-stone-400 dark:border-stone-700 dark:bg-stone-950"
 	>
-		<div
-			class="flex h-10 w-10 items-center justify-center rounded-l-md bg-stone-200 hover:cursor-pointer hover:bg-stone-300 dark:bg-stone-800 dark:hover:bg-stone-700"
+		<button
+			class="flex h-10 w-10 items-center justify-center rounded-l-md {isFront ? "bg-stone-200 dark:bg-stone-800" : "bg-stone-50 dark:bg-stone-950"}  hover:cursor-pointer hover:bg-stone-300 dark:hover:bg-stone-700"
+			on:click={() => { 
+				if (!isFront) {
+					flip()
+				}
+			}}
 		>
 			<div>
 				<Icon icon={Icons.FlipToFront} width="32" height="32" />
 			</div>
-		</div>
-		<div
-			class="flex h-10 w-10 items-center justify-center rounded-r-md bg-stone-50 hover:cursor-pointer hover:bg-stone-300 dark:bg-stone-950 dark:hover:bg-stone-700"
+		</button>
+		<button
+			class="flex h-10 w-10 items-center justify-center rounded-r-md {!isFront ? "bg-stone-200 dark:bg-stone-800" : "bg-stone-50 dark:bg-stone-950"} hover:cursor-pointer hover:bg-stone-300 dark:hover:bg-stone-700"
+			on:click={() => { 
+				if (isFront) {
+					flip()
+				}
+			}}
 		>
 			<div>
 				<Icon icon={Icons.FlipToBack} width="32" height="32" />
 			</div>
-		</div>
+		</button>
 	</div>
 </div>
 
