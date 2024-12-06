@@ -11,16 +11,6 @@
     let renameError = '';
     let deleteError = '';
 
-	onMount(() => {
-		const interval = setInterval(() => {
-			invalidateAll();
-		}, 500);
-
-		return () => {
-			clearInterval(interval);
-		};
-	});
-
     async function reloadClassroom() {
     classroom=data.classroom;
     classroomDecks = data.classroomDecks;
