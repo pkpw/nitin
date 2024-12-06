@@ -16,8 +16,8 @@
 		onUpdated({ form }) {
 			if (form.valid) {
 				// Rename flashcard in UI
-				const index = get(data.foldersquizzes).indexOf(data.quiz);
-				data.foldersquizzes.update((f) => {
+				const index = get(data.flashcards).indexOf(data.flashcard);
+				data.flashcards.update((f) => {
 					f[index].title = form.data.title;
 					return f;
 				});
@@ -28,7 +28,7 @@
 	});
 
 	onMount(() => {
-		$form.title = data.quiz.title;
+		$form.title = data.flashcard.title;
 	});
 
 	function handleKeyDown(event) {
@@ -45,7 +45,7 @@
 </div>
 
 <form method="POST" action="?/rename" use:enhance novalidate>
-	<input class="hidden" name="id" type="text" bind:value={data.quiz.id} />
+	<input class="hidden" name="id" type="text" bind:value={data.flashcard.id} />
 	<div class="mb-4">
 		<input
 			class="form-input"

@@ -18,8 +18,8 @@
 		onUpdated({ form }) {
 			if (form.valid) {
 				// Remove deleted flashcard from UI
-				const index = get(data.foldersquizzes).indexOf(data.quiz);
-				data.foldersquizzes.update((f) => {
+				const index = get(data.flashcards).indexOf(data.flashcard);
+				data.flashcards.update((f) => {
 					f.splice(index, 1);
 					return f;
 				});
@@ -27,7 +27,7 @@
 				// Deleted only flashcard.
 				// Rerun load function in /flashcards/[deck_id]/+layout.server.js to create default flashcard
 				// since saving flashcard contents is no longer a concern.
-				if (get(data.foldersquizzes).length == 0) {
+				if (get(data.flashcards).length == 0) {
 					invalidateAll();
 				}
 			}
@@ -40,10 +40,10 @@
 	<h1 class="text-xl font-semibold text-red-500">Delete Flashcard</h1>
 </div>
 <form method="POST" action="?/delete" use:enhance>
-	<input class="hidden" name="id" type="text" bind:value={data.quiz.id} />
+	<input class="hidden" name="id" type="text" bind:value={data.flashcard.id} />
 	<p class="text-lg">
 		Are you sure you want to permanently delete <span class="font-semibold"
-			>{data.quiz.title}</span
+			>{data.flashcard.title}</span
 		>?
 	</p>
 	<div class="flex flex-row items-center justify-end space-x-4 pt-4">
