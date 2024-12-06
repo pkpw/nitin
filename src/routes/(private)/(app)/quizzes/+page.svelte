@@ -22,7 +22,7 @@
 	const navBar = useNavBar();
 
 	onMount(() => {
-		navBar.setTitle('quizzes');
+		navBar.setTitle('Quizzes');
 	});
 </script>
 
