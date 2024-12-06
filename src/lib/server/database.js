@@ -4,6 +4,7 @@ import {
 	deleteDeck,
 	getDeck,
 	getDecks,
+	getAllDecks,
 	getFlashcards,
 	renameDeck
 } from './models/deck';
@@ -20,6 +21,8 @@ import {
 	createClassroom,
 	deleteClassroom,
 	renameClassroom,
+	addDeckToClassroom,
+	getDecksForClassroom
 } from './models/classroom';
 
 
@@ -31,6 +34,7 @@ export const db = {
 	// Decks
 	getDeck,
 	getDecks,
+	getAllDecks,
 	getFlashcards,
 	createDeck,
 	deleteDeck,
@@ -46,5 +50,7 @@ export const db = {
 	getAllClassrooms,
 	createClassroom,
 	deleteClassroom,
-	renameClassroom
+	renameClassroom,
+	addDeckToClassroom,
+	getDecksForClassroom
 };

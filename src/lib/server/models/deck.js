@@ -8,6 +8,18 @@ export async function getDeck(supabase, id, owner_id) {
 	return supabase.from('decks').select().eq('id', id).eq('owner_id', owner_id);
 }
 
+export async function getAllDecks(supabase) {
+    const { data, error } = await supabase
+        .from('decks') // Ensure the table is named 'decks'
+        .select('*');
+
+    if (error) {
+        console.error('Error fetching decks:', error);
+        return { error };
+    }
+
+    return { data };
+}
 export async function createDeck(supabase, owner_id, title) {
 	const colors = [
 		'#ef4444', // red-500

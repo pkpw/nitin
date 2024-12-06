@@ -3,18 +3,36 @@
 	export let data;
 	$: ({ supabase } = data);
 	const { form, errors, constraints, message, enhance } = superForm(data.createForm);
-	let classrooms = data.classrooms;
-	  
+	let classrooms = [];
+
+
 	async function reloadClassrooms() {
-    classrooms=data.classrooms;
-  }
-  $: if ($message) {
-    reloadClassrooms(); 
-  }
- // Watch for changes to the message and set a timer to clear it
- $: if ($message) {
-        clearMessageAfterTimeout();
+		// Fetch updated classrooms from the server
+		const { data: updatedClassrooms, error } = await supabase
+			.from('classrooms')
+			.select('*')
+			.eq('created_by', data.user.id); 
+
+		if (error) {
+			console.error('Failed to reload classrooms:', error);
+			return;
+		}
+
+		classrooms = updatedClassrooms;
+	}
+	// Call reloadClassrooms on component mount
+    $: {
+        if (!classrooms.length) {
+            reloadClassrooms();
+        }
     }
+
+
+	// Watch for changes to the message and reload classrooms if there's a success message
+	$: if ($message) {
+		reloadClassrooms();
+		clearMessageAfterTimeout();
+	}
 
     function clearMessageAfterTimeout() {
         setTimeout(() => {
