@@ -113,6 +113,31 @@ CREATE TABLE IF NOT EXISTS "public"."answers" (
 ALTER TABLE "public"."answers" OWNER TO "postgres";
 
 
+CREATE TABLE IF NOT EXISTS "public"."classroom_decks" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "classroom_id" "uuid",
+    "deck_id" "uuid",
+    "created_at" timestamp without time zone DEFAULT "now"()
+);
+
+
+ALTER TABLE "public"."classroom_decks" OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."classrooms" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "name" character varying(32) NOT NULL,
+    "description" "text",
+    "owner_id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "created_at" timestamp without time zone DEFAULT "now"() NOT NULL,
+    "updated_at" timestamp without time zone DEFAULT "now"() NOT NULL,
+    "created_by" "uuid"
+);
+
+
+ALTER TABLE "public"."classrooms" OWNER TO "postgres";
+
+
 CREATE TABLE IF NOT EXISTS "public"."decks" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
@@ -186,6 +211,16 @@ ALTER TABLE ONLY "public"."answers"
 
 
 
+ALTER TABLE ONLY "public"."classroom_decks"
+    ADD CONSTRAINT "classroom_decks_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."classrooms"
+    ADD CONSTRAINT "classrooms_pkey" PRIMARY KEY ("id");
+
+
+
 ALTER TABLE ONLY "public"."decks"
     ADD CONSTRAINT "decks_id_key" UNIQUE ("id");
 
@@ -221,6 +256,11 @@ ALTER TABLE ONLY "public"."quizzes"
 
 
 
+ALTER TABLE ONLY "public"."classroom_decks"
+    ADD CONSTRAINT "unique_classroom_deck" UNIQUE ("classroom_id", "deck_id");
+
+
+
 ALTER TABLE ONLY "public"."quizzes"
     ADD CONSTRAINT "unique_quiz_title_per_owner" UNIQUE ("owner_id", "title");
 
@@ -244,6 +284,16 @@ CREATE UNIQUE INDEX "unique_flashcard_title" ON "public"."flashcards" USING "btr
 
 ALTER TABLE ONLY "public"."answers"
     ADD CONSTRAINT "answers_question_id_fkey" FOREIGN KEY ("question_id") REFERENCES "public"."questions"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."classroom_decks"
+    ADD CONSTRAINT "classroom_decks_deck_id_fkey" FOREIGN KEY ("deck_id") REFERENCES "public"."decks"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."classrooms"
+    ADD CONSTRAINT "classrooms_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "public"."profiles"("id") ON DELETE CASCADE;
 
 
 
@@ -403,7 +453,22 @@ CREATE POLICY "Users can view quizzes" ON "public"."quizzes" FOR SELECT USING (t
 
 
 
+CREATE POLICY "allow_inserts_based_on_classroom_owner" ON "public"."classroom_decks" FOR INSERT TO "authenticated" WITH CHECK ((EXISTS ( SELECT 1
+   FROM "public"."classrooms"
+  WHERE (("classrooms"."id" = "classroom_decks"."classroom_id") AND ("classrooms"."created_by" = "auth"."uid"())))));
+
+
+
+CREATE POLICY "allow_select_based_on_classroom_owner" ON "public"."classroom_decks" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
+   FROM "public"."classrooms"
+  WHERE (("classrooms"."id" = "classroom_decks"."classroom_id") AND ("classrooms"."created_by" = "auth"."uid"())))));
+
+
+
 ALTER TABLE "public"."answers" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."classroom_decks" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."decks" ENABLE ROW LEVEL SECURITY;
@@ -643,6 +708,18 @@ GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "service_role";
 GRANT ALL ON TABLE "public"."answers" TO "anon";
 GRANT ALL ON TABLE "public"."answers" TO "authenticated";
 GRANT ALL ON TABLE "public"."answers" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."classroom_decks" TO "anon";
+GRANT ALL ON TABLE "public"."classroom_decks" TO "authenticated";
+GRANT ALL ON TABLE "public"."classroom_decks" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."classrooms" TO "anon";
+GRANT ALL ON TABLE "public"."classrooms" TO "authenticated";
+GRANT ALL ON TABLE "public"."classrooms" TO "service_role";
 
 
 
