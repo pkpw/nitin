@@ -47,7 +47,7 @@
 						{/if}
 					</button>
 					{#if $navBar.title}
-						<h1 class="pl-8 text-xl font-bold">{$navBar.title}</h1>
+						<h1 class="pl-8 text-xl font-bold whitespace-nowrap w-44 overflow-clip text-ellipsis">{$navBar.title}</h1>
 					{/if}
 					<slot name="left"></slot>
 				</div>
