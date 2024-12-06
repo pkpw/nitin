@@ -1,30 +1,47 @@
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
+import { message, superValidate } from 'sveltekit-superforms';
+import { schemasafe } from 'sveltekit-superforms/adapters';
+import { loginForm } from './loginForm.js';
+
+export const load = async ({ locals: { safeGetSession }, cookies }) => {
+	const { session, user } = await safeGetSession();
+	if (session) {
+		redirect(303, '/dashboard');
+	}
+
+	// Artificial delay to test form loading spinner
+	// await new Promise((resolve) => setTimeout(resolve, 5000));
+
+	const adapter = schemasafe(loginForm);
+	const form = await superValidate(adapter);
+
+	return {
+		form,
+		session,
+		user,
+		cookies: cookies.getAll()
+	};
+};
 
 export const actions = {
-	signup: async ({ request, locals: { supabase } }) => {
-		const formData = await request.formData();
-		const email = formData.get('email');
-		const password = formData.get('password');
-
-		const { error } = await supabase.auth.signUp({ email, password });
-		if (error) {
-			console.error(error);
-			redirect(303, '/auth/error');
-		} else {
-			redirect(303, '/');
+	default: async ({ request, locals: { supabase } }) => {
+		const adapter = schemasafe(loginForm);
+		const form = await superValidate(request, adapter);
+		if (!form.valid) {
+			return fail(400, { form });
 		}
-	},
-	login: async ({ request, locals: { supabase } }) => {
-		const formData = await request.formData();
-		const email = formData.get('email');
-		const password = formData.get('password');
 
-		const { error } = await supabase.auth.signInWithPassword({ email, password });
+		const { error } = await supabase.auth.signInWithOtp({
+			email: form.data.email,
+			options: {
+				shouldCreateUser: true
+			}
+		});
+
 		if (error) {
-			console.error(error);
 			redirect(303, '/auth/error');
-		} else {
-			redirect(303, '/private');
 		}
+
+		return message(form, 'Magic link sent!');
 	}
 };
