@@ -4,6 +4,7 @@ import {
 	deleteDeck,
 	getDeck,
 	getDecks,
+	getAllDecks,
 	getFlashcards,
 	renameDeck
 } from './models/deck';
@@ -14,6 +15,16 @@ import {
 	renameFlashcard,
 	saveFlashcard
 } from './models/flashcard';
+import {
+	getClassroomById,
+	getAllClassrooms,
+	createClassroom,
+	deleteClassroom,
+	renameClassroom,
+	addDeckToClassroom,
+	getDecksForClassroom
+} from './models/classroom';
+
 
 export const db = {
 	// Profile
@@ -23,6 +34,7 @@ export const db = {
 	// Decks
 	getDeck,
 	getDecks,
+	getAllDecks,
 	getFlashcards,
 	createDeck,
 	deleteDeck,
@@ -32,5 +44,13 @@ export const db = {
 	saveFlashcard,
 	createFlashcard,
 	deleteFlashcard,
-	renameFlashcard
+	renameFlashcard,
+	// Classrooms
+	getClassroomById, 
+	getAllClassrooms,
+	createClassroom,
+	deleteClassroom,
+	renameClassroom,
+	addDeckToClassroom,
+	getDecksForClassroom
 };
