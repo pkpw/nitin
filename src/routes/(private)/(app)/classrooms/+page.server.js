@@ -25,7 +25,7 @@ export async function load({ locals: { supabase, safeGetSession } }) {
 	const renameForm = await superValidate(renameAdapter);
 
 	return {
-		classrooms: classrooms.data ?? [],
+		classrooms: classrooms?.data ?? [],
 		createForm,
 		deleteForm,
 		renameForm,

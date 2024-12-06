@@ -17,13 +17,6 @@ create table "public"."classrooms" (
     "updated_at" timestamp without time zone not null default now()
 );
 
-
-alter table "public"."decks" add column "created_flashcards" bigint not null default '0'::bigint;
-
-alter table "public"."flashcards" alter column "back" drop default;
-
-alter table "public"."flashcards" alter column "front" drop default;
-
 CREATE UNIQUE INDEX classroom_decks_pkey ON public.classroom_decks USING btree (id);
 
 CREATE UNIQUE INDEX classrooms_pkey ON public.classrooms USING btree (id);
@@ -39,22 +32,6 @@ alter table "public"."classroom_decks" add constraint "classroom_decks_deck_id_f
 alter table "public"."classroom_decks" validate constraint "classroom_decks_deck_id_fkey";
 
 alter table "public"."classroom_decks" add constraint "unique_classroom_deck" UNIQUE using index "unique_classroom_deck";
-
-set check_function_bodies = off;
-
-CREATE OR REPLACE FUNCTION public.increment_created_flashcards(deck_id uuid)
- RETURNS integer
- LANGUAGE plpgsql
-AS $function$DECLARE
-    new_value INTEGER;
-BEGIN
-    UPDATE decks
-    SET created_flashcards = created_flashcards + 1
-    WHERE id = deck_id
-    RETURNING created_flashcards INTO new_value;
-    RETURN new_value;
-END;$function$
-;
 
 grant delete on table "public"."classroom_decks" to "anon";
 
