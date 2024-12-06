@@ -54,6 +54,12 @@
 		}
 	});
 
+	function updateCanvasHeight () {
+		const quillHeight = quill.root.clientHeight;
+		canvas.height = quillHeight;
+	}
+	quill.on('text-change', updateCanvasHeight);
+
 	function update(range) {
 		const format = quill.getFormat(range);
 		$textSize = format.size;
@@ -126,23 +132,7 @@
 		strokes = [];
 	}
 
-	function getCanvasData() {
-		//console.log("Getting canvas data");
-		// const ctx = canvas.getContext('2d');
-		// const data = [];
-
-		// const lines = getLinesFromCanvas(ctx);
-		// lines.forEach(line => {
-		// 	data.push({
-		// 	startX: line.startX,
-		// 	startY: line.startY,
-		// 	endX: line.endX,
-		// 	endY: line.endY,
-		// 	color: line.color,
-		// 	width: line.width
-		// 	});
-		// });
-
+	export function getCanvasData() {
 		return JSON.stringify(strokes);
 	}
 
@@ -150,44 +140,24 @@
 		const id = flashcardId;
 		const canvasData = getCanvasData();
 		console.log("Saving canvas Data...");
-		//console.log(canvasData);
-		const { data, error } = await supabase
-			.from('flashcards')
-			.upsert({
-				canvas_f: canvasData
-			})
-			.eq('id', flashcardId);
+		formData.append('canvasData', canvasData));
 
-		if (error) {
-			console.error('Error saving canvas data:', error);
+		const response = await fetch('/canvas', {
+			method: 'POST',
+			body: formData,
+		});
+
+
+		if (response.ok) {
+			console.log('Canvas saved successfully');
 		} else {
-			console.log('Canvas data saved successfully:', data);
+			console.error('Failed to save canvas data');
 		}
+
 	}
 
 	async function loadCanvas(flashcardId) {
-		const { data, error } = await supabase
-			.from('flashcards')
-			.select('canvas_f')
-			.eq('id', flashcardId)
-			.single();
-
-		if (error) {
-			console.error('Error loading canvas:', error);
-		} else {
-			const canvasData = JSON.parse(data.canvas_f);
-
-			canvasData.forEach(stroke => {
-				ctx.beginPath();
-				ctx.moveTo(stroke.startX, stroke.startY);
-				stroke.path.forEach(point => {
-					ctx.lineTo(point.x, point.y);
-				});
-				ctx.strokeStyle = stroke.color;
-				ctx.lineWidth = stroke.width;
-				ctx.stroke();
-			});
-		}
+	
 	}
 
 	function bold() {
