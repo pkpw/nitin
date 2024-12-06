@@ -140,20 +140,7 @@
 		const id = flashcardId;
 		const canvasData = getCanvasData();
 		console.log("Saving canvas Data...");
-		formData.append('canvasData', canvasData));
-
-		const response = await fetch('/canvas', {
-			method: 'POST',
-			body: formData,
-		});
-
-
-		if (response.ok) {
-			console.log('Canvas saved successfully');
-		} else {
-			console.error('Failed to save canvas data');
-		}
-
+		
 	}
 
 	async function loadCanvas(flashcardId) {
